@@ -8,7 +8,7 @@ Installing the Venus CLI is simple. It works on any modern Mac, Windows, or Linu
 {% step %}
 ### Open a Terminal
 
-Open the Terminal app. Mac users can find it in the Applications/Utilities folder.&#x20;
+You can find the terminal app in the Applications/Utilities folder.  Or, press `Cmd + Space Bar` and type `terminal` to search for it.
 
 Linux users, you know where to find it. 😉
 {% endstep %}
@@ -33,9 +33,9 @@ Don't skip this step! Quit the Terminal app and restart it. Restarting it allows
 {% endstep %}
 
 {% step %}
-Verify Installation
+### Verify installation
 
-To ensure Venus CLI was successfully installed on your computer, type this in your terminal and hit enter:
+To ensure the Venus CLI was successfully installed on your computer, type this in your terminal and hit enter:
 
 ```shellscript
 venus --help
@@ -44,6 +44,12 @@ venus --help
 {% hint style="success" %}
 If Venus CLI was installed successfully, you should see the list of available commands and options.
 {% endhint %}
+{% endstep %}
+
+{% step %}
+### Download game templates
+
+Templates are the easiest way to get started building games on Venus.
 {% endstep %}
 {% endstepper %}
 

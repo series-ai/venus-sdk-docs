@@ -1,0 +1,89 @@
+# Lifecycles API
+
+The host controls when your game is active, paused, or torn down. VenusAPI.lifecycles exposes five hooks so your app can react to those state changes:
+
+```
+initializeAsync
+     │
+     ▼
+Ready (implicit once initializeAsync resolves)
+     │
+     ├──▶ onPause  ──▶ onResume
+     │
+     ├──▶ onSleep  ──▶ onAwake
+     │
+     └──▶ onQuit   (terminal)
+```
+
+* `initializeAsync` resolving is the “ready” moment—there is no separate
+* `onReady` callback in the current SDK.
+
+## Quick Start
+
+1. Import and initialize the SDK:
+
+```typescript
+import VenusAPI from '@series-inc/venus-sdk/api'
+
+await VenusAPI.initializeAsync()
+```
+
+2. Register lifecycle callbacks on `VenusAPI.lifecycles`.
+3. Hold onto the returned disposer if your app hot-reloads or swaps scenes.
+
+## Event Reference
+
+| Hook                  | When it fires                                                     | Typical usage                                        |
+| --------------------- | ----------------------------------------------------------------- | ---------------------------------------------------- |
+| `onPause` (callback)  | Host overlays your game or user momentarily leaves the experience | Pause loops, mute audio, suspend timers              |
+| `onResume` (callback) | Host brings your game back to the foreground after a pause        | Resume loops, unmute audio, re-enable input          |
+| `onSleep` (callback)  | Long suspend/background (system tab switch, network loss, etc.)   | Persist progress, stop network churn, close sockets  |
+| `onAwake` (callback)  | App returns from sleep and is about to resume interaction         | Refresh auth/session, refetch stale data             |
+| `onQuit`(callback)    | Host is shutting down the app instance                            | Flush telemetry, save state, return pending promises |
+
+Each hook returns a `{ unsubscribe(): void }` handle. Call it if you need to detach listeners manually.
+
+## Implementation Example
+
+```typescript
+import VenusAPI from '@series-inc/venus-sdk/api'
+
+await VenusAPI.initializeAsync()
+
+const disposers = [
+  VenusAPI.lifecycles.onPause(() => {
+    pauseGameLoop()
+    VenusAPI.log('[Lifecycle] paused')
+  }),
+
+  VenusAPI.lifecycles.onResume(() => {
+    resumeGameLoop()
+    VenusAPI.log('[Lifecycle] resumed')
+  }),
+
+  VenusAPI.lifecycles.onSleep(() => {
+    saveProgressSnapshot()
+  }),
+
+  VenusAPI.lifecycles.onAwake(() => {
+    refreshLiveServices()
+  }),
+
+  VenusAPI.lifecycles.onQuit(async () => {
+    await flushTelemetry()
+    await saveProgressSnapshot()
+  }),
+]
+
+export function disposeLifecycleHandlers() {
+  disposers.forEach((dispose) => dispose?.())
+}
+
+```
+
+## Best Practices
+
+* Keep handlers fast: dispatch longer tasks to your own queues so the host isn’t blocked.
+* Guard async work: wrap awaits in try/catch—transitions can happen at any time.
+* Persist aggressively on `onSleep`: do not rely on `onQuit` always firing.
+* Avoid deprecated names: older docs referenced `VenusAPI.lifecycle` (singular) and `onShow`/`onPlay`; those APIs aren’t available in current SDK builds.

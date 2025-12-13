@@ -1,0 +1,34 @@
+# Navigation API
+
+## Venus Navigation API
+
+{% include "../../../../.gitbook/includes/stack-navigation-api-description.md" %}
+
+### Quick Start
+
+```typescript
+import VenusAPI from '@series-inc/venus-sdk/api'
+
+await VenusAPI.initializeAsync()
+
+await VenusAPI.navigation.pushApp('bird-flap', {
+  contextData: { level: 5, difficulty: 'hard' },
+})
+
+await VenusAPI.navigation.popApp()
+```
+
+### Stack Information
+
+```typescript
+const stackInfo = VenusAPI.navigation.getStackInfo()
+// { isInStack, stackPosition, isTopOfStack, stackDepth, parentInstanceId }
+```
+
+Use this data to adjust UI when embedded inside another app.
+
+### Best Practices
+
+* Pass lightweight context objects; host clamps size to keep navigation snappy.
+* Always call `popApp` after launching a child experience so control returns to your shell.
+* Sanitize context data before pushing—avoid leaking PII or oversized blobs.

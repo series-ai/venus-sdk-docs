@@ -1,21 +1,17 @@
-# Time API
-
-## Venus Time API
+# Venus Time API
 
 Sync with Venus server time, format timestamps with localized options, and compute future times without relying on client clocks.
 
-### Quick Start
+## Quick Start
 
 ```typescript
 import VenusAPI from '@series-inc/venus-sdk/api'
-
-await VenusAPI.initializeAsync()
 
 const serverTime = await VenusAPI.time.requestTimeAsync()
 console.log(serverTime.serverTime, serverTime.timezoneOffset)
 ```
 
-### Formatting Helpers
+## Formatting Helpers
 
 ```typescript
 const formatted = VenusAPI.time.formatTime(Date.now(), {
@@ -32,7 +28,7 @@ const formattedNumber = VenusAPI.time.formatNumber(1234567.89, {
 })
 ```
 
-### Future Calculations
+## Future Calculations
 
 ```typescript
 const futureTime = await VenusAPI.time.getFutureTimeAsync({
@@ -42,8 +38,9 @@ const futureTime = await VenusAPI.time.getFutureTimeAsync({
 })
 ```
 
-### Best Practices
+## Best Practices
 
-* Use server time for cooldowns or limited-time offers to avoid client clock tampering.
-* Cache the server response and update periodically rather than spamming the endpoint.
-* When formatting numbers, remember the host automatically applies the player’s locale.
+- Use server time for cooldowns or limited-time offers to avoid client clock tampering.
+- Cache the server response and update periodically rather than spamming the endpoint.
+- When formatting numbers, remember the host automatically applies the player’s locale.
+

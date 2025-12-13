@@ -1,0 +1,76 @@
+# Venus Social API
+
+Kick off share flows, generate challenge links, and create QR codes for in-person experiences. The Social API packages launch parameters so recipients jump straight into your content.
+
+## Quick Start
+
+```typescript
+import VenusAPI from '@series-inc/venus-sdk/api'
+
+const { shareUrl } = await VenusAPI.social.shareLinkAsync({
+  launchParams: {
+    challengeType: 'highscore',
+    scoreToBeat: '1500',
+    challengerId: VenusAPI.getProfile().id,
+  },
+  metadata: {
+    title: 'Beat my score!',
+    description: 'Can you top 1500 points?',
+    imageUrl: 'https://cdn.example.com/share-highscore.png',
+  },
+})
+
+console.log('Shared link:', shareUrl)
+```
+
+`shareLinkAsync` automatically launches the platform share UI (native sheet on mobile, `navigator.share` or clipboard fallback on web). Use the returned URL for telemetry or custom UI, but no additional modal call is required.
+
+## QR Codes
+
+```typescript
+const { qrCode } = await VenusAPI.social.createQRCodeAsync({
+  launchParams: {
+    challengeType: 'daily',
+    dailyPuzzleId: '2024-11-04',
+  },
+  metadata: {
+    title: 'Daily Challenge',
+    description: 'Scan to play today!',
+  },
+  qrOptions: {
+    size: 512,
+    margin: 4,
+    format: 'png',
+  },
+})
+
+document.querySelector('#qr').src = qrCode
+```
+
+`createQRCodeAsync` only returns data—display or share the image yourself. Pair it with an on-screen `<img>` element, print asset, or custom UI element.
+
+## Handling Launch Params
+
+```typescript
+const launchParams = VenusAPI.getLaunchParams()
+if (launchParams.challengeType === 'highscore') {
+  startHighScoreChallenge(parseInt(launchParams.scoreToBeat, 10))
+}
+```
+
+Launch parameters are fully custom. Define the schema your game needs (`challengeType`, `dailyPuzzleId`, `referredBy`, etc.) and decode when the experience boots.
+
+## Payload Guidelines
+
+- Keep `launchParams` under ~100 KB (share payloads are stored in Firestore with 1 MB document caps).
+- Use compact identifiers (IDs, short strings) and fetch bulky data from your backend.
+- Sanitize user-provided metadata before sharing publicly.
+- Fallback when social APIs are unavailable (desktop browsers without share support).
+
+## Best Practices
+
+- Use `shareLinkAsync` for instant share sheets; reserve `createQRCodeAsync` for in-person or kiosk flows.
+- Inspect `VenusAPI.getLaunchParams()` on boot and branch gameplay early—players expect to land in the invited context immediately.
+- Reward referrers only after validating signatures or payloads on your backend to prevent spoofing.
+- Provide manual copy buttons for desktop browsers without native sharing.
+

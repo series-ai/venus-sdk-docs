@@ -9,5 +9,33 @@ icon: brackets-curly
 
 You'll find here the list of API modules, the description of what each API does and the link to the specific API, which provides more detailed info on how it works and example code usage.
 
-<table><thead><tr><th width="197">API Module</th><th>What it does</th></tr></thead><tbody><tr><td><a data-mention href="ads-api.md">ads-api.md</a></td><td>To enable ads in your game.</td></tr><tr><td><a data-mention href="analytics-api.md">analytics-api.md</a></td><td>use it to log custom events.</td></tr><tr><td><a data-mention href="asset-loader-api.md">asset-loader-api.md</a></td><td>Load, preoad and clean up assets with WebView-aware optimizations.</td></tr><tr><td><a data-mention href="a-b-testing-api.md">a-b-testing-api.md</a></td><td>Toggle experiences, run experiments, and gate functionality using Venus feature flags and experiments.</td></tr><tr><td><a data-mention href="haptics-api.md">haptics-api.md</a></td><td>Trigger haptics feedback.</td></tr><tr><td><a data-mention href="in-app-purchases.md">in-app-purchases.md</a></td><td>Add In-App Purchases to your game.</td></tr><tr><td><a data-mention href="leaderboards-api-beta.md">leaderboards-api-beta.md</a></td><td>Competitive leaderboards with three security levels. Choose based on your game's requirements.</td></tr><tr><td><a data-mention href="lifecycles-api.md">lifecycles-api.md</a></td><td>The Venus App controls when your game is active, paused, or torn down. <code>VenusAPI.lifecycles</code> exposes five hooks so your app can react to those state changes:</td></tr><tr><td><a data-mention href="logging-api.md">logging-api.md</a></td><td>Use this to track debug info or errors.</td></tr><tr><td><a data-mention href="multiplayer-api-beta.md">multiplayer-api-beta.md</a></td><td>Build synchronous multiplayer sessions backed by the Venus Rooms service. Create or join rooms, listen for updates, and push authoritative state through a single interface.</td></tr><tr><td><a data-mention href="notifications-api.md">notifications-api.md</a></td><td>use it to schedule local notifs after preset parameters like.</td></tr><tr><td><a data-mention href="numbers-api.md">numbers-api.md</a></td><td>Handle exponential economies without losing precision.</td></tr><tr><td><a data-mention href="preloader-api.md">preloader-api.md</a></td><td>The preloader is opt-in by default. In order to opt in, you must add.</td></tr><tr><td><a data-mention href="profiles-api.md">profiles-api.md</a></td><td>Get current user profile (synchronous).</td></tr><tr><td><a data-mention href="safe-areas-api.md">safe-areas-api.md</a></td><td>Use it to get the safe area info at game startup, to avoid issues overlapping UI issues.</td></tr><tr><td><a data-mention href="sharing-api.md">sharing-api.md</a></td><td>Kick off share flows, generate challenge links, and create QR codes for in-person experiences.</td></tr><tr><td><a data-mention href="shared-assets-api.md">shared-assets-api.md</a></td><td>Download host-provisioned asset bundles that are shared across titles or reused within your game.</td></tr><tr><td><a data-mention href="simulation-api-beta.md">simulation-api-beta.md</a></td><td>Drive authoritative game state through the Venus simulation system. Execute recipes, manage inventories and slots, and resolve dynamic fields directly from the platform.</td></tr><tr><td><a data-mention href="storage-api.md">storage-api.md</a></td><td>Persist player data at the right scope using the Venus storage helpers.</td></tr><tr><td><a data-mention href="time-api.md">time-api.md</a></td><td>Server time synchronization and formatting.</td></tr><tr><td><a data-mention href="universal-llm-api.md">universal-llm-api.md</a></td><td>Call hosted LLM models for chat, hints, or narrative beats without managing your own inference stack. The API supports multiple models and exposes simple request/response helpers.</td></tr></tbody></table>
+| API Module | What it does |
+| - | - |
+| [Ads](ADS.md) | To enable ads in your game. |
+| [AI](AI.md) | Call hosted LLM models for chat, hints, or narrative beats without managing your own inference stack. |
+| [Analytics](ANALYTICS.md) | Record gameplay telemetry, funnel steps, and user properties. |
+| [Asset Loader](ASSET_LOADER.md) | Load, preload, and clean up assets with WebView-aware optimizations. |
+| [CDN](CDN.md) | Fetch CDN-backed content and handle platform caching. |
+| [Embedded Libraries](EMBEDDED_LIBRARIES.md) | Load and manage embedded libraries shipped by the host. |
+| [Features](FEATURES.md) | Toggle experiences, run experiments, and gate functionality with feature flags. |
+| [Haptics](HAPTICS.md) | Trigger haptics feedback. |
+| [In-App Purchases](IAP.md) | Add In-App Purchases to your game. |
+| [Leaderboards (BETA)](LEADERBOARD.md) | Competitive leaderboards with multiple security levels. |
+| [Lifecycles](LIFECYCLES.md) | Hooks to react to host lifecycle changes (pause/resume/teardown). |
+| [Logging](LOGGING.md) | Track debug info or errors. |
+| [Notifications](NOTIFICATIONS.md) | Schedule and manage local notifications. |
+| [Numbers](NUMBERS.md) | Handle exponential economies without losing precision. |
+| [Preloader](PRELOADER.md) | Opt into and configure the host preloader. |
+| [Profile](PROFILE.md) | Access the current user profile. |
+| [Rooms (BETA)](ROOMS.md) | Build synchronous multiplayer sessions backed by the Venus Rooms service. |
+| [Safe Area](SAFE_AREA.md) | Read safe-area insets to avoid overlapping host UI. |
+| [Shared Assets](SHARED_ASSETS.md) | Download host-provisioned asset bundles shared across titles. |
+| [Simulation (BETA)](SIMULATION.md) | Drive authoritative game state through the simulation system. |
+| [Social](SOCIAL.md) | Share links, generate QR codes, and handle launch params. |
+| [Storage](STORAGE.md) | Persist player data at the right scope using storage helpers. |
+| [Time](TIME.md) | Server time synchronization and formatting. |
+| Unsupported |  |
+| [Avatar 3D](AVATAR3D.md) | Avatar 3D APIs (unsupported). |
+| [Navigation](NAVIGATION.md) | Navigation APIs (unsupported). |
+| [Popups](POPUPS.md) | Popups APIs (unsupported). |
 

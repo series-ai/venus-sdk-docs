@@ -1,20 +1,16 @@
-# Asset Loader API
-
-## Venus Asset Loader API
+# Venus Asset Loader API
 
 Load, preload, and clean up assets with WebView-aware optimizations. Venus’ asset loader handles blob creation, streaming checks, and caching so you can focus on gameplay.
 
-### Quick Start
+## Quick Start
 
 ```typescript
 import VenusAPI from '@series-inc/venus-sdk/api'
 
-await VenusAPI.initializeAsync()
-
 const iconUrl = await VenusAPI.loadAsset('images/icon.png')
 ```
 
-### Preloading Bundles
+## Preloading Bundles
 
 ```typescript
 await VenusAPI.preloadAssets(
@@ -30,7 +26,7 @@ await VenusAPI.preloadAssets(
 )
 ```
 
-### Cache Management
+## Cache Management
 
 ```typescript
 const cached = VenusAPI.assetLoader?.getCached('images/icon.png')
@@ -39,8 +35,9 @@ const cached = VenusAPI.assetLoader?.getCached('images/icon.png')
 VenusAPI.cleanupAssets()
 ```
 
-### Best Practices
+## Best Practices
 
-* Treat optional assets differently—mark them with `isOptional` to suppress hard failures.
-* Pair with the Preloader API to keep the host splash visible during heavy loads.
-* For text/JSON, the loader returns the file contents instead of an object URL—branch your handling accordingly.
+- Treat optional assets differently—mark them with `isOptional` to suppress hard failures.
+- Pair with the Preloader API to keep the host splash visible during heavy loads.
+- For text/JSON, the loader returns the file contents instead of an object URL—branch your handling accordingly.
+

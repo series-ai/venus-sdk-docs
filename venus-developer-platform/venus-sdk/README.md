@@ -14,7 +14,7 @@ The Venus SDK is a collection functionalities that you'll be able to leverage fr
 The Venus SDK is designed for LLMs to easily utilize and write code for it. All the human operator needs to be aware of here is what functionality exists and how they can leverage it to enhance their game.
 
 {% hint style="info" %}
-Check how to Install/Import the SDK here: [install-import-and-update.md](install-import-and-update.md "mention")
+Check how to Install/Import the SDK here: [quickstart.md](quickstart.md "mention")
 {% endhint %}
 
 ## SDK Features

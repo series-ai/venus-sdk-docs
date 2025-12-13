@@ -11,7 +11,7 @@
     * [Logging into Venus with the CLI](venus-developer-platform/venus-cli/logging-into-venus-with-the-cli.md)
     * [Troubleshooting](venus-developer-platform/venus-cli/troubleshooting.md)
   * [Venus SDK](venus-developer-platform/venus-sdk/README.md)
-    * [Install, import & update](venus-developer-platform/venus-sdk/install-import-and-update.md)
+    * [Quickstart](venus-developer-platform/venus-sdk/quickstart.md)
     * [API](venus-developer-platform/venus-sdk/api/README.md)
       * [A/B Testing API](venus-developer-platform/venus-sdk/api/a-b-testing-api.md)
       * [Ads API](venus-developer-platform/venus-sdk/api/ads-api.md)

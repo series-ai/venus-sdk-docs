@@ -2,7 +2,7 @@
 icon: folder-arrow-down
 ---
 
-# Install, import & update
+# Quickstart
 
 ## Installing the SDK
 
@@ -23,5 +23,5 @@ npm install @series-inc/venus-sdk@latest
 if you want to update the SDK version, you can run the same install commands to install latest.
 {% endhint %}
 
-
+That's it! No initialization required. Happy hacking! Check out our [api](api/ "mention") docs to see what's available.
 

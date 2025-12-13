@@ -5,33 +5,32 @@
 ### "Session expired" or authentication errors
 
 * Run `venus login` to authenticate
-* If already logged in, try `venus login --force` to force a new login session
+* If already logged in but it still fails, run `venus login --help` to see session-related options
 * Your session is automatically refreshed, but if you encounter issues, re-login
 
 ### "Failed to upload file" error
 
 * Check your internet connection
 * Ensure you're logged in with `venus login`
-* Verify the game distribution folder exists and is not empty
+* Verify the game build folder exists and is not empty
 
 ### "Game dist folder does not exist" error
 
 * Verify the path to your game's build folder is correct
 * Ensure you're using the full path or correct relative path
-* Check that the path in `game.config.json` is correct if using auto-detection
+* If you previously initialized the game, check that your local game config points at the correct build folder
 
 ### "Unable to load game config" error
 
-* Make sure you're running the command from the directory containing `game.config.json`
-* Or provide `--id` and -`-path` options manually (for update-game)
-* Verify the `game.config.json` file is valid JSON
-* For publish-game, ensure `game.config.json` exists in the current directory
+* Make sure you're running the command from your project root (where you initialized the game)
+* If the CLI can’t find your game/build info automatically, run `venus deploy --help` (or `venus game upload-build --help`) to see what you can pass explicitly
+* If you have a local game config file, verify it is valid JSON and matches your current project
 
 ### "Game not found" or "Game has no version" error
 
-* Ensure you've created the game using `venus create-game` first
-* Verify the game ID in `game.config.json` is correct
-* Make sure you've created at least one version using `venus update-game` before publishing
+* Ensure you've created the game using `venus init` (or `venus game create`) first
+* Verify the game ID you're using is correct (see `--help` for the command you’re running)
+* Make sure you've created at least one version using `venus deploy` (or `venus game upload-build`) before setting it public
 
 ### Version conflicts
 
@@ -50,6 +49,6 @@
 
 * Check the command help `venus --help`
 * check specific command help: `venus <command> --help`
-  * e.g., `venus login --help`, `venus create-game --help`, etc.
+  * e.g., `venus login --help`, `venus init --help`, `venus deploy --help`, `venus game --help`
 * Make sure you're on the latest version by running `venus update`
 * Check the [GitHub releases](https://github.com/Zee-Series-AI/venus_cli_releases/releases) for changelogs and known issues

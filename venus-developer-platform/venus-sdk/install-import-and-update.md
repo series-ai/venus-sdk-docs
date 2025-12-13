@@ -23,14 +23,5 @@ npm install @series-inc/venus-sdk@latest
 if you want to update the SDK version, you can run the same install commands to install latest.
 {% endhint %}
 
-## Initialize the SDK after installing it!
 
-Before you can use anything from the Venus SDK, you need to initialize it.
-
-```javascript
-import { default as VenusAPI } from '@series-inc/venus-sdk/api'
-
-// Initialize the API
-await VenusAPI.initializeAsync()
-```
 

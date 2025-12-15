@@ -42,4 +42,4 @@
         * [Avatar 3D API](venus-developer-platform/venus-sdk/api/AVATAR3D.md)
         * [Navigation API](venus-developer-platform/venus-sdk/api/NAVIGATION.md)
         * [Popups API](venus-developer-platform/venus-sdk/api/POPUPS.md)
-    * [SDK FAQ](venus-developer-platform/venus-sdk/troubleshooting.md)
+    * [Troubleshooting](venus-developer-platform/venus-sdk/troubleshooting.md)

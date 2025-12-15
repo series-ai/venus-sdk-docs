@@ -1,10 +1,10 @@
 ---
-icon: question
+icon: circle-question
 ---
 
-# SDK FAQ
+# Troubleshooting
 
-## My assets aren't loading when I deploy to Venus. Why?
+#### My assets aren't loading when I deploy to Venus. Why?
 
 If you are seeing errors like these in your console, your app is not finding the correct files.
 
@@ -28,7 +28,7 @@ If you are using vite, the way to fix this is to open vite.config.js and add the
 }
 ```
 
-## How do I update the SDK?
+#### How do I update the SDK?
 
 In your Terminal:
 
@@ -39,9 +39,13 @@ cd <you project's root folder>
 npm i @series-inc/venus-sdk@latest.
 ```
 
-## Ads do not work in my game
+#### Ads do not work in my game
 
 Ads are currently not supported on Desktop, but will be in a future SDK update.
 
 If you're using a VPN, the ads won't be able to load.
+
+#### I can't find what I need here. Where else should I look?
+
+If you're ever stuck or can't find what you need here, ask the lovely humans in our Discord. We're a pretty friendly bunch of people who love making cool new things, too.
 

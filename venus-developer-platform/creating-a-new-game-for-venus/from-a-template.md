@@ -22,7 +22,7 @@ Use our [React](https://react.dev/) template if you want to build a game with a 
 
 <a href="https://drive.google.com/file/d/1kOngXoOiZiH9l-5LI6wBazYCI8odMKR1/view?usp=drive_link" class="button primary">UI-heavy React game template</a>
 
-Use our bare bones template if you want to explore 2D or 3D, without choosing one up front. You can build anything you want with this, using any web technologies that you choose. Using this template still saves you the work of setting up a new HTML project.
+Use our bare bones template if you want to explore 2D or 3D, without choosing one up front. You can build anything you want with this, using any web technologies that you choose. Using this template still saves you the work of setting up a new HTML project with TypeScript.
 
 <a href="https://drive.google.com/file/d/1MUViuM1U1wdbfWs8xMWVxJd7hOiJR3pJ/view?usp=drive_link" class="button primary">Bare bones template</a>
 {% endstep %}

@@ -1,5 +1,4 @@
 ---
-description: Typical development workflow
 icon: cloud-arrow-up
 ---
 

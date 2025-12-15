@@ -1,9 +1,9 @@
 # Table of contents
 
 * [Venus developer platform](README.md)
-  * [Creating a new game for Venus](venus-developer-platform/creating-a-new-game-for-venus/README.md)
-    * [From a template](venus-developer-platform/creating-a-new-game-for-venus/from-a-template.md)
-    * [From scratch](venus-developer-platform/creating-a-new-game-for-venus/from-scratch.md)
+  * [Building a new game for Venus](venus-developer-platform/creating-a-new-game-for-venus/README.md)
+    * [Building from a template](venus-developer-platform/creating-a-new-game-for-venus/from-a-template.md)
+    * [Building a new game from scratch](venus-developer-platform/creating-a-new-game-for-venus/from-scratch.md)
   * [Venus CLI](venus-developer-platform/venus-cli/README.md)
     * [Installing the Venus CLI](venus-developer-platform/venus-cli/installing-the-venus-cli.md)
     * [Deploying your game to Venus](venus-developer-platform/venus-cli/deploying-your-game-to-venus.md)

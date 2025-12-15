@@ -6,14 +6,17 @@ icon: folder-arrow-down
 
 ## Installing the SDK
 
-{% hint style="info" %}
-**pre-requisites**:
+{% stepper %}
+{% step %}
+### Ensure you have node.js installed
 
-* You need to install node.js in order to install the NPM SDK version:
-  * &#x20;[Node.js — Download Node.js®](https://nodejs.org/en/download)
-{% endhint %}
+<a href="https://nodejs.org/en/download" class="button primary">Download and install Node.js</a>
+{% endstep %}
 
-Using the following command you'll be able to get the latest SDK version:
+{% step %}
+### Install the SDK with npm
+
+From the root folder of your project:
 
 ```shell
 npm install @series-inc/venus-sdk@latest
@@ -22,6 +25,6 @@ npm install @series-inc/venus-sdk@latest
 {% hint style="info" %}
 if you want to update the SDK version, you can run the same install commands to install latest.
 {% endhint %}
-
-That's it! No initialization required. Happy hacking! Check out our [api](api/ "mention") docs to see what's available.
+{% endstep %}
+{% endstepper %}
 

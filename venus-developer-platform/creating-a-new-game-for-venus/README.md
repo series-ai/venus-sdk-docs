@@ -2,34 +2,34 @@
 icon: gamepad-modern
 ---
 
-# Creating a new game for Venus
+# Building a new game for Venus
+
+Everyone has a different creative process and comfort level with technology. As long as you are committed to building something great, then we want to accommodate your style of development.
 
 {% stepper %}
 {% step %}
 ### Install the Venus CLI
 
-[Head over here](../venus-cli/installing-the-venus-cli.md) for instructions on installing the Venus CLI.
+Regardless of which path you choose, you'll need the Venus CLI to publish your game and share it.
+
+<a href="../venus-cli/installing-the-venus-cli.md" class="button primary">Install the Venus CLI</a>
 
 When you're done, come back here for the next step.
 {% endstep %}
 
 {% step %}
-### Download the Venus game templates
+### Download a Venus game template
 
-We have a few basic templates that make it easy to get started. The file below contains a 2D, 3D, React, and barebones template.w
+We have several basic templates that make it easy to get started. They're great for both novice developers and experienced developers who want to start building right away.
 
-<a href="from-a-template.md" class="button primary">Create a new game from a template</a>
+<a href="from-a-template.md" class="button primary">Build a game from a template</a>
+{% endstep %}
 
+{% step %}
+### If you prefer, crate a project manually
 
+We know that experienced developers often prefer setting up projects manually. We salute you. Here's the guide for you:
+
+<a href="from-scratch.md" class="button primary">Build a game from scratch</a>
 {% endstep %}
 {% endstepper %}
-
-
-
-Everyone has a different creative process and comfort level with technology. As long as you are committed to building something great, then we want to accommodate your style of development.
-
-To help those who want to skip past the technical details and get straight to creating gameplay, we offer templates that make getting started easy.&#x20;
-
-If you're an experienced developer who's more comfortable building things by hand, you're just a `curl` and an `npm install` away from getting your game up and running on Venus.&#x20;
-
-<a href="from-scratch.md" class="button primary">Create a new game from scratch</a>

@@ -3,7 +3,7 @@ description: Creating a new game on Venus from scratch
 icon: rectangle-code
 ---
 
-# From scratch
+# Building a new game from scratch
 
 If you're comfortable making new web apps from scratch, understand the basic conventions, know how to use npm, etc, then this is the place for you.
 
@@ -23,12 +23,30 @@ base: './',
 {% endstep %}
 
 {% step %}
-### Build to a /dist folder
+### Build to a `./dist` folder
 
 We also prefer npm for package management and scripts.&#x20;
 
 Venus CLI looks for your build in `./dist` when uploading to Venus.&#x20;
 
 Make sure npm run build, or however you prefer to build your game, builds to a `./dist` folder.    &#x20;
+{% endstep %}
+
+{% step %}
+### Initialize the project with the Venus CLI
+
+<pre><code><strong>cd &#x3C;project root folder>
+</strong><strong>venus init
+</strong></code></pre>
+{% endstep %}
+
+{% step %}
+### Add Cursor rules, if you're using Cursor
+
+We offer Cursor rules that help you and Cursor use the Venus CLI and SDK. They're a huge help if you've embraced AI in your workflow.
+
+```
+venus cursor init
+```
 {% endstep %}
 {% endstepper %}

@@ -29,7 +29,7 @@ We also prefer npm for package management and development scripts.&#x20;
 
 Venus CLI looks for your build in `./dist` when uploading to Venus.&#x20;
 
-Make sure npm run build, or however you prefer to build your game, builds to a `./dist` folder.    &#x20;
+Make sure npm run build, or however you prefer to build your game, builds to a `./dist` folder
 {% endstep %}
 
 {% step %}

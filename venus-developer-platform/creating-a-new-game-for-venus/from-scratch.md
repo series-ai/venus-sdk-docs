@@ -50,5 +50,7 @@ venus deploy
 ```
 
 If everything is set up correctly, this will return a shareable link, playable by anyone on web or in the Venus app. This link will be unlisted, so don't worry about other people seeing this game on the Venus platform. To make it show in search results on Venus, see [publishing instructions](../venus-cli/deploying-your-game-to-venus.md).
+
+Our templates include an npm script, `npm run deploy`, that builds and runs your game. We find it pretty handy, if you want to create a script that simplifies deployment.
 {% endstep %}
 {% endstepper %}

@@ -1,31 +1,43 @@
-# Troubleshooting
+# SDK FAQ
 
-## SDK not initialized
+## My assets aren't loading when I deploy to Venus. Why?
 
-If you're asked to properly initialize the SDK, then ensure that this code is placed in your main file, somewhere at the beginning.
+If you are seeing errors like these in your console, your app is not finding the correct files.
 
-```shellscript
-import VenusAPI from "@series-inc/venus-sdk/api"
-await VenusAPI.initializeAsync()
+![](<../../.gitbook/assets/unknown (1).png>)
+
+{% hint style="info" %}
+**TL;DR: Add base: './', to your vite.config.js**&#x20;
+{% endhint %}
+
+Relative paths usually work on your local machine, but work differently when your game app is deployed. When deployed, the Venus web server will server your game from a subdirectory, so it will not be able to find you game's assets from the web server's root folder.
+
+If you are using vite, the way to fix this is to open vite.config.js and add the lines as shown below:
+
+```
+{
+  base: './', // <-- add this line
+
+  build: {
+    ...
+  }
+}
 ```
 
-## SDK timeout
+## How do I update the SDK?
 
-Ensure that the SDK is correctly installed.
+In your Terminal:
 
-* check the contents of the `package.json` file in your project folder.&#x20;
-* under `"dependencies"`, the SDK entry should read something like this:
+From your project's root folder
 
-```json
-  "dependencies": {
-    "@series-inc/venus-sdk": "^2.6.2", //min required SDK version is 2.6.2
 ```
-
-If it's not the min required version, then try updating the SDK by running `npm i @series-inc/venus-sdk@latest`.
+cd <you project's root folder>
+npm i @series-inc/venus-sdk@latest.
+```
 
 ## Ads do not work in my game
 
-When playing on desktop, we currently do not show ads. We'll offer them later for developers who want a simple way to monetize their games.
+Ads are currently not supported on Desktop, but will be in a future SDK update.
 
 If you're using a VPN, the ads won't be able to load.
 

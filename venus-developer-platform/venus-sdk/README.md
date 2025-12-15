@@ -30,5 +30,5 @@ These features include:
 * LLMs endpoints&#x20;
 
 {% hint style="info" %}
-Check the full API modules list here: [api](api/ "mention")
+Check the full API modules list here: [Broken link](/broken/pages/9EJcaRjEAprBoQvpGs3q "mention")
 {% endhint %}

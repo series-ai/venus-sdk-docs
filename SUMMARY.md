@@ -40,6 +40,4 @@
         * [Avatar 3D API](venus-developer-platform/venus-sdk/api/AVATAR3D.md)
         * [Navigation API](venus-developer-platform/venus-sdk/api/NAVIGATION.md)
         * [Popups API](venus-developer-platform/venus-sdk/api/POPUPS.md)
-    * [Troubleshooting](venus-developer-platform/venus-sdk/troubleshooting.md)
-  * [Troubleshooting](venus-developer-platform/troubleshooting/README.md)
-    * [Assets do not load once my game is uploaded it to Venus!](venus-developer-platform/troubleshooting/assets-do-not-load-once-my-game-is-uploaded-it-to-venus.md)
+    * [SDK FAQ](venus-developer-platform/venus-sdk/troubleshooting.md)

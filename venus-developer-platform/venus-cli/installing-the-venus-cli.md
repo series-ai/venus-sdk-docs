@@ -45,12 +45,6 @@ venus --help
 If Venus CLI was installed successfully, you should see the list of available commands and options.
 {% endhint %}
 {% endstep %}
-
-{% step %}
-### Download game templates
-
-Templates are the easiest way to get started building games on Venus.
-{% endstep %}
 {% endstepper %}
 
 ## Windows

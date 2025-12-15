@@ -68,7 +68,7 @@ This will take you through a few basic steps that give your game a name, descrip
 {% endstep %}
 
 {% step %}
-### Add Cursor rules, if you're using cursor
+### Add Cursor rules, if you're using Cursor
 
 In your Terminal, type:
 

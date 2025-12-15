@@ -34,15 +34,11 @@ Don't skip this step! Quit the Terminal app and restart it. Restarting it allows
 {% step %}
 ### Verify installation
 
-To ensure the Venus CLI was successfully installed on your computer, type this in your terminal and hit enter:
+To ensure the Venus CLI was successfully installed on your computer, type this in your terminal and hit enter. You should see a list of commands.
 
 ```shellscript
 venus --help
 ```
-
-{% hint style="success" %}
-If Venus CLI was installed successfully, you should see the list of available commands and options.
-{% endhint %}
 {% endstep %}
 {% endstepper %}
 

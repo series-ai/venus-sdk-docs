@@ -8,7 +8,7 @@ Templates make it easy to get started building games on Venus. Currently, we hav
 
 {% stepper %}
 {% step %}
-## Download a template
+### Download a template
 
 2D games tend to be easier to build than 3D games. Our 2D template uses [Phaser](https://phaser.io/), which is a very powerful and easy to use 2D game engine.
 

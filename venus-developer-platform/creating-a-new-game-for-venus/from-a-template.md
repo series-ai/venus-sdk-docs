@@ -69,7 +69,7 @@ This will take you through a few basic steps that give your game a name, descrip
 {% step %}
 ### Install libraries
 
-To install all of the required libraries that each template uses, type:
+To install all of the required libraries for your project, type:
 
 ```
 npm install
@@ -79,23 +79,15 @@ This will fetch all of the libraries and install them to your project.&#x20;
 {% endstep %}
 
 {% step %}
-### Build the starter project
-
-Compile your game in preparation to deploy:
-
-```
-npm run build
-```
-{% endstep %}
-
-{% step %}
 ### Deploy to Venus
 
 This will give you a link that you can open to verify that everything is working as intended.
 
 ```
-venus deploy
+npm run deploy
 ```
+
+If everything is set up correctly, this will build your game, upload the build to the platform, and then return a shareable link. The link is playable by anyone on web or in the Venus app. This link will be unlisted, so don't worry about other people finding this game on the Venus platform. To make it show in search results on Venus, see [publishing instructions](../venus-cli/deploying-your-game-to-venus.md).
 {% endstep %}
 
 {% step %}

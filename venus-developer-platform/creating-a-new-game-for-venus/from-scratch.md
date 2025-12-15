@@ -22,16 +22,6 @@ base: './',
 {% endstep %}
 
 {% step %}
-### Build to a `./dist` folder
-
-We also prefer npm for package management and development scripts.&#x20;
-
-Venus CLI looks for your build in `./dist` when uploading to Venus.&#x20;
-
-You can [optionally build](../venus-cli/deploying-your-game-to-venus.md#advanced-options) to an alternative location, but our tools will look in `./dist` by default.
-{% endstep %}
-
-{% step %}
 ### Initialize the project with the Venus CLI
 
 ```
@@ -41,13 +31,13 @@ venus init
 {% endstep %}
 
 {% step %}
-### Add Cursor rules, if you're using Cursor
+### Build to a `./dist` folder
 
-We offer Cursor rules that help you and Cursor use the Venus CLI and SDK. They're a huge help if you've embraced AI in your workflow.
+We also prefer npm for package management and development scripts.&#x20;
 
-```
-venus cursor init
-```
+Venus CLI looks for your build in `./dist` when uploading to Venus.&#x20;
+
+You can [optionally build](../venus-cli/deploying-your-game-to-venus.md#advanced-options) to an alternative location, but our tools will look in `./dist` by default.
 {% endstep %}
 
 {% step %}
@@ -59,6 +49,6 @@ Simply run:
 venus deploy
 ```
 
-If everything is set up correectly, this will return a shareable link, playable by anyone on web or in the Venus app. This link will be unlisted, so don't worry about other people seeing this game on the Venus platform. To make it show in search results on Venus, see [publishing instructions](../venus-cli/deploying-your-game-to-venus.md).
+If everything is set up correctly, this will return a shareable link, playable by anyone on web or in the Venus app. This link will be unlisted, so don't worry about other people seeing this game on the Venus platform. To make it show in search results on Venus, see [publishing instructions](../venus-cli/deploying-your-game-to-venus.md).
 {% endstep %}
 {% endstepper %}

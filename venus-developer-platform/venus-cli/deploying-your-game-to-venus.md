@@ -4,19 +4,6 @@ description: Typical development workflow
 
 # Deploying your game to Venus
 
-The regular workflow to create and deploy your game to Venus includes the following steps:
-
-* [Login](deploying-your-game-to-venus.md#login)
-* [Initialize your game](deploying-your-game-to-venus.md#initialize-your-game)
-* [Deploy a new version](deploying-your-game-to-venus.md#deploy-a-new-version)
-* [Make your game visible (optional)](deploying-your-game-to-venus.md#make-your-game-visible-optional)
-* [Update your game](deploying-your-game-to-venus.md#update-your-game)
-* [Advanced game configuration (optional)](deploying-your-game-to-venus.md#advanced-game-configuration-optional)
-
-{% hint style="info" %}
-Note: You should always run the terminal in the root folder of your game/project.
-{% endhint %}
-
 ## Quick Start
 
 Steps to publish a NEW game to Venus (and updating it):
@@ -40,27 +27,7 @@ venus deploy --public --bump Patch
 
 ## Commands
 
-Here's the list of available commands for the Venus CLI explained, with options descriptions and useful notes.
 
-{% hint style="info" %}
-**Note**: all commands have a `--help` option that surfaces the main info on a given command, as well as the list of options a given command has.&#x20;
-{% endhint %}
-
-###
-
-**Options:**
-
-* `--force`: Force a new login even if you're already authenticated
-
-**What it does:**
-
-1. Opens a browser window for authentication
-2. Saves your session locally in `~/.venus_cli/`
-3. Automatically refreshes your session when it expires
-
-{% hint style="info" %}
-**Note:** You need to login before using commands like `init`, `deploy`, and `list-games`.
-{% endhint %}
 
 ### init
 

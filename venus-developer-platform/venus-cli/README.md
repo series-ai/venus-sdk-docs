@@ -12,3 +12,7 @@ The Venus CLI ([command-line interface](https://en.wikipedia.org/wiki/Command-li
 You can use the Venus CLI manually, like any other CLI tool in your terminal. But we also provide Cursor rules that allow you to control it with natural language and an LLM.
 
 [How to install the Venus CLI.](installing-the-venus-cli.md)
+
+## Getting help directly in the CLI
+
+All commands have a `--help` option that shows usage information.

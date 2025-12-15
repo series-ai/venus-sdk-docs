@@ -6,15 +6,25 @@ When you want to initialize your project to work with Venus, or if you want to m
 venus init
 ```
 
-{% hint style="info" %}
+This command will interactively walk you through the initalizaton process.
+
+{% hint style="success" %}
 You can run this command on any HTML5 game project.&#x20;
 
 You can initialize any project at any time. If you have a existing game you've already been working on, you can initialize it at any time.
 {% endhint %}
 
+## Manually initialize with CLI options
+
+You can bypass interactive mode and manually specify everything that initialization requires. To see options, run:
+
+```
+venus init --help
+```
+
 ## Under the hood
 
-After you initialize your project's root folder, we create a file called `game.config.json` file to store your game's configuration.
+After you initialize your project's root folder, we create a file called `game.config.json` file that stores your game's configuration.
 
 This makes future deployments easier by storing your game ID and build path.
 

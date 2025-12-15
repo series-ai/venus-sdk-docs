@@ -19,7 +19,7 @@ Our 3D game template uses [Three.js](https://threejs.org/), the most popular and
 
 <a href="https://drive.google.com/file/d/1XSfJZ5ds9YTVgiW_Xgp0V-zX4VC-ZsMl/view?usp=drive_link" class="button primary">3D game template</a>
 
-Use our React template if you want to build a game with a lot of interactive UI. React generally helps make complex UI easy to build for both desktop and mobile.
+Use our [React](https://react.dev/) template if you want to build a game with a lot of interactive UI. React generally helps make complex UI easy to build for both desktop and mobile.
 
 <a href="https://drive.google.com/file/d/1kOngXoOiZiH9l-5LI6wBazYCI8odMKR1/view?usp=drive_link" class="button primary">UI-heavy React game template</a>
 

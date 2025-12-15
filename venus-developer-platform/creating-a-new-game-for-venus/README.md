@@ -8,6 +8,14 @@ Everyone has a different creative process and comfort level with technology. As 
 
 {% stepper %}
 {% step %}
+### Install Node.js
+
+Node has tools you'll need for Venus development. Installation is easy.&#x20;
+
+<a href="https://nodejs.org/en/download" class="button primary">Install Node.js</a>
+{% endstep %}
+
+{% step %}
 ### Install the Venus CLI
 
 Regardless of which path you choose, you'll need the Venus CLI to publish your game and share it.

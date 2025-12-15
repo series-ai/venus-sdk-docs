@@ -8,9 +8,11 @@ We offer the Venus SDK as a convenient npm package.
 
 {% stepper %}
 {% step %}
-### Ensure you have node.js installed
+### Install Node.js
 
 <a href="https://nodejs.org/en/download" class="button primary">Download and install Node.js</a>
+
+We support Node.js 20.0 or higher.
 {% endstep %}
 
 {% step %}

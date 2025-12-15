@@ -2,77 +2,53 @@
 description: Typical development workflow
 ---
 
-# Deploying your game to Venus
+# Deploy your game to Venus
 
-## Quick Start
+Deploying your game is simple.
 
-Steps to publish a NEW game to Venus (and updating it):
+{% stepper %}
+{% step %}
+### Build your game
 
-```shellscript
-# Step 1: Login
-venus login
+Don't forget to create a new build of your game. It's easy to forget this step! Even if your game is running locally, that doesn't mean it's built to be deployed.
 
-# Step 2: Initialize your game
-venus init
+If you're using our templates, simply run this command from your project's root folder:
 
-# Step 3: Deploy your game
-venus deploy
-
-# Step 4: Make it public (optional)
-venus game set-public
-
-# Step 5: Deploy again whenever you have updates (and make them public)
-venus deploy --public --bump Patch
+```
+npm run build
 ```
 
-## Commands
+This will compile your game into the `./dist` folder in the root of your project.
 
+{% hint style="info" %}
+Experienced developers: build your game any way you wish. You can optionally specify the path to your build, as described below.
+{% endhint %}
+{% endstep %}
 
+{% step %}
+### Deploy!
 
-### init
+Next, run:
 
-Initializes a new game on Venus. This is the first command you should run when setting up a new game.
-
-```shellscript
-venus init
 ```
-
-**Options:**
-
-* `--name`: The name of your game
-* `--description`: Description of your game
-* `--build-path`: Path to your game's distribution/build folder
-* `--uses-preloader`: Whether the game uses the Venus SDK
-* `--override`: Should override old game config file if it exists
-
-**Options 1-4 example usage:**
-
-```shellscript
-venus init --My Game --A game about puppies --./dist --no
-```
-
-**What it does:**
-
-1. Prompts for game details (name, description, build path) if not provided
-2. Creates a new game on Venus
-3. Creates a `game.config.json` file in your current directory with the game ID and settings
-
-**Interactive Mode:** If you don't provide options, the CLI will prompt you for:
-
-* Game Name
-* Game Description
-* Path to game build folder (default: `./dist`)
-* Whether your game uses the Venus SDK
-
-## deploy
-
-Deploys your game or a new version of your game. This is the main command for publishing updates.
-
-```shellscript
 venus deploy
 ```
 
-**Options**:
+When it's done deploying, the CLI will show you a link to your game. Share it with anyone! It will be playable in any desktop browser, or in the Venus app.
+{% endstep %}
+
+{% step %}
+### When ready, make your game public for everyone to find
+
+When you feel like your game's met a quality bar that you're proud of, you can make it show up on the Venus platform to everyone.  To do so, run:
+
+```
+venus deploy --public
+```
+{% endstep %}
+{% endstepper %}
+
+## **Advanced options**
 
 * `--game-id`: The game ID to deploy (reads from `game.config.json` if not provided)
 * `--build-path`: Path to your game's distribution/build folder
@@ -80,9 +56,9 @@ venus deploy
 * `--uses-preloader`: Whether the game uses the Venus SDK
 * `--public`: Make this version visible on the explore page
 
-**What it does:**
+## **Under the hood**
 
-1. Zips your game distribution folder
+1. First, we zip the build up in your game distribution folder
 2. Uploads the new version to Venus storage
 3. Creates a new version entry for your game
 4. Updates the `dev` tag to point to the new version
@@ -137,9 +113,11 @@ example usage:
 venus game set-private --1e35f47e-4774-4264-8ed4-f7e7c620a64c
 ```
 
-## Update your game
+## Controlling version numbers
 
-When you have updates, run `venus deploy` again. Use `--bump` to control versioning:
+`venus deploy` increments your game's version automatically.&#x20;
+
+Use `--bump` to manually control versioning:
 
 * `Major`: 1.0.0 → 2.0.0 (breaking changes)
 * `Minor`: 1.0.0 → 1.1.0 (new features) **(default)**

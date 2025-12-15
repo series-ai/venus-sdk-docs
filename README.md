@@ -35,4 +35,6 @@ Your feedback is a gift, and who doesn't love gifts? If you have an invite to ou
 
 ## Getting started
 
-[Head over here](venus-developer-platform/creating-a-new-game-for-venus/) to get started making games on Venus.
+To get started making games on Venus, head here:
+
+<a href="venus-developer-platform/creating-a-new-game-for-venus/" class="button primary">Building a new game for Venus</a>

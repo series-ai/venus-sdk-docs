@@ -1,4 +1,4 @@
-# Installing the Venus CLI
+# Installation
 
 Installing the Venus CLI is simple. It works on any modern Mac, Windows, or Linux desktop machine.
 
@@ -80,6 +80,10 @@ If Venus CLI was installed successfully, you should see the list of available co
 {% endhint %}
 {% endstep %}
 {% endstepper %}
+
+## Manually installing the Venus CLI
+
+You can always manually download and install the Venus CLI [here](https://github.com/series-ai/venus_cli_releases).
 
 ## Updating the Venus CLI
 

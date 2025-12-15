@@ -1,7 +1,5 @@
 ---
-description: >-
-  this document goes over the typical development workflow, detailing how to
-  login, create a game, update and publish it to Venus platform
+description: Typical development workflow
 ---
 
 # Deploying your game to Venus
@@ -19,13 +17,6 @@ The regular workflow to create and deploy your game to Venus includes the follow
 Note: You should always run the terminal in the root folder of your game/project.
 {% endhint %}
 
-{% hint style="info" %}
-How to open terminal:
-
-* MacOS: open your terminal by using Spotlight search (press Command + Space, type "Terminal," and press Enter
-* Windows: open the PowerShell terminal by pressing the Windows key + Q, typing `powershell` into the Search dialog box and click it.
-{% endhint %}
-
 ## Quick Start
 
 Steps to publish a NEW game to Venus (and updating it):
@@ -35,7 +26,7 @@ Steps to publish a NEW game to Venus (and updating it):
 venus login
 
 # Step 2: Initialize your game
-venus init --name "Space Invaders HD" --build-path "./build/web" --uses-preloader
+venus init
 
 # Step 3: Deploy your game
 venus deploy
@@ -47,50 +38,6 @@ venus game set-public
 venus deploy --public --bump Patch
 ```
 
-## Configuration
-
-### Authentication
-
-Before using the CLI, you need to authenticate with your Venus account:
-
-```shellscript
-venus login
-```
-
-This will open a browser window for you to sign in with your Venus credentials. Your session will be saved locally in `~/.venus/` (or `%APPDATA%\.venus\` on Windows) and automatically refreshed when needed.
-
-**Login Options:**
-
-* `--force`: Force a new login even if you're already authenticated
-
-{% hint style="info" %}
-**Note:**&#x20;
-
-* Your credentials are stored securely on your local machine. The CLI never stores your password directly.
-* If you hit session/auth errors, rerun `venus login` (or run `venus login --help` to see options)
-{% endhint %}
-
-### Game Configuration
-
-The CLI uses a `game.config.json` file to store your game's configuration:
-
-```json
-{
-  "gameId": "your-game-id",
-  "relativePathToBuildFolder": "./dist",
-  "usesPreloader": false
-}
-```
-
-This file is created automatically when you run `venus init` and makes future deployments easier by storing your game ID and build path.
-
-#### Data Storage Locations
-
-The Venus CLI stores configuration data in the following locations:
-
-* **Session data**: `~/.venus_cli/` (macOS/Linux) or `%USERPROFILE%\.venus_cli\` (Windows)
-* **Game configuration**: `game.config.json` in your project directory
-
 ## Commands
 
 Here's the list of available commands for the Venus CLI explained, with options descriptions and useful notes.
@@ -99,13 +46,7 @@ Here's the list of available commands for the Venus CLI explained, with options 
 **Note**: all commands have a `--help` option that surfaces the main info on a given command, as well as the list of options a given command has.&#x20;
 {% endhint %}
 
-### login
-
-Authenticate with your Venus account.
-
-```shellscript
-venus login
-```
+###
 
 **Options:**
 

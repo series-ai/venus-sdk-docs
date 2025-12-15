@@ -32,4 +32,12 @@ We know that experienced developers often prefer setting up projects manually. W
 
 <a href="from-scratch.md" class="button primary">Build a game from scratch</a>
 {% endstep %}
+
+{% step %}
+### Deploy your game to Venus
+
+Once your game is working and ready to share, use the Venus CLI to upload the latest version of your game. You'll get a link back that you can share with anyone.
+
+<a href="../venus-cli/deploying-your-game-to-venus.md" class="button primary">Deploy your game to Venus</a>&#x20;
+{% endstep %}
 {% endstepper %}

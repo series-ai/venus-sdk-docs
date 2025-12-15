@@ -26,9 +26,9 @@ We have several basic templates that make it easy to get started. They're great 
 {% endstep %}
 
 {% step %}
-### If you prefer, crate a project manually
+### If you prefer, create a project manually
 
-We know that experienced developers often prefer setting up projects manually. We salute you. Here's the guide for you:
+We know that experienced developers often prefer setting up projects manually. Here's how:
 
 <a href="from-scratch.md" class="button primary">Build a game from scratch</a>
 {% endstep %}

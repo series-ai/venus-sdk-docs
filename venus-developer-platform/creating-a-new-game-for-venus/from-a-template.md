@@ -67,15 +67,15 @@ This will take you through a few basic steps that give your game a name, descrip
 {% endstep %}
 
 {% step %}
-### Add Cursor rules
+### Install libraries
 
-In your Terminal, type:
+To install all of the required libraries that each template uses, type:
 
 ```
-venus cursor init
+npm install
 ```
 
-This will allow Cursor to help you use the CLI and SDK. You can skip this step if you do not want to use Cursor.
+This will fetch all of the libraries and install them to your project.&#x20;
 {% endstep %}
 
 {% step %}

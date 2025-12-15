@@ -10,7 +10,7 @@ Everyone has a different creative process and comfort level with technology. As 
 {% step %}
 ### Install Node.js
 
-Node has tools you'll need for Venus development. Installation is easy.&#x20;
+Node has tools you'll need for Venus development, including the npm package manager.
 
 <a href="https://nodejs.org/en/download" class="button primary">Install Node.js</a>
 {% endstep %}

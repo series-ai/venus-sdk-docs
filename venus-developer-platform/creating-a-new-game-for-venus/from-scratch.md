@@ -51,14 +51,14 @@ venus cursor init
 {% endstep %}
 
 {% step %}
-### Deploy your game to Venus
+### Verify that deployment works
 
-Once you have something you're proud to show off, simply run:
+Simply run:
 
 ```
 venus deploy
 ```
 
-This will return a shareable link, playable by anyone on web or in the Venus app.
+If everything is set up correectly, this will return a shareable link, playable by anyone on web or in the Venus app. This link will be unlisted, so don't worry about other people seeing this game on the Venus platform. To make it show in search results on Venus, see [publishing instructions](../venus-cli/deploying-your-game-to-venus.md).
 {% endstep %}
 {% endstepper %}

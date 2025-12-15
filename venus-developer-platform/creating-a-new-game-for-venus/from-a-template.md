@@ -79,6 +79,26 @@ This will fetch all of the libraries and install them to your project.&#x20;
 {% endstep %}
 
 {% step %}
+### Build the starter project
+
+Compile your game in preparation to deploy:
+
+```
+npm run build
+```
+{% endstep %}
+
+{% step %}
+### Deploy to Venus
+
+This will give you a link that you can open to verify that everything is working as intended.
+
+```
+venus deploy
+```
+{% endstep %}
+
+{% step %}
 ### Start coding
 
 If you're new to development, we suggest browsing [Cursor's documents,](https://cursor.com/docs) or finding some YouTube videos on vibe coding.

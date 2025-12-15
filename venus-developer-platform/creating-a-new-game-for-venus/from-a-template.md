@@ -46,7 +46,7 @@ To begin development, simply open the folder you unzipped above in your code edi
 {% endstep %}
 
 {% step %}
-### Initialize the code with Venus CLI
+### Initialize your game
 
 If you didn't already install the Venus CLI, [install it first.](../venus-cli/installing-the-venus-cli.md)
 
@@ -67,7 +67,7 @@ This will take you through a few basic steps that give your game a name, descrip
 {% endstep %}
 
 {% step %}
-### Add Cursor rules, if you're using Cursor
+### Add Cursor rules
 
 In your Terminal, type:
 
@@ -75,7 +75,7 @@ In your Terminal, type:
 venus cursor init
 ```
 
-This will instal
+This will allow Cursor to help you use the CLI and SDK. You can skip this step if you do not want to use Cursor.
 {% endstep %}
 
 {% step %}

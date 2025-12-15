@@ -49,4 +49,16 @@ We offer Cursor rules that help you and Cursor use the Venus CLI and SDK. They'r
 venus cursor init
 ```
 {% endstep %}
+
+{% step %}
+### Deploy your game to Venus
+
+Once you have something you're proud to show off, simply run:
+
+```
+venus deploy
+```
+
+This will return a shareable link, playable by anyone on web or in the Venus app.
+{% endstep %}
 {% endstepper %}

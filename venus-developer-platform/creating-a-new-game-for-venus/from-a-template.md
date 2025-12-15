@@ -1,5 +1,4 @@
 ---
-description: Creating a new game on Venus from a template
 icon: folder-open
 ---
 

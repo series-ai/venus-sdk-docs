@@ -2,12 +2,12 @@
 icon: glasses
 ---
 
-# Managing your game visibility
+# Managing your game's discoverability
 
 Your game can be:
 
 * **Public**: visible on the Venus **Explore** page
-* **Private**: hidden from Explore, but still accessible via OneLink
+* **Private**: hidden from Explore, but still accessible via OneLink. This lets you share your games with early testers or a limited audience without worrying about prying eyes.
 
 ## Make the latest version public
 

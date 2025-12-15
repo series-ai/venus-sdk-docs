@@ -9,7 +9,7 @@
     * [Log into Venus](venus-developer-platform/venus-cli/logging-into-venus-with-the-cli.md)
     * [Initialize your game](readme/venus-cli/initialize-your-game.md)
     * [Deploy your game to Venus](venus-developer-platform/venus-cli/deploying-your-game-to-venus.md)
-    * [Managing your game visibility](venus-developer-platform/venus-cli/managing-your-game-visibility.md)
+    * [Managing your game's discoverability](venus-developer-platform/venus-cli/managing-your-game-visibility.md)
     * [Troubleshooting](venus-developer-platform/venus-cli/troubleshooting.md)
   * [Venus SDK](venus-developer-platform/venus-sdk/README.md)
     * [Quickstart](venus-developer-platform/venus-sdk/quickstart.md)

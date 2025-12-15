@@ -1,5 +1,6 @@
 ---
 hidden: true
+icon: glasses
 ---
 
 # Managing your game visibility

@@ -1,3 +1,7 @@
+---
+icon: question
+---
+
 # SDK FAQ
 
 ## My assets aren't loading when I deploy to Venus. Why?

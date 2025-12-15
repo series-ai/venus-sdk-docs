@@ -1,3 +1,7 @@
+---
+icon: user
+---
+
 # Log into Venus
 
 You'll need to log into your Venus account to publish your game. From your Terminal, simply run:

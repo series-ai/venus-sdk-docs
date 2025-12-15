@@ -1,3 +1,7 @@
+---
+icon: circle-arrow-down
+---
+
 # Installation
 
 Installing the Venus CLI is simple. It works on any modern Mac, Windows, or Linux desktop machine.

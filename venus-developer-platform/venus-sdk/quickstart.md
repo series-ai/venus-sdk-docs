@@ -23,7 +23,7 @@ npm install @series-inc/venus-sdk@latest
 ```
 
 {% hint style="info" %}
-if you want to update the SDK version, you can run the same install commands to install latest.
+The SDK is updated frequently. To update it in your project, simply re-run the above command.
 {% endhint %}
 {% endstep %}
 {% endstepper %}

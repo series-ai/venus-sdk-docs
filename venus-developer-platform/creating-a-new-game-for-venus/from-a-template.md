@@ -1,6 +1,6 @@
 ---
 description: Creating a new game on Venus from a template
-icon: gamepad-modern
+icon: folder-open
 ---
 
 # Building from a template

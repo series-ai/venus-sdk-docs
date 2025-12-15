@@ -1,3 +1,7 @@
+---
+icon: wrench
+---
+
 # Initialize your game
 
 When you want to initialize your project to work with Venus, or if you want to make an existing Venus project publish to a new game (like if you wanted to fork a project), simply run:

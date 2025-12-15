@@ -1,3 +1,7 @@
+---
+icon: question
+---
+
 # Troubleshooting
 
 ## Common Issues

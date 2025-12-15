@@ -1,5 +1,6 @@
 ---
 description: Typical development workflow
+icon: cloud-arrow-up
 ---
 
 # Deploy your game to Venus

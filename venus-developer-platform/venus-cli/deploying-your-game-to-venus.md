@@ -28,7 +28,9 @@ Experienced developers: build your game any way you wish. You can optionally spe
 {% step %}
 ### Deploy!
 
-Next, run:
+You'll want to share your game early and often to get plenty of feedback. _**Deploy**_ means your game is playable by people who you share a link with, but it won't be shown on the platform to anyone, and won't be shown in search results on the platform. Think of a deployed game as "unlisted" by default.
+
+To deploy a build, run:
 
 ```
 venus deploy
@@ -38,9 +40,11 @@ When it's done deploying, the CLI will show you a link to your game. Share it wi
 {% endstep %}
 
 {% step %}
-### When ready, make your game public for everyone to find
+### Publish your game to make it show in seach results
 
-When you feel like your game's met a quality bar that you're proud of, you can make it show up on the Venus platform to everyone.  To do so, run:
+When you feel like your game's met a quality bar that you're proud of, you can make it show up in search results on the Venus platform, for everyone.
+
+To publish your game, run:
 
 ```
 venus deploy --public
@@ -49,6 +53,8 @@ venus deploy --public
 {% endstepper %}
 
 ## **Advanced options**
+
+**There are optional CLI paramters that give you fine control:**
 
 * `--game-id`: The game ID to deploy (reads from `game.config.json` if not provided)
 * `--build-path`: Path to your game's distribution/build folder

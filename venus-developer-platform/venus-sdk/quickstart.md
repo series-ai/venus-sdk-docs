@@ -4,7 +4,7 @@ icon: folder-arrow-down
 
 # Quickstart
 
-We offer the Venus SDK a convenient npm package.
+We offer the Venus SDK as a convenient npm package.
 
 {% stepper %}
 {% step %}

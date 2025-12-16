@@ -38,19 +38,74 @@ const rooms = await VenusAPI.rooms.getUserRoomsAsync({ includeArchived: false })
 ```typescript
 const roomData = await VenusAPI.rooms.getRoomDataAsync(room)
 
-await VenusAPI.rooms.updateRoomDataAsync(
-  room,
-  { turn: 2, currentPlayer: 'player_456' },
-  { merge: true },
-)
-
 await VenusAPI.rooms.sendRoomMessageAsync(room, {
   message: { type: 'chat', text: 'Good game!' },
   metadata: { timestamp: Date.now() },
 })
 ```
 
-Use room data for authoritative state (turn order, scores, board positions) and room messages for chat or lightweight event broadcasts.
+Room messages are for chat or lightweight event broadcasts.
+
+**Authoritative game flow (phase/turn order/current player)** is managed server-side under `room.customMetadata.rules`:
+- `room.customMetadata.rules.gameState.phase` is the canonical phase (`'waiting'` ~= lobby, `'playing'` in-game, `'ended'` complete).
+- `room.customMetadata.rules.hostProfileId` is the canonical “host/arbiter” identity (room creator).
+- For turn-based games, `room.customMetadata.rules.gameState` also contains `turnOrder`, `currentPlayer`, and `turnCount`.
+
+## Quickstart: Ready-up + Start Game (server-authoritative)
+
+The recommended multiplayer pattern is:
+- **Players** write intent via `proposeMoveAsync` (low-latency direct Firestore write via the host).
+- **Server** validates and updates authoritative state.
+- **Host/arbiter** (the room creator) coordinates a countdown and calls `startRoomGameAsync`.
+
+```typescript
+import type { VenusRoomPayload } from '@series-inc/venus-sdk/api'
+
+// 1) Create a room (phase begins as 'waiting' on the server)
+const room = await VenusAPI.rooms.createRoomAsync({
+  maxPlayers: 8,
+  gameType: 'bouncing_balls',
+  isPrivate: false,
+  name: 'Bouncing Balls',
+})
+
+// 2) Subscribe for authoritative updates
+let latestRoomSnapshot: VenusRoomPayload | null = null
+const unsubscribe = await VenusAPI.rooms.subscribeAsync(room, {
+  onData(event) {
+    latestRoomSnapshot = event.roomData
+  },
+})
+
+// 3) Each player "ready ups" by proposing a move.
+// Your server config must allow this moveType in the 'waiting' phase.
+await VenusAPI.rooms.proposeMoveAsync(room, {
+  moveType: 'player_ready',
+  gameSpecificState: {
+    ready: true,
+    readyAt: Date.now(),
+  },
+})
+
+// 4) Host/arbiter decides when to start.
+// The canonical host identity is server-set:
+const myProfileId = VenusAPI.getProfile().id
+const hostProfileId = latestRoomSnapshot?.customMetadata?.rules?.hostProfileId
+
+if (myProfileId === hostProfileId) {
+  // Example: when all players are ready, run a short countdown, then start.
+  // (Your readiness model lives in server-authoritative state; e.g. playerStates.*.ready)
+  const countdownMs = 3000
+  await new Promise((r) => setTimeout(r, countdownMs))
+
+  await VenusAPI.rooms.startRoomGameAsync(room, {
+    gameConfig: { countdownMs },
+  })
+}
+
+// Later...
+unsubscribe()
+```
 
 ## Real-Time Subscriptions
 
@@ -159,8 +214,10 @@ Rooms config is delivered by the host during `INIT_SDK`. You don’t read `Venus
 
 `VenusRoom` includes `id`, `players`, `maxPlayers`, `gameType`, `isPrivate`, `status`, `customMetadata`, `data`, timestamps, and admin IDs.
 
-- Mirror game state from `room.data`; avoid divergent local models.
-- Use `customMetadata` for lobby settings and `data` for live gameplay state.
+- Treat `customMetadata.rules.gameState` as the canonical game lifecycle state:
+  - Lobby vs in-game: `phase === 'waiting'` (lobby) vs `phase === 'playing'` (in-game).
+  - Turn-based fields: `turnOrder`, `currentPlayer`, `turnCount` (when applicable).
+- Treat `customMetadata.rules.hostProfileId` as the canonical room host/arbiter identity.
 - Always `unsubscribe()` and `leaveRoomAsync()` when a player exits to free slots.
 - Pair `proposeMoveAsync` and `validateMoveAsync` for peer-validated turn systems; fall back to authoritative arbitration on the server when needed.
 

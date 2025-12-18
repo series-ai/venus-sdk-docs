@@ -91,19 +91,13 @@ You can always manually download and install the Venus CLI [here](https://github
 
 ## Updating the Venus CLI
 
-We'll be shipping improved versions of the Venus CLI frequently, so you'll want to keep it up to date.&#x20;
+We'll be shipping improved versions of the Venus CLI frequently, so you'll want to keep it up to date. When you use the CLI, it will alert you when there is a new version available for installation.
 
-{% hint style="info" %}
-The CLI automatically checks for updates any time you run a command, and will let you know when it needs an update.
-{% endhint %}
-
-To update Venus CLI manually, go to your Terminal and type:
+To update the Venus CLI to the latest version, go to your Terminal and type:
 
 ```powershell
 venus update
 ```
-
-
 
 
 

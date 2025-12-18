@@ -99,6 +99,8 @@ To update the Venus CLI to the latest version, go to your Terminal and type:
 venus update
 ```
 
+## Build a new game for Venus
 
+Now that you have the Venus CLI installed, you're all set to [build a new game for Venus](../creating-a-new-game-for-venus/).&#x20;
 
 {% include "../../.gitbook/includes/cli-troubleshooting.md" %}

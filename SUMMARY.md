@@ -28,6 +28,7 @@
       * [Logging API](venus-developer-platform/venus-sdk/api/LOGGING.md)
       * [Notifications API](venus-developer-platform/venus-sdk/api/NOTIFICATIONS.md)
       * [Numbers API](venus-developer-platform/venus-sdk/api/NUMBERS.md)
+      * [Popups API](readme/venus-sdk/api/popups.md)
       * [Preloader API](venus-developer-platform/venus-sdk/api/PRELOADER.md)
       * [Profiles API](venus-developer-platform/venus-sdk/api/PROFILE.md)
       * [Rooms API (BETA)](venus-developer-platform/venus-sdk/api/ROOMS.md)
@@ -40,5 +41,4 @@
       * [Unsupported APIs](readme/venus-sdk/api/unsupported-apis/README.md)
         * [Avatar 3D API](venus-developer-platform/venus-sdk/api/AVATAR3D.md)
         * [Navigation API](venus-developer-platform/venus-sdk/api/NAVIGATION.md)
-        * [Popups API](venus-developer-platform/venus-sdk/api/POPUPS.md)
     * [Troubleshooting](venus-developer-platform/venus-sdk/troubleshooting.md)

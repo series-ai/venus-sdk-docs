@@ -4,11 +4,9 @@ The Social API stores shared content and creates launch parameters. Recipients c
 
 Here are some examples for what you might use it for:
 
-* Store a user-created level and share a link to it, allowing anyone to play it.
+* Store a user-created level and share a link to it, allowing anyone to play it
 * Generate a challenge, like "Can you beat my score?"
-* Generate a QR code so that in-person content sharing can happen.
-
-Kick off share flows, generate challenge links, and create QR codes for in-person experiences.&#x20;
+* Generate a QR code for in-person content sharing.]
 
 ## Quick Start
 

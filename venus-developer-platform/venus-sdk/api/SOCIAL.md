@@ -66,7 +66,7 @@ if (launchParams.challengeType === 'highscore') {
 }
 ```
 
-Launch parameters are fully custom. Define the schema your game needs (`challengeType`, `dailyPuzzleId`, `referredBy`, etc.) and decode when the experience boots. For example, say you have a game where users can share user-generated content with one another in the form of custom levels.
+Launch parameters are fully custom. Define the schema your game needs (`challengeType`, `dailyPuzzleId`, `referredBy`, etc.) and decode when the experience boots. For example, say you have a game where users can share user-generated content with one another in the form of custom levels. Here is how you might handle share links
 
 ```typescript
 const onShare = async (levelData, levelName) => {

@@ -1,6 +1,14 @@
-# Venus Social API
+# Social API
 
-Kick off share flows, generate challenge links, and create QR codes for in-person experiences. The Social API packages launch parameters so recipients jump straight into your content.
+The Social API stores shared content and creates launch parameters. Recipients can jump straight into your content.
+
+Here are some examples for what you might use it for:
+
+* Store a user-created level and share a link to it, allowing anyone to play it.
+* Generate a challenge, like "Can you beat my score?"
+* Generate a QR code so that in-person content sharing can happen.
+
+Kick off share flows, generate challenge links, and create QR codes for in-person experiences.&#x20;
 
 ## Quick Start
 
@@ -62,15 +70,14 @@ Launch parameters are fully custom. Define the schema your game needs (`challeng
 
 ## Payload Guidelines
 
-- Keep `launchParams` under ~100 KB (share payloads are stored in Firestore with 1 MB document caps).
-- Use compact identifiers (IDs, short strings) and fetch bulky data from your backend.
-- Sanitize user-provided metadata before sharing publicly.
-- Fallback when social APIs are unavailable (desktop browsers without share support).
+* Keep `launchParams` under \~100 KB (share payloads are stored in Firestore with 1 MB document caps).
+* Use compact identifiers (IDs, short strings) and fetch bulky data from your backend.
+* Sanitize user-provided metadata before sharing publicly.
+* Fallback when social APIs are unavailable (desktop browsers without share support).
 
 ## Best Practices
 
-- Use `shareLinkAsync` for instant share sheets; reserve `createQRCodeAsync` for in-person or kiosk flows.
-- Inspect `VenusAPI.getLaunchParams()` on boot and branch gameplay early—players expect to land in the invited context immediately.
-- Reward referrers only after validating signatures or payloads on your backend to prevent spoofing.
-- Provide manual copy buttons for desktop browsers without native sharing.
-
+* Use `shareLinkAsync` for instant share sheets; reserve `createQRCodeAsync` for in-person or kiosk flows.
+* Inspect `VenusAPI.getLaunchParams()` on boot and branch gameplay early—players expect to land in the invited context immediately.
+* Reward referrers only after validating signatures or payloads on your backend to prevent spoofing.
+* Provide manual copy buttons for desktop browsers without native sharing.

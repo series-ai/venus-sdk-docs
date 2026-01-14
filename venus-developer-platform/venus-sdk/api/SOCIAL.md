@@ -6,7 +6,7 @@ Here are some examples for what you might use it for:
 
 * Store a user-created level and share a link to it, allowing anyone to play it
 * Generate a challenge, like "Can you beat my score?"
-* Generate a QR code for in-person content sharing.]
+* Generate a QR code for in-person content sharing.
 
 ## Quick Start
 
@@ -55,16 +55,39 @@ document.querySelector('#qr').src = qrCode
 
 `createQRCodeAsync` only returns data—display or share the image yourself. Pair it with an on-screen `<img>` element, print asset, or custom UI element.
 
-## Handling Launch Params
+## Interpreting Share Links on Game Start
+
+The data stored when creating a share link get passed to your game as launch parameters. You can load the data back into your game from a share link by accessing the launch parameters like so:
 
 ```typescript
 const launchParams = VenusAPI.getLaunchParams()
 if (launchParams.challengeType === 'highscore') {
-  startHighScoreChallenge(parseInt(launchParams.scoreToBeat, 10))
+  startHighScoreChallenge(parseInt(launchParams.scoreToBeat, launchParams.challengerId, 10))
 }
 ```
 
-Launch parameters are fully custom. Define the schema your game needs (`challengeType`, `dailyPuzzleId`, `referredBy`, etc.) and decode when the experience boots.
+Launch parameters are fully custom. Define the schema your game needs (`challengeType`, `dailyPuzzleId`, `referredBy`, etc.) and decode when the experience boots. For example, say you have a game where users can share user-generated content with one another in the form of custom levels. Here is how you might handle share links
+
+```typescript
+const onShare = async (levelData, levelName) => {
+  const { shareUrl } = await VenusAPI.social.shareLinkAsync({
+    launchParams: {
+      levelData: levelData,
+      levelName: levelName
+    },
+  })
+  return shareUrl
+}
+
+const onLaunch = () => {
+  const launchParams = VenusAPI.getLaunchParams()
+  if (Object.keys(launchParams).includes('levelData')) {
+    loadLevel(launchParams.levelData, launchParams.levelName)
+  } else {
+    loadBlankLevel()
+  }
+}
+```
 
 ## Payload Guidelines
 

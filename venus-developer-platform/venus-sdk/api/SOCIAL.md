@@ -6,7 +6,7 @@ Here are some examples for what you might use it for:
 
 * Store a user-created level and share a link to it, allowing anyone to play it
 * Generate a challenge, like "Can you beat my score?"
-* Generate a QR code for in-person content sharing.]
+* Generate a QR code for in-person content sharing.
 
 ## Quick Start
 
@@ -55,7 +55,7 @@ document.querySelector('#qr').src = qrCode
 
 `createQRCodeAsync` only returns data—display or share the image yourself. Pair it with an on-screen `<img>` element, print asset, or custom UI element.
 
-## Interpretting Share Links on Game Start
+## Interpreting Share Links on Game Start
 
 The data stored when creating a share link get passed to your game as launch parameters. You can load the data back into your game from a share link by accessing the launch parameters like so:
 

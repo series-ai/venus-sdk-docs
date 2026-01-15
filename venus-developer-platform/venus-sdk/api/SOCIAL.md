@@ -1,6 +1,6 @@
 # Social API
 
-The Social API stores shared content and creates launch parameters. Recipients can jump straight into your content.
+Store shared content and creates share parameters. Recipients can jump straight into your content.
 
 Here are some examples for what you might use it for:
 
@@ -14,7 +14,7 @@ Here are some examples for what you might use it for:
 import VenusAPI from '@series-inc/venus-sdk/api'
 
 const { shareUrl } = await VenusAPI.social.shareLinkAsync({
-  launchParams: {
+  shareParams: {
     challengeType: 'highscore',
     scoreToBeat: '1500',
     challengerId: VenusAPI.getProfile().id,
@@ -35,7 +35,7 @@ console.log('Shared link:', shareUrl)
 
 ```typescript
 const { qrCode } = await VenusAPI.social.createQRCodeAsync({
-  launchParams: {
+  shareParams: {
     challengeType: 'daily',
     dailyPuzzleId: '2024-11-04',
   },
@@ -55,14 +55,14 @@ document.querySelector('#qr').src = qrCode
 
 `createQRCodeAsync` only returns data—display or share the image yourself. Pair it with an on-screen `<img>` element, print asset, or custom UI element.
 
-## Interpreting Share Links on Game Start
+## Interpreting shareParams on Game Start
 
-The data stored when creating a share link get passed to your game as launch parameters. You can load the data back into your game from a share link by accessing the launch parameters like so:
+The data stored when creating a share link get passed to your game as share parameters in the [context](CONTEXT.md). You can load the data back into your game from a share link by accessing the share parameters like so:
 
 ```typescript
-const launchParams = VenusAPI.getLaunchParams()
-if (launchParams.challengeType === 'highscore') {
-  startHighScoreChallenge(parseInt(launchParams.scoreToBeat, launchParams.challengerId, 10))
+const shareParams = VenusAPI.context.shareParams
+if (shareParams.challengeType === 'highscore') {
+  startHighScoreChallenge(parseInt(shareParams.scoreToBeat, shareParams.challengerId, 10))
 }
 ```
 
@@ -71,7 +71,7 @@ Launch parameters are fully custom. Define the schema your game needs (`challeng
 ```typescript
 const onShare = async (levelData, levelName) => {
   const { shareUrl } = await VenusAPI.social.shareLinkAsync({
-    launchParams: {
+    shareParams: {
       levelData: levelData,
       levelName: levelName
     },
@@ -80,9 +80,9 @@ const onShare = async (levelData, levelName) => {
 }
 
 const onLaunch = () => {
-  const launchParams = VenusAPI.getLaunchParams()
-  if (Object.keys(launchParams).includes('levelData')) {
-    loadLevel(launchParams.levelData, launchParams.levelName)
+  const shareParams = VenusAPI.context.shareParams
+  if (Object.keys(shareParams).includes('levelData')) {
+    loadLevel(shareParams.levelData, shareParams.levelName)
   } else {
     loadBlankLevel()
   }
@@ -91,7 +91,7 @@ const onLaunch = () => {
 
 ## Payload Guidelines
 
-* Keep `launchParams` under \~100 KB (share payloads are stored in Firestore with 1 MB document caps).
+* Keep `shareParams` under \~100 KB (share payloads are stored in Firestore with 1 MB document caps).
 * Use compact identifiers (IDs, short strings) and fetch bulky data from your backend.
 * Sanitize user-provided metadata before sharing publicly.
 * Fallback when social APIs are unavailable (desktop browsers without share support).
@@ -99,6 +99,6 @@ const onLaunch = () => {
 ## Best Practices
 
 * Use `shareLinkAsync` for instant share sheets; reserve `createQRCodeAsync` for in-person or kiosk flows.
-* Inspect `VenusAPI.getLaunchParams()` on boot and branch gameplay early—players expect to land in the invited context immediately.
+* Inspect `VenusAPI.context.shareParams` on boot and branch gameplay early—players expect to land in the invited context immediately.
 * Reward referrers only after validating signatures or payloads on your backend to prevent spoofing.
 * Provide manual copy buttons for desktop browsers without native sharing.

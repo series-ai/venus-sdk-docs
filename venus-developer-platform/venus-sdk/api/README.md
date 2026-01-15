@@ -16,6 +16,7 @@ You'll find here the list of API modules, the description of what each API does 
 | [Analytics](ANALYTICS.md)                         | Record gameplay telemetry, funnel steps, and user properties.                                         |
 | [Asset Loader](ASSET_LOADER.md)                   | Load, preload, and clean up assets with WebView-aware optimizations.                                  |
 | [CDN](CDN.md)                                     | Fetch CDN-backed content and handle platform caching.                                                 |
+| [Context](CONTEXT.md)                             | Exposes data passed to the game about the context (launch and share params)                           |
 | [Embedded Libraries](EMBEDDED_LIBRARIES.md)       | Load and manage embedded libraries shipped by the host.                                               |
 | [Features](FEATURES.md)                           | Toggle experiences, run experiments, and gate functionality with feature flags.                       |
 | [Haptics](HAPTICS.md)                             | Trigger haptics feedback.                                                                             |

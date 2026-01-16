@@ -13,7 +13,7 @@ Venus CLI supports authentication via environment variables.&#x20;
 You can find your authentication refresh token on Mac/Linux at:
 
 ```
-~/.venus/prod.session.json
+~/.venus/<env_name>.session.json
 ```
 
 On Windows, you can find it at:

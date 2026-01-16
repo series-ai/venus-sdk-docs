@@ -11,7 +11,7 @@
     * [Deploy your game to Venus](venus-developer-platform/venus-cli/deploying-your-game-to-venus.md)
     * [Managing your game's discoverability](venus-developer-platform/venus-cli/managing-your-game-visibility.md)
     * [Troubleshooting](venus-developer-platform/venus-cli/troubleshooting.md)
-    * [Venus CLI - CI/CD Pipeline Guide](readme/venus-cli/venus-cli-ci-cd-pipeline-guide.md)
+    * [CI/CD Pipeline Guide](readme/venus-cli/ci-cd-pipeline-guide.md)
   * [Venus SDK](venus-developer-platform/venus-sdk/README.md)
     * [Quickstart](venus-developer-platform/venus-sdk/quickstart.md)
     * [API](venus-developer-platform/venus-sdk/api/README.md)

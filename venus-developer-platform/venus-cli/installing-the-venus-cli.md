@@ -104,7 +104,7 @@ We'll be shipping improved versions of the RUN.game CLI frequently, so you'll wa
 To update the RUN.game CLI to the latest version, go to your Terminal and type:
 
 ```powershell
-venus update
+rundot update
 ```
 
 ## Build a new game for RUN.game

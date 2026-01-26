@@ -1,26 +1,26 @@
-# Venus Time API
+#  Time API
 
-Sync with Venus server time, format timestamps with localized options, and compute future times without relying on client clocks.
+Sync with  server time, format timestamps with localized options, and compute future times without relying on client clocks.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const serverTime = await VenusAPI.time.requestTimeAsync()
+const serverTime = await RundotGameAPI.time.requestTimeAsync()
 console.log(serverTime.serverTime, serverTime.timezoneOffset)
 ```
 
 ## Formatting Helpers
 
 ```typescript
-const formatted = VenusAPI.time.formatTime(Date.now(), {
+const formatted = RundotGameAPI.time.formatTime(Date.now(), {
   dateStyle: 'full',
   timeStyle: 'medium',
   hour12: true,
 })
 
-const formattedNumber = VenusAPI.time.formatNumber(1234567.89, {
+const formattedNumber = RundotGameAPI.time.formatNumber(1234567.89, {
   style: 'currency',
   currency: 'USD',
   minimumFractionDigits: 2,
@@ -31,7 +31,7 @@ const formattedNumber = VenusAPI.time.formatNumber(1234567.89, {
 ## Future Calculations
 
 ```typescript
-const futureTime = await VenusAPI.time.getFutureTimeAsync({
+const futureTime = await RundotGameAPI.time.getFutureTimeAsync({
   days: 1,
   hours: 2,
   minutes: 30,

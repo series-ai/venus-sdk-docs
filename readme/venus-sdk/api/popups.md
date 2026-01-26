@@ -1,13 +1,13 @@
-# Venus Toast API
+# RUN.game Toast API
 
-Use Venus to display lightweight toast notifications without building custom UI per platform.
+Use RUN.game to display lightweight toast notifications without building custom UI per platform.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const actionTriggered = await VenusAPI.popups.showToast('Progress saved!', {
+const actionTriggered = await RundotGameAPI.popups.showToast('Progress saved!', {
   duration: 3000,
   variant: 'success',
   action: { label: 'Undo' },

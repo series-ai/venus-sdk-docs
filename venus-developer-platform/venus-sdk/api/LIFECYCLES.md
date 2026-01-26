@@ -1,9 +1,9 @@
-# Venus Lifecycles API
+#  Lifecycles API
 
-The host controls when your game is active, paused, or torn down. `VenusAPI.lifecycles` exposes five hooks so your app can react to those state changes:
+The host controls when your game is active, paused, or torn down. `RundotGameAPI.lifecycles` exposes five hooks so your app can react to those state changes:
 
 ```
-Import VenusAPI
+Import RundotGameAPI
      │
      ▼
 Ready (implicit once module import resolves)
@@ -21,9 +21,9 @@ Ready (implicit once module import resolves)
 
 1. Import the SDK (it initializes automatically on import):
    ```typescript
-   import VenusAPI from '@series-inc/venus-sdk/api'
+   import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
    ```
-2. Register lifecycle callbacks on `VenusAPI.lifecycles`.
+2. Register lifecycle callbacks on `RundotGameAPI.lifecycles`.
 3. Hold onto the returned disposers if your app hot-reloads or swaps scenes.
 
 ## Event Reference
@@ -41,28 +41,28 @@ Each hook returns a `{ unsubscribe(): void }` handle. Call it if you need to det
 ## Implementation Example
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
 const disposers = [
-  VenusAPI.lifecycles.onPause(() => {
+  RundotGameAPI.lifecycles.onPause(() => {
     pauseGameLoop()
-    VenusAPI.log('[Lifecycle] paused')
+    RundotGameAPI.log('[Lifecycle] paused')
   }),
 
-  VenusAPI.lifecycles.onResume(() => {
+  RundotGameAPI.lifecycles.onResume(() => {
     resumeGameLoop()
-    VenusAPI.log('[Lifecycle] resumed')
+    RundotGameAPI.log('[Lifecycle] resumed')
   }),
 
-  VenusAPI.lifecycles.onSleep(() => {
+  RundotGameAPI.lifecycles.onSleep(() => {
     saveProgressSnapshot()
   }),
 
-  VenusAPI.lifecycles.onAwake(() => {
+  RundotGameAPI.lifecycles.onAwake(() => {
     refreshLiveServices()
   }),
 
-  VenusAPI.lifecycles.onQuit(async () => {
+  RundotGameAPI.lifecycles.onQuit(async () => {
     await flushTelemetry()
     await saveProgressSnapshot()
   }),
@@ -78,5 +78,5 @@ export function disposeLifecycleHandlers() {
 - **Keep handlers fast**: dispatch longer tasks to your own queues so the host isn’t blocked.
 - **Guard async work**: wrap awaits in try/catch—transitions can happen at any time.
 - **Persist aggressively on `onSleep`**: do not rely on `onQuit` always firing.
-- **Avoid deprecated names**: older docs referenced `VenusAPI.lifecycle` (singular) and `onShow`/`onPlay`; those APIs aren’t available in current SDK builds.
+- **Avoid deprecated names**: older docs referenced `RundotGameAPI.lifecycle` (singular) and `onShow`/`onPlay`; those APIs aren’t available in current SDK builds.
 

@@ -4,10 +4,11 @@ icon: folder-open
 
 # Building from a template
 
-Templates make it easy to get started building games on Venus. Currently, we have a few basic templates, but we'll offer more over time that give you a bigger head start in popular game genres.
+Templates make it easy to get started building games on RUN.game. Currently, we have a few basic templates, but we'll offer more over time that give you a bigger head start in popular game genres.
 
 {% stepper %}
 {% step %}
+
 ### Download a template
 
 2D games tend to be easier to build than 3D games. Our 2D template uses [Phaser](https://phaser.io/), which is a very powerful and easy to use 2D game engine.
@@ -28,17 +29,19 @@ Use our bare bones template if you want to explore 2D or 3D, without choosing on
 {% endstep %}
 
 {% step %}
+
 ### Unzip the template
 
 Unzip the template into any location you choose.
 {% endstep %}
 
 {% step %}
+
 ### Open the project in your favorite code editor
 
 Developers, we know that you are most productive when you're using your favorite tools. So, feel free to use any IDE that you prefer for development.
 
-We do recommend Cursor, and we use it ourselves to keep things moving fast. In the [Venus CLI docs](../venus-cli/), we will show how you can install Cursor rules into your project to make the CLI and SDK even easier to use. We think that Cursor's also the best choice for new developers who need help getting started and who are interested in using AI to write code.
+We do recommend Cursor, and we use it ourselves to keep things moving fast. In the [RUN.game CLI docs](../venus-cli/), we will show how you can install Cursor rules into your project to make the CLI and SDK even easier to use. We think that Cursor's also the best choice for new developers who need help getting started and who are interested in using AI to write code.
 
 <a href="https://www.cursor.com" class="button primary">Get Cursor</a>
 
@@ -46,32 +49,34 @@ To begin development, simply open the folder you unzipped above in your code edi
 {% endstep %}
 
 {% step %}
+
 ### Initialize your game
 
-If you didn't already install the Venus CLI, [install it first.](../venus-cli/installing-the-venus-cli.md)
+If you didn't already install the RUN.game CLI, [install it first.](../venus-cli/installing-the-venus-cli.md)
 
 Open a Terminal directly inside the editor and type:
 
-```
-venus init
+```bash
+rundot init
 ```
 
 If you prefer using your Terminal/Powershell outside of your IDE:
 
-```
+```bash
 cd <your project's root folder>
-venus init
+rundot init
 ```
 
-This will take you through a few basic steps that give your game a name, description, etc, for when it appears on the Venus platform.
+This will take you through a few basic steps that give your game a name, description, etc, for when it appears on the RUN.game platform.
 {% endstep %}
 
 {% step %}
+
 ### Install libraries
 
 To install all of the required libraries for your project, type:
 
-```
+```bash
 npm install
 ```
 
@@ -79,18 +84,20 @@ This will fetch all of the libraries and install them to your project.&#x20;
 {% endstep %}
 
 {% step %}
-### Deploy to Venus
+
+### Deploy to RUN.game
 
 This will give you a link that you can open to verify that everything is working as intended.
 
-```
+```bash
 npm run deploy
 ```
 
-If everything is set up correctly, this will build your game, upload the build to the platform, and then return a shareable link. The link is playable by anyone on web or in the Venus app. This link will be unlisted, so don't worry about other people finding this game on the Venus platform. To make it show in search results on Venus, see [publishing instructions](../venus-cli/deploying-your-game-to-venus.md).
+If everything is set up correctly, this will build your game, upload the build to the platform, and then return a shareable link. The link is playable by anyone on web or in the RUN.game app. This link will be unlisted, so don't worry about other people finding this game on the RUN.game platform. To make it show in search results on RUN.game, see [publishing instructions](../venus-cli/deploying-your-game-to-venus.md).
 {% endstep %}
 
 {% step %}
+
 ### Start coding
 
 If you're new to development, we suggest browsing [Cursor's documents,](https://cursor.com/docs) or finding some YouTube videos on vibe coding.

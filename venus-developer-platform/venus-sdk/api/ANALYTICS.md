@@ -1,19 +1,19 @@
-# Venus Analytics API
+#  Analytics API
 
-Record gameplay telemetry, funnel steps, and user properties directly through Venus. Events flow to the host analytics pipeline with consistent schema and automatic attribution.
+Record gameplay telemetry, funnel steps, and user properties directly through . Events flow to the host analytics pipeline with consistent schema and automatic attribution.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-await VenusAPI.analytics.logEvent('level_complete', {
+await RundotGameAPI.analytics.logEvent('level_complete', {
   level: 5,
   score: 1200,
   timeElapsed: 98,
 })
 
-await VenusAPI.analytics.setUserProperty('vip_status', 'gold')
+await RundotGameAPI.analytics.setUserProperty('vip_status', 'gold')
 ```
 
 ## Funnels & Custom Events
@@ -21,14 +21,14 @@ await VenusAPI.analytics.setUserProperty('vip_status', 'gold')
 - Track funnels with step numbers for precise drop-off reporting:
 
   ```typescript
-  await VenusAPI.analytics.trackFunnelStep(1, 'tutorial_start', 'onboarding')
-  await VenusAPI.analytics.trackFunnelStep(2, 'tutorial_complete', 'onboarding')
+  await RundotGameAPI.analytics.trackFunnelStep(1, 'tutorial_start', 'onboarding')
+  await RundotGameAPI.analytics.trackFunnelStep(2, 'tutorial_complete', 'onboarding')
   ```
 
 - Record custom events with payloads to capture deeper context:
 
   ```typescript
-  await VenusAPI.analytics.recordCustomEvent('boss_defeated', {
+  await RundotGameAPI.analytics.recordCustomEvent('boss_defeated', {
     bossId: 'dragon',
     attempts: 3,
     remainingHp: 12,
@@ -39,6 +39,6 @@ await VenusAPI.analytics.setUserProperty('vip_status', 'gold')
 
 - Keep event names stable and snake_case for easier querying.
 - Limit payload size; send identifiers for large objects instead of entire blobs.
-- Combine analytics with `VenusAPI.profile` data (id, username) for joined analysis without extra network calls.
+- Combine analytics with `RundotGameAPI.profile` data (id, username) for joined analysis without extra network calls.
 - Batch non-critical analytics behind `onPause` or `onSleep` to avoid mid-combat network churn.
 

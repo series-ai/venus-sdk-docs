@@ -1,16 +1,16 @@
-# Venus Rooms API (BETA)
+# RUN.game Rooms API (BETA)
 
-Build synchronous multiplayer sessions backed by the Venus Rooms service. Create or join rooms, stream updates in real time, and coordinate turn-based or free-form play.
+Build synchronous multiplayer sessions backed by the RUN.game Rooms service. Create or join rooms, stream updates in real time, and coordinate turn-based or free-form play.
 
-> ⚠️ Rooms only work inside the Venus host environment. Local mock mode throws helpful errors instead of simulating networking.
+> ⚠️ Rooms only work inside the RUN.game host environment. Local mock mode throws helpful errors instead of simulating networking.
 
 ## Creating & Joining Rooms
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
 // Create a room explicitly
-const createdRoom = await VenusAPI.rooms.createRoomAsync({
+const createdRoom = await RundotGameAPI.rooms.createRoomAsync({
   maxPlayers: 4,
   gameType: 'chess',
   isPrivate: false,
@@ -20,25 +20,25 @@ const createdRoom = await VenusAPI.rooms.createRoomAsync({
 })
 
 // Join or create via matchmaking defaults
-const result = await VenusAPI.rooms.joinOrCreateRoomAsync({
+const result = await RundotGameAPI.rooms.joinOrCreateRoomAsync({
   matchCriteria: { gameType: 'chess', hasSpace: true },
   createOptions: { maxPlayers: 2, name: 'Quick Match' },
 })
 // { action: 'joined' | 'created', room, playersJoined }
 
 // Join by invite code
-const room = await VenusAPI.rooms.joinRoomByCodeAsync('ABC123')
+const room = await RundotGameAPI.rooms.joinRoomByCodeAsync('ABC123')
 
 // List rooms you currently belong to
-const rooms = await VenusAPI.rooms.getUserRoomsAsync({ includeArchived: false })
+const rooms = await RundotGameAPI.rooms.getUserRoomsAsync({ includeArchived: false })
 ```
 
 ## Room Data & Messaging
 
 ```typescript
-const roomData = await VenusAPI.rooms.getRoomDataAsync(room)
+const roomData = await RundotGameAPI.rooms.getRoomDataAsync(room)
 
-await VenusAPI.rooms.sendRoomMessageAsync(room, {
+await RundotGameAPI.rooms.sendRoomMessageAsync(room, {
   message: { type: 'chat', text: 'Good game!' },
   metadata: { timestamp: Date.now() },
 })
@@ -47,6 +47,7 @@ await VenusAPI.rooms.sendRoomMessageAsync(room, {
 Room messages are for chat or lightweight event broadcasts.
 
 **Authoritative game flow (phase/turn order/current player)** is managed server-side under `room.customMetadata.rules`:
+
 - `room.customMetadata.rules.gameState.phase` is the canonical phase (`'waiting'` ~= lobby, `'playing'` in-game, `'ended'` complete).
 - `room.customMetadata.rules.hostProfileId` is the canonical “host/arbiter” identity (room creator).
 - For turn-based games, `room.customMetadata.rules.gameState` also contains `turnOrder`, `currentPlayer`, and `turnCount`.
@@ -54,15 +55,16 @@ Room messages are for chat or lightweight event broadcasts.
 ## Quickstart: Ready-up + Start Game (server-authoritative)
 
 The recommended multiplayer pattern is:
+
 - **Players** write intent via `proposeMoveAsync` (low-latency direct Firestore write via the host).
 - **Server** validates and updates authoritative state.
 - **Host/arbiter** (the room creator) coordinates a countdown and calls `startRoomGameAsync`.
 
 ```typescript
-import type { VenusRoomPayload } from '@series-inc/venus-sdk/api'
+import type { RundotGamesRoomPayload } from '@series-inc/rundot-game-sdk/api'
 
 // 1) Create a room (phase begins as 'waiting' on the server)
-const room = await VenusAPI.rooms.createRoomAsync({
+const room = await RundotGameAPI.rooms.createRoomAsync({
   maxPlayers: 8,
   gameType: 'bouncing_balls',
   isPrivate: false,
@@ -70,8 +72,8 @@ const room = await VenusAPI.rooms.createRoomAsync({
 })
 
 // 2) Subscribe for authoritative updates
-let latestRoomSnapshot: VenusRoomPayload | null = null
-const unsubscribe = await VenusAPI.rooms.subscribeAsync(room, {
+let latestRoomSnapshot: RundotGamesRoomPayload | null = null
+const unsubscribe = await RundotGameAPI.rooms.subscribeAsync(room, {
   onData(event) {
     latestRoomSnapshot = event.roomData
   },
@@ -79,7 +81,7 @@ const unsubscribe = await VenusAPI.rooms.subscribeAsync(room, {
 
 // 3) Each player "ready ups" by proposing a move.
 // Your server config must allow this moveType in the 'waiting' phase.
-await VenusAPI.rooms.proposeMoveAsync(room, {
+await RundotGameAPI.rooms.proposeMoveAsync(room, {
   moveType: 'player_ready',
   gameSpecificState: {
     ready: true,
@@ -89,7 +91,7 @@ await VenusAPI.rooms.proposeMoveAsync(room, {
 
 // 4) Host/arbiter decides when to start.
 // The canonical host identity is server-set:
-const myProfileId = VenusAPI.getProfile().id
+const myProfileId = RundotGameAPI.getProfile().id
 const hostProfileId = latestRoomSnapshot?.customMetadata?.rules?.hostProfileId
 
 if (myProfileId === hostProfileId) {
@@ -98,7 +100,7 @@ if (myProfileId === hostProfileId) {
   const countdownMs = 3000
   await new Promise((r) => setTimeout(r, countdownMs))
 
-  await VenusAPI.rooms.startRoomGameAsync(room, {
+  await RundotGameAPI.rooms.startRoomGameAsync(room, {
     gameConfig: { countdownMs },
   })
 }
@@ -110,7 +112,7 @@ unsubscribe()
 ## Real-Time Subscriptions
 
 ```typescript
-const unsubscribe = await VenusAPI.rooms.subscribeAsync(room, {
+const unsubscribe = await RundotGameAPI.rooms.subscribeAsync(room, {
   onData(event) {
     console.log('Room data updated:', event.roomData)
   },
@@ -123,7 +125,7 @@ const unsubscribe = await VenusAPI.rooms.subscribeAsync(room, {
 })
 
 // Leaving the room
-await VenusAPI.rooms.leaveRoomAsync(room)
+await RundotGameAPI.rooms.leaveRoomAsync(room)
 unsubscribe()
 ```
 
@@ -132,30 +134,31 @@ unsubscribe()
 ## Turn-Based Game Flow
 
 ```typescript
-await VenusAPI.rooms.startRoomGameAsync(room, {
+await RundotGameAPI.rooms.startRoomGameAsync(room, {
   gameConfig: { turnDuration: 30, roundLimit: 10 },
   turnOrder: ['player_1', 'player_2'],
 })
 
-const move = await VenusAPI.rooms.proposeMoveAsync(room, {
+const move = await RundotGameAPI.rooms.proposeMoveAsync(room, {
   gameSpecificState: { from: 'e2', to: 'e4' },
   moveType: 'piece_move',
   clientContext: { timestamp: Date.now() },
   clientProposalId: 'move_123',
 })
 
-await VenusAPI.rooms.validateMoveAsync(room, move.proposedMoveId, {
+await RundotGameAPI.rooms.validateMoveAsync(room, move.proposedMoveId, {
   isValid: true,
   reason: null,
-  validatorId: VenusAPI.getProfile().id,
+  validatorId: RundotGameAPI.getProfile().id,
 })
 ```
 
 ## Configuration
 
-Rooms config is delivered by the host during `INIT_SDK`. You don’t read `VenusAPI.config.rooms` directly—the SDK blocks that—and instead the Rooms APIs inject these defaults when you omit parameters.
+Rooms config is delivered by the host during `INIT_SDK`. You don’t read `RundotGameAPI.config.rooms` directly—the SDK blocks that—and instead the Rooms APIs inject these defaults when you omit parameters.
 
 ### Minimal config (single game type)
+
 ```json
 {
   "rooms": {
@@ -168,6 +171,7 @@ Rooms config is delivered by the host during `INIT_SDK`. You don’t read `Venus
 - Host matchmaking and creation defaults are applied when you omit options.
 
 ### Full config (advanced)
+
 ```json
 {
   "rooms": {
@@ -201,18 +205,20 @@ Rooms config is delivered by the host during `INIT_SDK`. You don’t read `Venus
 ```
 
 ### How the SDK applies this configuration
+
 - Matchmaking: `joinOrCreateRoomAsync` uses `matchmaking.defaultCriteria` and honors `enableAutoMatch` / `maxSearchResults` when you omit criteria.
 - Creation defaults: `createOptions` supply `gameType`, `maxPlayers`, and metadata when not provided in the call.
 - Private rooms: `privateMatchDefaults.createOptions` are layered on top of `createOptions`; `allowCustomCode` controls whether user-supplied `roomCode` values are accepted.
 - Rules/game type: `gameType` and optional `rulesPreset` are forwarded so the host can enforce rule sets without extra parameters.
 
 ### Notes
-- Configuration is host-provided; use `VenusAPI.rooms.*` methods and pass overrides only when needed.
+
+- Configuration is host-provided; use `RundotGameAPI.rooms.*` methods and pass overrides only when needed.
 - Per-call overrides take precedence over config defaults for that single call.
 
 ## Room Properties & Best Practices
 
-`VenusRoom` includes `id`, `players`, `maxPlayers`, `gameType`, `isPrivate`, `status`, `customMetadata`, `data`, timestamps, and admin IDs.
+`RundotGamesRoom` includes `id`, `players`, `maxPlayers`, `gameType`, `isPrivate`, `status`, `customMetadata`, `data`, timestamps, and admin IDs.
 
 - Treat `customMetadata.rules.gameState` as the canonical game lifecycle state:
   - Lobby vs in-game: `phase === 'waiting'` (lobby) vs `phase === 'playing'` (in-game).
@@ -220,4 +226,3 @@ Rooms config is delivered by the host during `INIT_SDK`. You don’t read `Venus
 - Treat `customMetadata.rules.hostProfileId` as the canonical room host/arbiter identity.
 - Always `unsubscribe()` and `leaveRoomAsync()` when a player exits to free slots.
 - Pair `proposeMoveAsync` and `validateMoveAsync` for peer-validated turn systems; fall back to authoritative arbitration on the server when needed.
-

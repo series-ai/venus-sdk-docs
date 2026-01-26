@@ -6,14 +6,14 @@ icon: circle-question
 
 #### "Session expired" or authentication errors
 
-* Run `venus login` to authenticate
-* If already logged in but it still fails, run `venus login --help` to see session-related options
+* Run `rundot login` to authenticate
+* If already logged in but it still fails, run `rundot login --help` to see session-related options
 * Your session is automatically refreshed, but if you encounter issues, re-login
 
 #### "Failed to upload file" error
 
 * Check your internet connection
-* Ensure you're logged in with `venus login`
+* Ensure you're logged in with `rundot login`
 * Verify the game build folder exists and is not empty
 
 #### "Game dist folder does not exist" error
@@ -25,14 +25,14 @@ icon: circle-question
 #### "Unable to load game config" error
 
 * Make sure you're running the command from your project root (where you initialized the game)
-* If the CLI can’t find your game/build info automatically, run `venus deploy --help` (or `venus game upload-build --help`) to see what you can pass explicitly
+* If the CLI can’t find your game/build info automatically, run `rundot deploy --help` (or `rundot game upload-build --help`) to see what you can pass explicitly
 * If you have a local game config file, verify it is valid JSON and matches your current project
 
 #### "Game not found" or "Game has no version" error
 
-* Ensure you've created the game using `venus init` (or `venus game create`) first
+* Ensure you've created the game using `rundot init` (or `rundot game create`) first
 * Verify the game ID you're using is correct (see `--help` for the command you’re running)
-* Make sure you've created at least one version using `venus deploy` (or `venus game upload-build`) before setting it public
+* Make sure you've created at least one version using `rundot deploy` (or `rundot game upload-build`) before setting it public
 
 #### Version conflicts
 
@@ -50,8 +50,8 @@ icon: circle-question
 #### Getting Help
 
 * If you're ever stuck or can't find what you need here, ask the lovely humans in our Discord. We're a pretty friendly bunch of people who love making cool new things, too.
-* Check the command help `venus --help`
-* check specific command help: `venus <command> --help`
-  * e.g., `venus login --help`, `venus init --help`, `venus deploy --help`, `venus game --help`
-* Make sure you're on the latest version by running `venus update`
-* Check the [GitHub releases](https://github.com/Zee-Series-AI/venus_cli_releases/releases) for changelogs and known issues
+* Check the command help `rundot --help`
+* check specific command help: `rundot <command> --help`
+  * e.g., `rundot login --help`, `rundot init --help`, `rundot deploy --help`, `rundot game --help`
+* Make sure you're on the latest version by running `rundot update`
+* Check the [GitHub releases](https://github.com/series-inc/rundot_cli_releases/releases) for changelogs and known issues

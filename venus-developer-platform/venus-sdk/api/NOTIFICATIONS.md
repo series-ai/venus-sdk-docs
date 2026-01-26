@@ -1,22 +1,22 @@
-# Venus Local Notifications API
+#  Local Notifications API
 
-Schedule reminders, re-engagement prompts, and timed events across devices using Venus local notifications. The host persists schedules and surfaces alerts even when your game is suspended.
+Schedule reminders, re-engagement prompts, and timed events across devices using  local notifications. The host persists schedules and surfaces alerts even when your game is suspended.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
 // Minimal schedule
-const id = await VenusAPI.notifications.scheduleAsync(
+const id = await RundotGameAPI.notifications.scheduleAsync(
   'Daily Reward Ready',
   'Come back to claim your chest!',
   60 * 60, // fire in one hour
 )
 
 // Manage lifecycle
-await VenusAPI.notifications.cancelNotification(id)
-const pending = await VenusAPI.notifications.getAllScheduledLocalNotifications()
+await RundotGameAPI.notifications.cancelNotification(id)
+const pending = await RundotGameAPI.notifications.getAllScheduledLocalNotifications()
 ```
 
 ## Advanced Scheduling

@@ -1,22 +1,22 @@
-# Venus Haptics API
+#  Haptics API
 
-Trigger tactile feedback across supported devices without worrying about platform differences. Venus normalizes style names and falls back gracefully when hardware lacks vibration support.
+Trigger tactile feedback across supported devices without worrying about platform differences.  normalizes style names and falls back gracefully when hardware lacks vibration support.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI, { HapticFeedbackStyle } from '@series-inc/venus-sdk/api'
+import RundotGameAPI, { HapticFeedbackStyle } from '@series-inc/rundot-game-sdk/api'
 
-await VenusAPI.triggerHapticAsync(HapticFeedbackStyle.Success)
-await VenusAPI.triggerHapticAsync(HapticFeedbackStyle.Warning)
-await VenusAPI.triggerHapticAsync(HapticFeedbackStyle.Heavy)
+await RundotGameAPI.triggerHapticAsync(HapticFeedbackStyle.Success)
+await RundotGameAPI.triggerHapticAsync(HapticFeedbackStyle.Warning)
+await RundotGameAPI.triggerHapticAsync(HapticFeedbackStyle.Heavy)
 ```
 
 `triggerHapticAsync` gracefully no-ops on hosts that lack vibration hardware, so you can call it defensively without extra guards.
 
 ## Supported Styles
 
-`triggerHapticAsync` only accepts the `HapticFeedbackStyle` enum exported from `@series-inc/venus-sdk/api`. Stick to the enum (or the equivalent string literal) to avoid typos.
+`triggerHapticAsync` only accepts the `HapticFeedbackStyle` enum exported from `@series-inc/rundot-game-sdk/api`. Stick to the enum (or the equivalent string literal) to avoid typos.
 
 | Style (`HapticFeedbackStyle`) | String literal | Typical use |
 | --- | --- | --- |
@@ -29,10 +29,10 @@ await VenusAPI.triggerHapticAsync(HapticFeedbackStyle.Heavy)
 
 ## Capability Detection
 
-Capability data lives on the device payload that Venus provides during the host handshake. Cache it once so you can tailor UI (for example, hide haptics toggles if unsupported).
+Capability data lives on the device payload that  provides during the host handshake. Cache it once so you can tailor UI (for example, hide haptics toggles if unsupported).
 
 ```typescript
-const { haptics } = VenusAPI.system.getDevice()
+const { haptics } = RundotGameAPI.system.getDevice()
 
 // Useful if you want to adjust UI, prompt the player, or log analytics.
 const supportsHaptics = haptics.supported && haptics.enabled
@@ -46,7 +46,7 @@ const supportsHaptics = haptics.supported && haptics.enabled
 
 ## Best Practices
 
-- Cache `VenusAPI.system.getDevice().haptics` to avoid repeated lookups and to understand if the host supports feedback.
+- Cache `RundotGameAPI.system.getDevice().haptics` to avoid repeated lookups and to understand if the host supports feedback.
 - Avoid spamming vibrations—respect rhythm and allow cooldowns so the experience stays premium.
 - Wrap calls in `try/catch`; some desktop browsers reject vibration promises.
 

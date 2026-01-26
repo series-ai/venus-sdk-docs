@@ -10,7 +10,7 @@ Submit scores directly without tokens:
 
 ```typescript
 // One call - no token needed!
-const result = await VenusAPI.leaderboard.submitScore({
+const result = await RundotGameAPI.leaderboard.submitScore({
   score: 1500,
   duration: 120,
   metadata: {
@@ -50,13 +50,13 @@ Add session validation for replay protection:
 
 ```typescript
 // Step 1: Create score token
-const scoreToken = await VenusAPI.leaderboard.createScoreToken()
+const scoreToken = await RundotGameAPI.leaderboard.createScoreToken()
 // Returns: { token, startTime, expiresAt, mode }
 
 // Step 2: Play game...
 
 // Step 3: Submit with token
-const result = await VenusAPI.leaderboard.submitScore({
+const result = await RundotGameAPI.leaderboard.submitScore({
   token: scoreToken.token,
   score: 1500,
   duration: 120
@@ -89,13 +89,13 @@ Add cryptographic tamper protection:
 
 ```typescript
 // Step 1: Create score token (sealing data included automatically if enabled)
-const scoreToken = await VenusAPI.leaderboard.createScoreToken()
+const scoreToken = await RundotGameAPI.leaderboard.createScoreToken()
 // Returns: { token, sealingNonce, sealingSecret, ... }
 
 // Step 2: Play game...
 
 // Step 3: Submit score - SDK auto-computes hash internally!
-const result = await VenusAPI.leaderboard.submitScore({
+const result = await RundotGameAPI.leaderboard.submitScore({
   token: scoreToken.token,
   score: 1500,
   duration: 120
@@ -131,20 +131,20 @@ All query methods work identically regardless of security mode:
 
 ```typescript
 // Get paginated scores
-const pagedScores = await VenusAPI.leaderboard.getPagedScores({
+const pagedScores = await RundotGameAPI.leaderboard.getPagedScores({
   limit: 50,
   cursor: nextCursor
 })
 
 // Get podium + player context
-const podiumScores = await VenusAPI.leaderboard.getPodiumScores({
+const podiumScores = await RundotGameAPI.leaderboard.getPodiumScores({
   topCount: 3,
   contextAhead: 4,
   contextBehind: 2
 })
 
 // Get my rank
-const rank = await VenusAPI.leaderboard.getMyRank()
+const rank = await RundotGameAPI.leaderboard.getMyRank()
 ```
 
 **Note:** Mode and period are automatically resolved from your config. For games with single mode/period, no need to specify them!
@@ -170,14 +170,14 @@ Config with multiple modes:
 Explicitly specify mode in submissions/queries:
 ```typescript
 // Submit to specific mode
-await VenusAPI.leaderboard.submitScore({
+await RundotGameAPI.leaderboard.submitScore({
   score: 1500,
   duration: 120,
   mode: 'competitive'  // Override default
 })
 
 // Query specific mode
-const scores = await VenusAPI.leaderboard.getPodiumScores({
+const scores = await RundotGameAPI.leaderboard.getPodiumScores({
   mode: 'competitive',
   topCount: 10
 })
@@ -186,7 +186,7 @@ const scores = await VenusAPI.leaderboard.getPodiumScores({
 Same pattern for periods:
 ```typescript
 // Query specific time period
-const dailyScores = await VenusAPI.leaderboard.getPagedScores({
+const dailyScores = await RundotGameAPI.leaderboard.getPagedScores({
   period: 'daily',
   limit: 50
 })

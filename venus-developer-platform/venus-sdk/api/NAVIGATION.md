@@ -1,23 +1,23 @@
-# Venus Navigation API
+#  Navigation API
 
-Use the stack navigation helpers when your game embeds other Venus experiences or needs to return control cleanly. The API mirrors traditional push/pop semantics with context passing.
+Use the stack navigation helpers when your game embeds other  experiences or needs to return control cleanly. The API mirrors traditional push/pop semantics with context passing.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-await VenusAPI.navigation.pushApp('bird-flap', {
+await RundotGameAPI.navigation.pushApp('bird-flap', {
   contextData: { level: 5, difficulty: 'hard' },
 })
 
-await VenusAPI.navigation.popApp()
+await RundotGameAPI.navigation.popApp()
 ```
 
 ## Stack Information
 
 ```typescript
-const stackInfo = VenusAPI.navigation.getStackInfo()
+const stackInfo = RundotGameAPI.navigation.getStackInfo()
 // { isInStack, stackPosition, isTopOfStack, stackDepth, parentInstanceId }
 ```
 

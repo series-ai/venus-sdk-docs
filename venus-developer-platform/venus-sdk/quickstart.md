@@ -4,7 +4,7 @@ icon: folder-arrow-down
 
 # Quickstart
 
-We offer the Venus SDK as a convenient npm package.
+We offer the  SDK as a convenient npm package.
 
 {% stepper %}
 {% step %}
@@ -21,7 +21,7 @@ We support Node.js 20.0 or higher.
 From the root folder of your project:
 
 ```shell
-npm install @series-inc/venus-sdk@latest
+npm install @series-inc/rundot-game-sdk@latest
 ```
 
 {% hint style="info" %}

@@ -1,13 +1,13 @@
-# Venus Features API
+#  Features API
 
-Toggle experiences, run experiments, and gate functionality using Venus feature flags and experiments. The API resolves host-managed settings so your game can adapt dynamically.
+Toggle experiences, run experiments, and gate functionality using  feature flags and experiments. The API resolves host-managed settings so your game can adapt dynamically.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const isNewUIEnabled = await VenusAPI.features.getFeatureFlag('new_ui_enabled')
+const isNewUIEnabled = await RundotGameAPI.features.getFeatureFlag('new_ui_enabled')
 if (isNewUIEnabled) {
   showNewInterface()
 }
@@ -16,9 +16,9 @@ if (isNewUIEnabled) {
 ## Gates & Experiments
 
 ```typescript
-const canAccessBeta = await VenusAPI.features.getFeatureGate('beta_features')
+const canAccessBeta = await RundotGameAPI.features.getFeatureGate('beta_features')
 
-const experiment = await VenusAPI.features.getExperiment('checkout_flow')
+const experiment = await RundotGameAPI.features.getExperiment('checkout_flow')
 if (experiment?.value === 'variant_b') {
   renderVariantB()
 }
@@ -28,5 +28,5 @@ if (experiment?.value === 'variant_b') {
 
 - Cache feature results locally and invalidate on lifecycle transitions if necessary.
 - Build fallbacks for disabled features—the host may roll flags off without notice.
-- Record exposure events via `VenusAPI.analytics` to measure feature impact.
+- Record exposure events via `RundotGameAPI.analytics` to measure feature impact.
 

@@ -2,6 +2,12 @@
 
 Fetch and manage assets through the Venus CDN. The SDK handles host configuration, versioning, and caching automatically so your assets load consistently across environments.
 
+## Why Use the CDN?
+
+1. **Larger Game Size**: It allows your game to exceed the 32 MB bundle size limit.
+2. **Efficient Updates**: It prevents you from having to re-upload large assets if they haven't changed.
+3. **Performance**: It improves initial load times by allowing you to defer loading assets until they are needed.
+
 ## Setting Up Your Assets
 
 Place any assets you want served via CDN in your project's `public/cdn-assets` folder. The Venus CLI automatically uploads these files when you deploy.

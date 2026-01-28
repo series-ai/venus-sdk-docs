@@ -39,6 +39,7 @@
       * [Social API](venus-developer-platform/venus-sdk/api/SOCIAL.md)
       * [Storage API](venus-developer-platform/venus-sdk/api/STORAGE.md)
       * [Time API](venus-developer-platform/venus-sdk/api/TIME.md)
+      * [UGC API (BETA)](venus-developer-platform/venus-sdk/api/UGC.md)
       * [Unsupported APIs](readme/venus-sdk/api/unsupported-apis/README.md)
         * [Avatar 3D API](venus-developer-platform/venus-sdk/api/AVATAR3D.md)
         * [Navigation API](venus-developer-platform/venus-sdk/api/NAVIGATION.md)

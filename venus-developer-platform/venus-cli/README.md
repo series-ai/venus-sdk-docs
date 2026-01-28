@@ -11,7 +11,7 @@ The  CLI ([command-line interface](https://en.wikipedia.org/wiki/Command-line_in
 
 You can use the  CLI manually, like any other CLI tool in your terminal. But we also provide Cursor rules that allow you to control it with natural language and an LLM.
 
-[How to install the  CLI.](installing-the-venus-cli.md)
+[How to install the CLI.](installing-the-venus-cli.md)
 
 ## Cursor can help you use the  CLI
 

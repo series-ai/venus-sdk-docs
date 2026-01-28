@@ -40,7 +40,7 @@ import React from 'react';
 npm run build
 
 # For standalone deployment (bundled libraries)
-VENUS_DISABLE_EMBEDDED_LIBS=true npm run build
+RUNDOT_DISABLE_EMBEDDED_LIBS=true npm run build
 ```
 
 ## Supported Libraries
@@ -59,10 +59,10 @@ VENUS_DISABLE_EMBEDDED_LIBS=true npm run build
 
 ### Build without embedded libraries
 
-If you want to bundle all libraries into your game, you can set the `VENUS_DISABLE_EMBEDDED_LIBS` environment variable to `true`.
+If you want to bundle all libraries into your game, you can set the `RUNDOT_DISABLE_EMBEDDED_LIBS` environment variable to `true`.
 
 ```bash
-VENUS_DISABLE_EMBEDDED_LIBS=true npm run build
+RUNDOT_DISABLE_EMBEDDED_LIBS=true npm run build
 ```
 
 This bundles all libraries (larger size, but guaranteed to work).

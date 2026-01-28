@@ -25,7 +25,7 @@ Linux users, you know where to find it. 😉
 Copy the following line:
 
 ```
-curl -fsSL https://github.com/series-ai/venus_cli_releases/releases/latest/download/install.sh | bash
+curl -fsSL https://github.com/series-ai/rundot-cli-releases/releases/latest/download/install.sh | bash
 ```
 
 Paste the line into the Terminal and press enter., then give it a few seconds to install.
@@ -71,7 +71,7 @@ If you've never opened PowerShell, it's easy. Tap the Start key to open the Star
 Copy the following line:
 
 ```powershell
-irm https://github.com/series-ai/venus_cli_releases/releases/latest/download/install.ps1 | iex
+irm https://github.com/series-ai/rundot-cli-releases/releases/latest/download/install.ps1 | iex
 ```
 
 Paste the line into the Terminal and press enter, then give it a few seconds to install.
@@ -95,7 +95,7 @@ If RUN.game CLI was installed successfully, you should see the list of available
 
 ## Manually installing the RUN.game CLI
 
-You can always manually download and install the RUN.game CLI [here](https://github.com/series-ai/venus_cli_releases).
+You can always manually download and install the RUN.game CLI [here](https://github.com/series-ai/rundot-cli-releases).
 
 ## Updating the RUN.game CLI
 

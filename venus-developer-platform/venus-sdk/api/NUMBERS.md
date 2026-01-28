@@ -1,13 +1,13 @@
-# Venus Numbers API
+#  Numbers API
 
 Handle exponential economies without losing precision. The numbers API wraps `break_eternity` and exposes helpers for normalization, formatting, and progression math tuned for idle or incremental games.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const numbers = VenusAPI.numbers
+const numbers = RundotGameAPI.numbers
 
 const currency = numbers.normalize('BE:1.23e9')
 const display = numbers.format.incremental(currency) // "1.23B"

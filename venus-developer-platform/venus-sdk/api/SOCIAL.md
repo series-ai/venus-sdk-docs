@@ -11,13 +11,13 @@ Here are some examples for what you might use it for:
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const { shareUrl } = await VenusAPI.social.shareLinkAsync({
+const { shareUrl } = await RundotGameAPI.social.shareLinkAsync({
   shareParams: {
     challengeType: 'highscore',
     scoreToBeat: '1500',
-    challengerId: VenusAPI.getProfile().id,
+    challengerId: RundotGameAPI.getProfile().id,
   },
   metadata: {
     title: 'Beat my score!',
@@ -34,7 +34,7 @@ console.log('Shared link:', shareUrl)
 ## QR Codes
 
 ```typescript
-const { qrCode } = await VenusAPI.social.createQRCodeAsync({
+const { qrCode } = await RundotGameAPI.social.createQRCodeAsync({
   shareParams: {
     challengeType: 'daily',
     dailyPuzzleId: '2024-11-04',
@@ -60,7 +60,7 @@ document.querySelector('#qr').src = qrCode
 The data stored when creating a share link get passed to your game as share parameters in the [context](CONTEXT.md). You can load the data back into your game from a share link by accessing the share parameters like so:
 
 ```typescript
-const shareParams = VenusAPI.context.shareParams
+const shareParams = RundotGameAPI.context.shareParams
 if (shareParams.challengeType === 'highscore') {
   startHighScoreChallenge(parseInt(shareParams.scoreToBeat, shareParams.challengerId, 10))
 }
@@ -70,7 +70,7 @@ Launch parameters are fully custom. Define the schema your game needs (`challeng
 
 ```typescript
 const onShare = async (levelData, levelName) => {
-  const { shareUrl } = await VenusAPI.social.shareLinkAsync({
+  const { shareUrl } = await RundotGameAPI.social.shareLinkAsync({
     shareParams: {
       levelData: levelData,
       levelName: levelName
@@ -80,7 +80,7 @@ const onShare = async (levelData, levelName) => {
 }
 
 const onLaunch = () => {
-  const shareParams = VenusAPI.context.shareParams
+  const shareParams = RundotGameAPI.context.shareParams
   if (Object.keys(shareParams).includes('levelData')) {
     loadLevel(shareParams.levelData, shareParams.levelName)
   } else {
@@ -99,6 +99,6 @@ const onLaunch = () => {
 ## Best Practices
 
 * Use `shareLinkAsync` for instant share sheets; reserve `createQRCodeAsync` for in-person or kiosk flows.
-* Inspect `VenusAPI.context.shareParams` on boot and branch gameplay early—players expect to land in the invited context immediately.
+* Inspect `RundotGameAPI.context.shareParams` on boot and branch gameplay early—players expect to land in the invited context immediately.
 * Reward referrers only after validating signatures or payloads on your backend to prevent spoofing.
 * Provide manual copy buttons for desktop browsers without native sharing.

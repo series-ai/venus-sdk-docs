@@ -3,19 +3,19 @@ description: Installation and usage instructions
 icon: cloud-word
 ---
 
-# Venus CLI
+#  CLI
 
-## What is the Venus CLI?
+## What is the  CLI?
 
-The Venus CLI ([command-line interface](https://en.wikipedia.org/wiki/Command-line_interface)) is what you'll use to administer your game and upload each new version of your game to the Venus platform. With just a single command, it can upload your game to Venus for anyone to play.
+The  CLI ([command-line interface](https://en.wikipedia.org/wiki/Command-line_interface)) is what you'll use to administer your game and upload each new version of your game to the  platform. With just a single command, it can upload your game to  for anyone to play.
 
-You can use the Venus CLI manually, like any other CLI tool in your terminal. But we also provide Cursor rules that allow you to control it with natural language and an LLM.
+You can use the  CLI manually, like any other CLI tool in your terminal. But we also provide Cursor rules that allow you to control it with natural language and an LLM.
 
-[How to install the Venus CLI.](installing-the-venus-cli.md)
+[How to install the  CLI.](installing-the-venus-cli.md)
 
-## Cursor can help you use the Venus CLI
+## Cursor can help you use the  CLI
 
-We supply Cursor rules that let you use an LLM to control the Venus CLI. Most, if not all, of the CLI's commands can be controlled with natural language in Cursor.
+We supply Cursor rules that let you use an LLM to control the  CLI. Most, if not all, of the CLI's commands can be controlled with natural language in Cursor.
 
 ## Getting help directly in the CLI
 

@@ -1,13 +1,13 @@
-# Venus Profile API
+#  Profile API
 
 Sync access to the active player's identity so you can personalize UI on first paint, gate features, or tag analytics without extra calls.
 
 ## Quick Start
 
 ```ts
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const profile = VenusAPI.getProfile()
+const profile = RundotGameAPI.getProfile()
 console.log(profile.id, profile.username)
 ```
 

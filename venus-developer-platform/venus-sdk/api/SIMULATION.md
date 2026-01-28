@@ -1,25 +1,25 @@
-# Venus Simulation API
+#  Simulation API
 
-Drive authoritative game state through the Venus simulation system. Execute recipes, manage inventories and slots, and resolve dynamic fields directly from the platform.
+Drive authoritative game state through the  simulation system. Execute recipes, manage inventories and slots, and resolve dynamic fields directly from the platform.
 
-> ⚠️ The Simulation API only runs inside the Venus host environment. Mock/test harnesses throw helpful errors when these methods are called locally.
+> ⚠️ The Simulation API only runs inside the  host environment. Mock/test harnesses throw helpful errors when these methods are called locally.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const state = await VenusAPI.simulation.getStateAsync()
-const config = await VenusAPI.simulation.getConfigAsync()
+const state = await RundotGameAPI.simulation.getStateAsync()
+const config = await RundotGameAPI.simulation.getConfigAsync()
 ```
 
 ## State Management
 
 ```typescript
-const personalState = await VenusAPI.simulation.getStateAsync()
-const roomState = await VenusAPI.simulation.getStateAsync('room_123')
+const personalState = await RundotGameAPI.simulation.getStateAsync()
+const roomState = await RundotGameAPI.simulation.getStateAsync('room_123')
 
-const config = await VenusAPI.simulation.getConfigAsync()
+const config = await RundotGameAPI.simulation.getConfigAsync()
 // { version, entities, recipes }
 ```
 
@@ -29,41 +29,41 @@ const config = await VenusAPI.simulation.getConfigAsync()
 
 ```typescript
 // Server-authoritative action
-const craft = await VenusAPI.simulation.executeRecipeAsync('craft_sword', {
+const craft = await RundotGameAPI.simulation.executeRecipeAsync('craft_sword', {
   materials: ['iron', 'wood'],
 })
 
 // Entity-scoped recipe
-const upgrade = await VenusAPI.simulation.executeScopedRecipeAsync(
+const upgrade = await RundotGameAPI.simulation.executeScopedRecipeAsync(
   'upgrade_weapon',
   'sword_123',
   { level: 5 },
 )
 
 // Track and collect runs
-const runs = await VenusAPI.simulation.getActiveRunsAsync()
-const collected = await VenusAPI.simulation.collectRecipeAsync(runs[0].id)
+const runs = await RundotGameAPI.simulation.getActiveRunsAsync()
+const collected = await RundotGameAPI.simulation.collectRecipeAsync(runs[0].id)
 
 // Trigger chained behaviour
-await VenusAPI.simulation.triggerRecipeChainAsync('battle_complete')
+await RundotGameAPI.simulation.triggerRecipeChainAsync('battle_complete')
 ```
 
 ## Recipe Requirements & Availability
 
 ```typescript
-const requirements = await VenusAPI.simulation.getRecipeRequirementsAsync(
+const requirements = await RundotGameAPI.simulation.getRecipeRequirementsAsync(
   'craft_sword',
   'player',
   1,
 )
 // { recipeId, entity, inputs, canAfford, disabled }
 
-const batch = await VenusAPI.simulation.getBatchRecipeRequirementsAsync([
+const batch = await RundotGameAPI.simulation.getBatchRecipeRequirementsAsync([
   { recipeId: 'craft_sword', batchAmount: 1 },
   { recipeId: 'craft_shield', batchAmount: 2 },
 ])
 
-const available = await VenusAPI.simulation.getAvailableRecipesAsync({
+const available = await RundotGameAPI.simulation.getAvailableRecipesAsync({
   roomId: 'room_123',
   includeActorRecipes: true,
 })
@@ -74,20 +74,20 @@ Use these helpers to pre-flight UI, disable unaffordable buttons, or build craft
 ## Slot Management
 
 ```typescript
-const containers = await VenusAPI.simulation.getSlotContainersAsync()
-const assignments = await VenusAPI.simulation.getSlotAssignmentsAsync('party_formation')
+const containers = await RundotGameAPI.simulation.getSlotContainersAsync()
+const assignments = await RundotGameAPI.simulation.getSlotAssignmentsAsync('party_formation')
 
-await VenusAPI.simulation.assignItemToSlotAsync('party_formation', 'leader', 'hero_knight')
-await VenusAPI.simulation.removeItemFromSlotAsync('party_formation', 'leader')
+await RundotGameAPI.simulation.assignItemToSlotAsync('party_formation', 'leader', 'hero_knight')
+await RundotGameAPI.simulation.removeItemFromSlotAsync('party_formation', 'leader')
 
-const available = await VenusAPI.simulation.getAvailableItemsAsync('party_formation', 'leader')
-const preview = await VenusAPI.simulation.calculatePowerPreviewAsync(
+const available = await RundotGameAPI.simulation.getAvailableItemsAsync('party_formation', 'leader')
+const preview = await RundotGameAPI.simulation.calculatePowerPreviewAsync(
   'party_formation',
   'leader',
   available[0].id,
 )
 
-await VenusAPI.simulation.executeBatchOperationsAsync(
+await RundotGameAPI.simulation.executeBatchOperationsAsync(
   [
     { type: 'assign', containerId: 'party_formation', slotId: 'leader', itemId: 'hero_knight' },
     { type: 'remove', containerId: 'party_formation', slotId: 'support' },
@@ -99,13 +99,13 @@ await VenusAPI.simulation.executeBatchOperationsAsync(
 ## Field Resolution & Metadata
 
 ```typescript
-const power = await VenusAPI.simulation.resolveFieldValueAsync(
+const power = await RundotGameAPI.simulation.resolveFieldValueAsync(
   'player_123',
   'stats.power',
   'player',
 )
 
-const metadata = await VenusAPI.simulation.getEntityMetadataAsync('sword_123')
+const metadata = await RundotGameAPI.simulation.getEntityMetadataAsync('sword_123')
 ```
 
 Use field resolution for derived stats (power, crit chance, etc.) and metadata lookups for UI tooltips or detail panes.
@@ -113,7 +113,7 @@ Use field resolution for derived stats (power, crit chance, etc.) and metadata l
 ## Real-Time Subscriptions (BETA)
 
 ```typescript
-const unsubscribe = await VenusAPI.simulation.subscribeAsync({
+const unsubscribe = await RundotGameAPI.simulation.subscribeAsync({
   entities: ['gold', 'energy'],
   tags: ['currency', 'contractor'],
   activeRuns: true,

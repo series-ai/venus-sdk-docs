@@ -1,6 +1,6 @@
-# Venus CDN API
+#  CDN API
 
-Fetch and manage assets through the Venus CDN. The SDK handles host configuration, versioning, and caching automatically so your assets load consistently across environments.
+Fetch and manage assets through the RUN.game CDN. The SDK handles host configuration, versioning, and caching automatically so your assets load consistently across environments.
 
 ## Why Use the CDN?
 
@@ -10,7 +10,7 @@ Fetch and manage assets through the Venus CDN. The SDK handles host configuratio
 
 ## Setting Up Your Assets
 
-Place any assets you want served via CDN in your project's `public/cdn-assets` folder. The Venus CLI automatically uploads these files when you deploy.
+Place any assets you want served via CDN in your project's `public/cdn-assets` folder. The RUN.game CLI automatically uploads these files when you deploy.
 
 ```
 my-game/
@@ -29,18 +29,18 @@ my-game/
 Use `fetchAsset` to load assets from your game's CDN. Paths are relative to the `cdn-assets` folder.
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
 // Fetch an image
-const imageBlob = await VenusAPI.cdn.fetchAsset('images/logo.png')
+const imageBlob = await RundotGameAPI.cdn.fetchAsset('images/logo.png')
 const imageUrl = URL.createObjectURL(imageBlob)
 
 // Fetch JSON data
-const dataBlob = await VenusAPI.cdn.fetchAsset('data/levels.json')
+const dataBlob = await RundotGameAPI.cdn.fetchAsset('data/levels.json')
 const levels = JSON.parse(await dataBlob.text())
 
 // Fetch with timeout (in milliseconds)
-const audioBlob = await VenusAPI.cdn.fetchAsset('audio/background.mp3', { timeout: 30000 })
+const audioBlob = await RundotGameAPI.cdn.fetchAsset('audio/background.mp3', { timeout: 30000 })
 ```
 
 ## URL Resolution
@@ -48,13 +48,13 @@ const audioBlob = await VenusAPI.cdn.fetchAsset('audio/background.mp3', { timeou
 If you need the raw URL instead of fetching directly, use `resolveAssetUrl`:
 
 ```typescript
-const assetUrl = VenusAPI.cdn.resolveAssetUrl('images/logo.png')
-const baseUrl = VenusAPI.cdn.getAssetCdnBaseUrl()
+const assetUrl = RundotGameAPI.cdn.resolveAssetUrl('images/logo.png')
+const baseUrl = RundotGameAPI.cdn.getAssetCdnBaseUrl()
 ```
 
 ## Versioning & Deployment
 
-Asset versioning is handled automatically by the Venus CLI:
+Asset versioning is handled automatically by the RUN.game CLI:
 
 - On each deploy, the CLI generates a manifest of your `cdn-assets` folder
 - Only files that have changed since the last deploy are uploaded

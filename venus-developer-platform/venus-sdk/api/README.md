@@ -28,7 +28,7 @@ You'll find here the list of API modules, the description of what each API does 
 | [Numbers](NUMBERS.md)                             | Handle exponential economies without losing precision.                                                |
 | [Preloader](PRELOADER.md)                         | Opt into and configure the host preloader.                                                            |
 | [Profile](PROFILE.md)                             | Access the current user profile.                                                                      |
-| [Rooms (BETA)](ROOMS.md)                          | Build synchronous multiplayer sessions backed by the Venus Rooms service.                             |
+| [Rooms (BETA)](ROOMS.md)                          | Build synchronous multiplayer sessions backed by the  Rooms service.                             |
 | [Safe Area](SAFE_AREA.md)                         | Read safe-area insets to avoid overlapping host UI.                                                   |
 | [Shared Assets](SHARED_ASSETS.md)                 | Download host-provisioned asset bundles shared across titles.                                         |
 | [Simulation (BETA)](SIMULATION.md)                | Drive authoritative game state through the simulation system.                                         |

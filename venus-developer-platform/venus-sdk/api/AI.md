@@ -1,13 +1,13 @@
 # Universal LLM API
 
-Call the Venus Universal LLM API to run hosted LLM models for chat, hints, or narrative beats without managing your own inference stack. The API supports multiple models and exposes simple request/response helpers.
+Call the  Universal LLM API to run hosted LLM models for chat, hints, or narrative beats without managing your own inference stack. The API supports multiple models and exposes simple request/response helpers.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const response = await VenusAPI.ai.requestChatCompletionAsync({
+const response = await RundotGameAPI.ai.requestChatCompletionAsync({
   model: 'gpt-4o-mini',
   messages: [
     { role: 'user', content: 'Give me a tip for this puzzle.' },
@@ -22,7 +22,7 @@ console.log(response.message)
 - List available models dynamically:
 
   ```typescript
-  const models = await VenusAPI.ai.getAvailableCompletionModels()
+  const models = await RundotGameAPI.ai.getAvailableCompletionModels()
   ```
 
 - Commonly available production models:

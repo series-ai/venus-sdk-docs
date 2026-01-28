@@ -4,10 +4,10 @@ icon: wrench
 
 # Initialize your game
 
-When you want to initialize your project to work with Venus, or if you want to make an existing Venus project publish to a new game (like if you wanted to fork a project), simply run:
+When you want to initialize your project to work with RUN.game, or if you want to make an existing RUN.game project publish to a new game (like if you wanted to fork a project), simply run:
 
 ```
-venus init
+rundot init
 ```
 
 This command will interactively walk you through the initalizaton process.
@@ -23,7 +23,7 @@ You can initialize any project at any time. If you have a existing game you've a
 You can bypass interactive mode and manually specify everything that initialization requires. To see options, run:
 
 ```
-venus init --help
+rundot init --help
 ```
 
 ## Under the hood

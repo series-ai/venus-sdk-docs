@@ -1,6 +1,6 @@
 # Ads API
 
-Use Venus ads to monetize with rewarded videos, interstitials, and availability checks that respect platform rate limits. The host manages presentation; your game just requests placements and reacts to the result.
+Use  ads to monetize with rewarded videos, interstitials, and availability checks that respect platform rate limits. The host manages presentation; your game just requests placements and reacts to the result.
 
 {% hint style="danger" %}
 Ads are not currently supported on Desktop. \
@@ -10,11 +10,11 @@ Calling the Ads API on Desktop will show a universal link to the mobile app.&#x2
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const isReady = await VenusAPI.ads.isRewardedAdReadyAsync()
+const isReady = await RundotGameAPI.ads.isRewardedAdReadyAsync()
 if (isReady) {
-  const rewarded = await VenusAPI.ads.showRewardedAdAsync()
+  const rewarded = await RundotGameAPI.ads.showRewardedAdAsync()
   if (rewarded) {
     grantReward()
   }
@@ -23,7 +23,7 @@ if (isReady) {
 
 ## Common Flows
 
-* **Interstitial breaks:** gate level transitions with `VenusAPI.ads.showInterstitialAd()` and resume gameplay when it resolves `true`.
+* **Interstitial breaks:** gate level transitions with `RundotGameAPI.ads.showInterstitialAd()` and resume gameplay when it resolves `true`.
 * **Reward previews:** disable earn buttons when `isRewardedAdReadyAsync()` returns `false` to avoid extra clicks.
 * **Cooldown UI:** show countdowns using host-provided availability and re-check before enabling the next view.
 

@@ -1,19 +1,19 @@
-# Venus Asset Loader API
+#  Asset Loader API
 
-Load, preload, and clean up assets with WebView-aware optimizations. Venus’ asset loader handles blob creation, streaming checks, and caching so you can focus on gameplay.
+Load, preload, and clean up assets with WebView-aware optimizations. ’ asset loader handles blob creation, streaming checks, and caching so you can focus on gameplay.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const iconUrl = await VenusAPI.loadAsset('images/icon.png')
+const iconUrl = await RundotGameAPI.loadAsset('images/icon.png')
 ```
 
 ## Preloading Bundles
 
 ```typescript
-await VenusAPI.preloadAssets(
+await RundotGameAPI.preloadAssets(
   [
     'audio/music.mp3',
     { url: 'video/intro.mp4', isOptional: true },
@@ -29,10 +29,10 @@ await VenusAPI.preloadAssets(
 ## Cache Management
 
 ```typescript
-const cached = VenusAPI.assetLoader?.getCached('images/icon.png')
+const cached = RundotGameAPI.assetLoader?.getCached('images/icon.png')
 
 // Release blob URLs when leaving a scene
-VenusAPI.cleanupAssets()
+RundotGameAPI.cleanupAssets()
 ```
 
 ## Best Practices

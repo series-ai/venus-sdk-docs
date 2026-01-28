@@ -1,6 +1,6 @@
 # Embedded Libraries
 
-Reduce your game's bundle size by using Venus embedded libraries. Supported libraries are automatically loaded from the Venus host instead of being bundled into your game.
+Reduce your game's bundle size by using  embedded libraries. Supported libraries are automatically loaded from the  host instead of being bundled into your game.
 
 ## Benefits
 
@@ -15,10 +15,10 @@ Reduce your game's bundle size by using Venus embedded libraries. Supported libr
 ```typescript
 // vite.config.ts
 import { defineConfig } from 'vite';
-import { venusLibrariesPlugin } from '@series-inc/venus-sdk/vite';
+import { rundotGameLibrariesPlugin } from '@series-inc/rundot-game-sdk/vite';
 
 export default defineConfig({
-  plugins: [venusLibrariesPlugin()],
+  plugins: [rundotGameLibrariesPlugin()],
   build: { target: 'es2022' } // Required for top-level await
 });
 ```
@@ -36,7 +36,7 @@ import React from 'react';
 ### 3. Build
 
 ```bash
-# For Venus deployment (embedded libraries)
+# For  deployment (embedded libraries)
 npm run build
 
 # For standalone deployment (bundled libraries)
@@ -69,5 +69,4 @@ This bundles all libraries (larger size, but guaranteed to work).
 
 ### Need a different library?
 
-Contact the Venus team to request additional libraries for the embedded system.
-
+Contact the  team to request additional libraries for the embedded system.

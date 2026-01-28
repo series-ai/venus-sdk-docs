@@ -1,15 +1,15 @@
-# Venus IAP API
+#  IAP API
 
-Integrate Venus-managed purchases for hard currency, consumables, and storefront actions. The SDK handles platform billing flows—your game just requests balances and initiates transactions.
+Integrate -managed purchases for hard currency, consumables, and storefront actions. The SDK handles platform billing flows—your game just requests balances and initiates transactions.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const balance = await VenusAPI.iap.getHardCurrencyBalance()
+const balance = await RundotGameAPI.iap.getHardCurrencyBalance()
 
-const purchase = await VenusAPI.iap.spendCurrency('bundle_sword', 1)
+const purchase = await RundotGameAPI.iap.spendCurrency('bundle_sword', 1)
 if (purchase.success) {
   unlockItem('bundle_sword')
 }
@@ -17,9 +17,9 @@ if (purchase.success) {
 
 ## Storefront Helpers
 
-- Launch the native storefront: `await VenusAPI.iap.openStore()`.
-- Fetch currency art for UI: `const icon = await VenusAPI.iap.getCurrencyIcon()`.
-- Combine with `VenusAPI.analytics` to attribute purchases by SKU.
+- Launch the native storefront: `await RundotGameAPI.iap.openStore()`.
+- Fetch currency art for UI: `const icon = await RundotGameAPI.iap.getCurrencyIcon()`.
+- Combine with `RundotGameAPI.analytics` to attribute purchases by SKU.
 
 ## Best Practices
 

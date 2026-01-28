@@ -10,10 +10,10 @@ Here are some examples for what you might use it for:
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const launchParams = await VenusAPI.context.launchParams
-const shareParams = await VenusAPI.context.shareParams
+const launchParams = await RundotGameAPI.context.launchParams
+const shareParams = await RundotGameAPI.context.shareParams
 
 console.log('Launch parameters:', launchParams)
 console.log('Share parameters:', shareParams)
@@ -27,5 +27,5 @@ console.log('Share parameters:', shareParams)
 
 ## Best Practices
 
-* Inspect `VenusAPI.context.launchParams` on boot to determine how you want your game to load early on.
-* Inspect `VenusAPI.context.shareParams` on boot and branch gameplay early. Players expect to land in the invited context immediately.
+* Inspect `RundotGameAPI.context.launchParams` on boot to determine how you want your game to load early on.
+* Inspect `RundotGameAPI.context.shareParams` on boot and branch gameplay early. Players expect to land in the invited context immediately.

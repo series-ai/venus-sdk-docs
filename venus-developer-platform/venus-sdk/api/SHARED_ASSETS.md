@@ -1,13 +1,13 @@
-# Venus Shared Assets API
+#  Shared Assets API
 
 Download host-provisioned asset bundles that are shared across titles or reused within your game. Shared assets reduce bundle size and keep large media up to date without shipping updates.
 
 ## Quick Start
 
 ```typescript
-import VenusAPI from '@series-inc/venus-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const bundleBuffer = await VenusAPI.sharedAssets.loadAssetsBundle(
+const bundleBuffer = await RundotGameAPI.sharedAssets.loadAssetsBundle(
   'burger-time',
   'CharacterAssets',
 )

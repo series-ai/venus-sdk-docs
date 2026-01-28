@@ -6,31 +6,31 @@ icon: glasses
 
 Your game can be:
 
-* **Public**: visible on the Venus **Explore** page
+* **Public**: visible on the RUN.game **Explore** page
 * **Private**: hidden from Explore, but still accessible via OneLink. This lets you share your games with early testers or a limited audience without worrying about prying eyes.
 
 ## Make the latest version public
 
 ```shellscript
-venus game set-public --version latest
+rundot game set-public --version latest
 ```
 
 To see all options (game id, environment, version selection), run:
 
 ```shellscript
-venus game set-public --help
+rundot game set-public --help
 ```
 
 ## Make the game private
 
 ```shellscript
-venus game set-private
+rundot game set-private
 ```
 
 To see all options, run:
 
 ```shellscript
-venus game set-private --help
+rundot game set-private --help
 ```
 
 ## Deploy and set public in one command
@@ -38,5 +38,5 @@ venus game set-private --help
 If you’re deploying a new version and want it visible immediately:
 
 ```shellscript
-venus deploy --public
+rundot deploy --public
 ```

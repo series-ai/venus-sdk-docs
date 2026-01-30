@@ -28,9 +28,10 @@ export default defineConfig({
 ```typescript
 // Import as usual - the plugin handles the rest
 import Phaser from 'phaser';
-import create from 'zustand';
+import { create } from 'zustand';
 import * as THREE from 'three';
 import React from 'react';
+import { Story, Compiler } from 'inkjs/full';
 ```
 
 ### 3. Build
@@ -45,15 +46,27 @@ RUNDOT_DISABLE_EMBEDDED_LIBS=true npm run build
 
 ## Supported Libraries
 
-| Library | Version | Package |
-|---------|---------|---------|
+| Library | Version | Supported Imports |
+|---------|---------|-------------------|
 | Phaser | 3.90.0 | `phaser` |
-| React | 18.3.1 | `react` |
-| ReactDOM | 18.3.1 | `react-dom` |
+| React | 18.3.1 | `react`, `react/jsx-runtime` |
+| ReactDOM | 18.3.1 | `react-dom`, `react-dom/client` |
 | Three.js | 0.170.0 | `three` |
 | Matter.js | 0.19.0 | `matter-js` |
-| Ink.js | 2.2.0 | `inkjs` |
-| Zustand | 5.0.3 | `zustand` |
+| Ink.js | 2.2.0 | `inkjs`, `inkjs/full` |
+| Zustand | 5.0.3 | `zustand`, `zustand/middleware` |
+
+### Ink.js Usage
+
+Ink.js supports both runtime-only and full (with compiler) imports:
+
+```typescript
+// Runtime only - for running pre-compiled ink JSON
+import { Story } from 'inkjs';
+
+// Full - includes Compiler for runtime ink compilation
+import { Story, Compiler } from 'inkjs/full';
+```
 
 ## Troubleshooting
 

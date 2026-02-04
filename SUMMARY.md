@@ -12,7 +12,7 @@
     * [Managing your game's discoverability](venus-developer-platform/venus-cli/managing-your-game-visibility.md)
     * [Troubleshooting](venus-developer-platform/venus-cli/troubleshooting.md)
   * [RUN.game SDK](venus-developer-platform/venus-sdk/README.md)
-    * [Quickstart](venus-developer-platform/venus-sdk/quickstart.md)
+    * [Installation](venus-developer-platform/venus-sdk/quickstart.md)
     * [API](venus-developer-platform/venus-sdk/api/README.md)
       * [Ads API](venus-developer-platform/venus-sdk/api/ADS.md)
       * [AI API](venus-developer-platform/venus-sdk/api/AI.md)

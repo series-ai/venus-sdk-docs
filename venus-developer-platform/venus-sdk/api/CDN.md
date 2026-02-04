@@ -1,4 +1,4 @@
-#  CDN API
+# CDN API
 
 Fetch and manage assets through the RUN.game CDN. The SDK handles host configuration, versioning, and caching automatically so your assets load consistently across environments.
 
@@ -43,24 +43,15 @@ const levels = JSON.parse(await dataBlob.text())
 const audioBlob = await RundotGameAPI.cdn.fetchAsset('audio/background.mp3', { timeout: 30000 })
 ```
 
-## URL Resolution
-
-If you need the raw URL instead of fetching directly, use `resolveAssetUrl`:
-
-```typescript
-const assetUrl = RundotGameAPI.cdn.resolveAssetUrl('images/logo.png')
-const baseUrl = RundotGameAPI.cdn.getAssetCdnBaseUrl()
-```
-
 ## Versioning & Deployment
 
 Asset versioning is handled automatically by the RUN.game CLI:
 
-- On each deploy, the CLI generates a manifest of your `cdn-assets` folder
-- Only files that have changed since the last deploy are uploaded
-- Cache-busting is managed for you—no need to manually version filenames
+* On each deploy, the CLI generates a manifest of your `cdn-assets` folder
+* Only files that have changed since the last deploy are uploaded
+* Cache-busting is managed for you—no need to manually version filenames
 
 ## Best Practices
 
-- Store all CDN assets in `public/cdn-assets` to ensure they are uploaded on deploy.
-- Use `fetchAsset` for loading your game's assets—it handles auth and host configuration.
+* Store all CDN assets in `public/cdn-assets` to ensure they are uploaded on deploy.
+* Use `fetchAsset` for loading your game's assets—it handles auth and host configuration.

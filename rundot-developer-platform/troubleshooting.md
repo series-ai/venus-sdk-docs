@@ -4,6 +4,8 @@ icon: circle-question
 
 # Troubleshooting
 
+## CLI Issues
+
 #### "Session expired" or authentication errors
 
 * Run `rundot login` to authenticate
@@ -42,16 +44,54 @@ icon: circle-question
 #### PATH not updated after installation (macOS/Linux)
 
 * The installer automatically adds `~/.local/bin` to your PATH
-* You may need to reload your shell: source `~/.bashrc` (or `~/.zshrc` for zsh)
+* You may need to reload your shell: `source ~/.bashrc` (or `~/.zshrc` for zsh)
 * Or simply open a new terminal window
 * To verify: run `echo $PATH` and check if `~/.local/bin` is listed
 * If you used a custom install directory, make sure it's in your PATH
 
-#### Getting Help
+## SDK Issues
+
+#### My assets aren't loading when I deploy. Why?
+
+If your console shows file-not-found errors after deploying, your app is using absolute paths instead of relative paths.
+
+{% hint style="info" %}
+**TL;DR: Add `base: './'` to your `vite.config.js`**
+{% endhint %}
+
+Relative paths usually work on your local machine, but when deployed, the web server serves your game from a subdirectory, so absolute paths won't resolve correctly.
+
+If you're using Vite, open `vite.config.js` and add:
+
+```javascript
+{
+  base: './', // <-- add this line
+
+  build: {
+    ...
+  }
+}
+```
+
+#### How do I update the SDK?
+
+From your project's root folder:
+
+```bash
+npm install @series-inc/rundot-game-sdk@latest
+```
+
+#### Ads do not work in my game
+
+Ads are currently not supported on Desktop, but will be in a future SDK update.
+
+If you're using a VPN, the ads won't be able to load.
+
+## Getting Help
 
 * If you're ever stuck or can't find what you need here, ask the lovely humans in our Discord. We're a pretty friendly bunch of people who love making cool new things, too.
-* Check the command help `rundot --help`
-* check specific command help: `rundot <command> --help`
+* Check the command help: `rundot --help`
+* Check specific command help: `rundot <command> --help`
   * e.g., `rundot login --help`, `rundot init --help`, `rundot deploy --help`, `rundot game --help`
 * Make sure you're on the latest version by running `rundot update`
 * Check the [GitHub releases](https://github.com/series-inc/rundot_cli_releases/releases) for changelogs and known issues

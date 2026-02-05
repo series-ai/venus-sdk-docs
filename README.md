@@ -4,8 +4,5 @@ RUN.game simplifies HTML5 game development and publishing. It gives you an SDK t
 
 Any genre or style of game can be made for RUN.game, as long as it's built with HTML5.
 
-To develop a game for RUN.game, you will need to do the following:
-
-* [Install the RUN.game CLI](./)
-* [Install the RUN.game SDK](rundot-developer-platform/rundot-sdk/quickstart.md)
-
+* [Get started building a game](rundot-developer-platform/getting-started.md)
+* [Browse the SDK API reference](rundot-developer-platform/api/README.md)

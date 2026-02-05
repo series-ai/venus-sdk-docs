@@ -1,0 +1,158 @@
+---
+icon: rocket
+---
+
+# Getting Started
+
+This guide walks you through everything you need to build and publish your first game on RUN.game — from installation to your first deploy.
+
+{% stepper %}
+{% step %}
+
+### Install Node.js
+
+Node has tools you'll need for RUN.game development, including the npm package manager.
+
+<a href="https://nodejs.org/en/download" class="button primary">Install Node.js</a>
+
+We support Node.js 20.0 or higher.
+{% endstep %}
+
+{% step %}
+
+### Install the RUN.game CLI
+
+The RUN.game CLI is what you'll use to initialize, manage, and deploy your games.
+
+#### MacOS / Linux
+
+Open a Terminal and run:
+
+```bash
+curl -fsSL https://github.com/series-ai/rundot-cli-releases/releases/latest/download/install.sh | bash
+```
+
+**Restart your Terminal after installation** so it can find the CLI.
+
+#### Windows
+
+Open PowerShell and run:
+
+```powershell
+irm https://github.com/series-ai/rundot-cli-releases/releases/latest/download/install.ps1 | iex
+```
+
+#### Verify installation
+
+```bash
+rundot --help
+```
+
+You should see a list of available commands. If not, see [Troubleshooting](troubleshooting.md).
+
+You can always manually download the CLI [here](https://github.com/series-ai/rundot-cli-releases).
+{% endstep %}
+
+{% step %}
+
+### Install the RUN.game SDK
+
+From your project's root folder:
+
+```bash
+npm install @series-inc/rundot-game-sdk@latest
+```
+
+{% hint style="info" %}
+The SDK is updated frequently. To update it, simply re-run the command above.
+{% endhint %}
+{% endstep %}
+
+{% step %}
+
+### Create your game project
+
+You have two options: start from a template, or set up a project from scratch.
+
+#### Option A: Start from a template
+
+Templates make it easy to get started. Pick the one that fits your game:
+
+<a href="https://drive.google.com/file/d/1k_L15UVjSwTk7FKjPgpVZKZgNv6Xodnn/view?usp=drive_link" class="button primary">2D game template (Phaser)</a>
+
+<a href="https://drive.google.com/file/d/1XSfJZ5ds9YTVgiW_Xgp0V-zX4VC-ZsMl/view?usp=drive_link" class="button primary">3D game template (Three.js)</a>
+
+<a href="https://drive.google.com/file/d/1kOngXoOiZiH9l-5LI6wBazYCI8odMKR1/view?usp=drive_link" class="button primary">UI-heavy React game template</a>
+
+<a href="https://drive.google.com/file/d/1MUViuM1U1wdbfWs8xMWVxJd7hOiJR3pJ/view?usp=drive_link" class="button primary">Bare bones template</a>
+
+Unzip the template, open it in your code editor, and install dependencies:
+
+```bash
+npm install
+```
+
+#### Option B: Build from scratch
+
+If you're an experienced developer and prefer setting up projects manually:
+
+1. **Use relative file paths.** When deployed, your game is served from a subdirectory. If you use Vite, add this to `vite.config.js`:
+
+```javascript
+{
+  base: './',
+}
+```
+
+2. **Build to `./dist`.** The CLI looks for your build there by default. You can [customize the build path](deploying-your-game.md#advanced-options) if needed.
+
+{% endstep %}
+
+{% step %}
+
+### Initialize your game
+
+From your project's root folder:
+
+```bash
+rundot init
+```
+
+This walks you through naming and configuring your game for the RUN.game platform. It creates a `game.config.json` file that stores your game ID and build settings.
+
+See [Initializing Your Game](initializing-your-game.md) for more details and manual options.
+{% endstep %}
+
+{% step %}
+
+### Deploy to RUN.game
+
+Build and deploy your game:
+
+```bash
+npm run build
+rundot deploy
+```
+
+You'll get a shareable link, playable by anyone on web or in the RUN.game app. The link is unlisted by default — no one will find it on the platform unless you publish it.
+
+See [Deploying Your Game](deploying-your-game.md) for publishing, versioning, and advanced options.
+{% endstep %}
+{% endstepper %}
+
+## Recommended: Use Cursor as your editor
+
+We recommend [Cursor](https://www.cursor.com) for development. It's the best choice for developers who want AI assistance writing code and using the SDK. We use it ourselves.
+
+## Updating the CLI
+
+The CLI will alert you when a new version is available. To update manually:
+
+```bash
+rundot update
+```
+
+## Next steps
+
+- [Deploy and publish your game](deploying-your-game.md)
+- [Browse the SDK API reference](api/README.md) to add features like ads, multiplayer, storage, and more

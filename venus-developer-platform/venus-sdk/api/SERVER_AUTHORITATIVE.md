@@ -1,8 +1,8 @@
-#  Simulation API
+# Server-Authoritative API (BETA)
 
-Drive authoritative game state through the  simulation system. Execute recipes, manage inventories and slots, and resolve dynamic fields directly from the platform.
+Drive authoritative game state through the RUN.game simulation system. Execute recipes, manage inventories and slots, and resolve dynamic fields directly from the platform.
 
-> ⚠️ The Simulation API only runs inside the  host environment. Mock/test harnesses throw helpful errors when these methods are called locally.
+> ⚠️ The Server-Authoritative API only runs inside the RUN.game host environment. Mock/test harnesses throw helpful errors when these methods are called locally.
 
 ## Quick Start
 
@@ -145,4 +145,3 @@ Only entities marked `clientViewable: true` in your simulation config are stream
 - Batch operations with `executeBatchOperationsAsync` when you need atomic updates.
 - Use simulation results as the source of truth—mirror UI state from responses rather than guessing.
 - Guard recipe calls with optimistic UI but reconcile against the final data returned by the host.
-

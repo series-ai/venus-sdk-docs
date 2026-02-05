@@ -1,6 +1,6 @@
-# Social API
+# Sharing API
 
-Store shared content and creates share parameters. Recipients can jump straight into your content.
+Store shared content and create share parameters. Recipients can jump straight into your content.
 
 Here are some examples for what you might use it for:
 
@@ -89,9 +89,16 @@ const onLaunch = () => {
 }
 ```
 
+## API Reference
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `shareLinkAsync(options)` | `Promise<{ shareUrl }>` | Create and share a link with custom parameters |
+| `createQRCodeAsync(options)` | `Promise<{ qrCode }>` | Generate a QR code data URL |
+
 ## Payload Guidelines
 
-* Keep `shareParams` under \~100 KB (share payloads are stored in Firestore with 1 MB document caps).
+* Keep `shareParams` under ~100 KB (share payloads are stored in Firestore with 1 MB document caps).
 * Use compact identifiers (IDs, short strings) and fetch bulky data from your backend.
 * Sanitize user-provided metadata before sharing publicly.
 * Fallback when social APIs are unavailable (desktop browsers without share support).

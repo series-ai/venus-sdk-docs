@@ -9,33 +9,62 @@ icon: brackets-curly
 
 You'll find here the list of API modules, the description of what each API does and the link to the specific API, which provides more detailed info on how it works and example code usage.
 
-| API Module                                        | What it does                                                                                          |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [Ads](ADS.md)                                     | Serve monetized ads in your game.                                                                     |
-| [AI](AI.md)                                       | Call hosted LLM models for chat, hints, or narrative beats without managing your own inference stack. |
-| [Analytics](ANALYTICS.md)                         | Record gameplay telemetry, funnel steps, and user properties.                                         |
-| [Asset Loader](ASSET_LOADER.md)                   | Load, preload, and clean up assets with WebView-aware optimizations.                                  |
-| [CDN](CDN.md)                                     | Fetch CDN-backed content and handle platform caching.                                                 |
-| [Context](CONTEXT.md)                             | Exposes data passed to the game about the context (launch and share params)                           |
-| [Embedded Libraries](EMBEDDED_LIBRARIES.md)       | Load and manage embedded libraries shipped by the host.                                               |
-| [Features](FEATURES.md)                           | Toggle experiences, run experiments, and gate functionality with feature flags.                       |
-| [Haptics](HAPTICS.md)                             | Trigger haptics feedback.                                                                             |
-| [In-App Purchases](IAP.md)                        | Add In-App Purchases to your game.                                                                    |
-| [Leaderboards (BETA)](LEADERBOARD.md)             | Competitive leaderboards with multiple security levels.                                               |
-| [Lifecycles](LIFECYCLES.md)                       | Hooks to react to host lifecycle changes (pause/resume/teardown).                                     |
-| [Logging](LOGGING.md)                             | Track debug info or errors.                                                                           |
-| [Notifications](NOTIFICATIONS.md)                 | Schedule and manage local notifications.                                                              |
-| [Numbers](NUMBERS.md)                             | Handle exponential economies without losing precision.                                                |
-| [Preloader](PRELOADER.md)                         | Opt into and configure the host preloader.                                                            |
-| [Profile](PROFILE.md)                             | Access the current user profile.                                                                      |
-| [Rooms (BETA)](ROOMS.md)                          | Build synchronous multiplayer sessions backed by the  Rooms service.                             |
-| [Safe Area](SAFE_AREA.md)                         | Read safe-area insets to avoid overlapping host UI.                                                   |
-| [Shared Assets](SHARED_ASSETS.md)                 | Download host-provisioned asset bundles shared across titles.                                         |
-| [Simulation (BETA)](SIMULATION.md)                | Drive authoritative game state through the simulation system.                                         |
-| [Social](SOCIAL.md)                               | Share links, generate QR codes, and handle launch params.                                             |
-| [Storage](STORAGE.md)                             | Persist player data at the right scope using storage helpers.                                         |
-| [Time](TIME.md)                                   | Server time synchronization and formatting.                                                           |
-| Unsupported                                       |                                                                                                       |
-| [Avatar 3D](AVATAR3D.md)                          | Avatar 3D APIs (unsupported).                                                                         |
-| [Navigation](NAVIGATION.md)                       | Navigation APIs (unsupported).                                                                        |
-| [Popups](../../../readme/venus-sdk/api/popups.md) | Popups APIs (unsupported).                                                                            |
+## Monetization APIs
+
+| API Module | What it does |
+| ---------- | ------------ |
+| [Ads](ADS.md) | Serve rewarded video and interstitial ads in your game. |
+| [Purchases](PURCHASES.md) | Let players spend RunBucks on digital goods and entitlements. |
+
+## Messaging APIs
+
+| API Module | What it does |
+| ---------- | ------------ |
+| [Notifications](NOTIFICATIONS.md) | Schedule local notifications for re-engagement and reminders. |
+| [In-App Messaging](IN_APP_MESSAGING.md) | Display toast notifications and in-app messages. |
+
+## Assets APIs
+
+| API Module | What it does |
+| ---------- | ------------ |
+| [Assets](ASSETS.md) | Load and manage game assets via CDN with smart caching. |
+| [Shared Assets](SHARED_ASSETS.md) | Download host-provisioned asset bundles shared across titles. |
+
+## Game Systems APIs
+
+| API Module | What it does |
+| ---------- | ------------ |
+| [Experiments](EXPERIMENTS.md) | Run A/B tests, feature flags, and feature gates. |
+| [Big Numbers](BIGNUMBERS.md) | Handle exponential economies without losing precision. |
+| [Multiplayer (BETA)](MULTIPLAYER.md) | Build synchronous multiplayer sessions with real-time updates. |
+| [Server-Authoritative (BETA)](SERVER_AUTHORITATIVE.md) | Drive authoritative game state through the simulation system. |
+| [Sharing](SHARING.md) | Share links, generate QR codes, and handle share parameters. |
+| [Leaderboards (BETA)](LEADERBOARD.md) | Competitive leaderboards with multiple security levels. |
+
+## Device & Environment APIs
+
+| API Module | What it does |
+| ---------- | ------------ |
+| [Safe Area](SAFE_AREA.md) | Read safe-area insets to avoid overlapping host UI and notches. |
+| [Environment](ENVIRONMENT.md) | Detect device type, platform, screen size, and development mode. |
+
+## AI APIs
+
+| API Module | What it does |
+| ---------- | ------------ |
+| [AI](AI.md) | Generate text and images using hosted AI models. |
+
+## Utility APIs
+
+| API Module | What it does |
+| ---------- | ------------ |
+| [Analytics](ANALYTICS.md) | Record gameplay telemetry, funnel steps, and user properties. |
+| [Context](CONTEXT.md) | Access launch parameters and share parameters. |
+| [Embedded Libraries](EMBEDDED_LIBRARIES.md) | Load and manage embedded libraries shipped by the host. |
+| [Haptics](HAPTICS.md) | Trigger haptic feedback on supported devices. |
+| [Lifecycles](LIFECYCLES.md) | React to host lifecycle changes (pause/resume/teardown). |
+| [Logging](LOGGING.md) | Stream structured logs for debugging and support. |
+| [Preloader](PRELOADER.md) | Control the native loading screen during heavy loads. |
+| [Profile](PROFILE.md) | Access the current user profile. |
+| [Storage](STORAGE.md) | Persist player data at device, app, or global scope. |
+| [Time](TIME.md) | Server time synchronization and formatting. |

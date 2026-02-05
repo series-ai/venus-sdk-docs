@@ -24,7 +24,7 @@ The UGC API enables games to let users create, share, and discover community con
 
 ```typescript
 // Create new content
-const entry = await VenusAPI.ugc.create({
+const entry = await RundotAPI.ugc.create({
   contentType: 'character',  // App-defined type
   data: {
     name: 'My Character',
@@ -43,7 +43,7 @@ console.log(`Published with ID: ${entry.id}`)
 
 ```typescript
 // Browse public content
-const catalog = await VenusAPI.ugc.browse({
+const catalog = await RundotAPI.ugc.browse({
   contentType: 'character',
   sortBy: 'mostUsed',  // 'recent' | 'mostLiked' | 'mostUsed'
   limit: 20
@@ -57,7 +57,7 @@ for (const entry of catalog.entries) {
 
 // Pagination
 if (catalog.nextCursor) {
-  const nextPage = await VenusAPI.ugc.browse({
+  const nextPage = await RundotAPI.ugc.browse({
     contentType: 'character',
     cursor: catalog.nextCursor
   })
@@ -68,19 +68,19 @@ if (catalog.nextCursor) {
 
 ```typescript
 // List your published content
-const myContent = await VenusAPI.ugc.listMine({
+const myContent = await RundotAPI.ugc.listMine({
   contentType: 'character'
 })
 
 // Update content
-await VenusAPI.ugc.update({
+await RundotAPI.ugc.update({
   id: entry.id,
   data: { ...updatedData },
   title: 'Updated Title'
 })
 
 // Delete content
-await VenusAPI.ugc.delete(entry.id)
+await RundotAPI.ugc.delete(entry.id)
 ```
 
 ---
@@ -91,11 +91,11 @@ await VenusAPI.ugc.delete(entry.id)
 
 ```typescript
 // Like content
-const result = await VenusAPI.ugc.like(entryId)
+const result = await RundotAPI.ugc.like(entryId)
 console.log(`New like count: ${result.likeCount}`)
 
 // Unlike content
-const result = await VenusAPI.ugc.unlike(entryId)
+const result = await RundotAPI.ugc.unlike(entryId)
 console.log(`New like count: ${result.likeCount}`)
 ```
 
@@ -106,7 +106,7 @@ setIsLiked(true)
 setLikeCount(prev => prev + 1)
 
 try {
-  const result = await VenusAPI.ugc.like(entryId)
+  const result = await RundotAPI.ugc.like(entryId)
   setLikeCount(result.likeCount)  // Sync with server
 } catch (error) {
   // Rollback on failure
@@ -121,7 +121,7 @@ Track when users import or use community content:
 
 ```typescript
 // Record usage (rate limited to once per user per entry per day)
-const result = await VenusAPI.ugc.recordUse(entryId)
+const result = await RundotAPI.ugc.recordUse(entryId)
 console.log(`Total uses: ${result.useCount}`)
 ```
 
@@ -129,7 +129,7 @@ console.log(`Total uses: ${result.useCount}`)
 
 ```typescript
 // Report inappropriate content
-await VenusAPI.ugc.report({
+await RundotAPI.ugc.report({
   id: entryId,
   reason: 'inappropriate',  // 'inappropriate' | 'spam' | 'harassment' | 'other'
   details: 'Contains offensive language'  // Optional
@@ -226,7 +226,7 @@ Content types are app-defined strings that categorize your UGC:
 
 ```typescript
 // Good: Structured, validated data
-const entry = await VenusAPI.ugc.create({
+const entry = await RundotAPI.ugc.create({
   contentType: 'character',
   data: {
     version: 1,  // Version your data format
@@ -238,7 +238,7 @@ const entry = await VenusAPI.ugc.create({
 })
 
 // Bad: Unstructured blob
-const entry = await VenusAPI.ugc.create({
+const entry = await RundotAPI.ugc.create({
   contentType: 'data',
   data: { blob: '...' }  // Hard to validate/display
 })
@@ -248,7 +248,7 @@ const entry = await VenusAPI.ugc.create({
 
 ```typescript
 try {
-  await VenusAPI.ugc.create({ ... })
+  await RundotAPI.ugc.create({ ... })
 } catch (error) {
   if (error.message.includes('rate limit')) {
     showToast('Too many entries. Please wait before creating more.')
@@ -274,7 +274,7 @@ async function getCatalog() {
     return cachedCatalog
   }
   
-  cachedCatalog = await VenusAPI.ugc.browse({ sortBy: 'mostUsed' })
+  cachedCatalog = await RundotAPI.ugc.browse({ sortBy: 'mostUsed' })
   cacheTime = Date.now()
   return cachedCatalog
 }

@@ -4,6 +4,7 @@
   * [Getting Started](rundot-developer-platform/getting-started.md)
   * [Initializing Your Game](rundot-developer-platform/initializing-your-game.md)
   * [Deploying Your Game](rundot-developer-platform/deploying-your-game.md)
+  * [Setting Your Game Thumbnail](rundot-developer-platform/setting-your-game-thumbnail.md)
   * [Troubleshooting](rundot-developer-platform/troubleshooting.md)
   * [Ads API](rundot-developer-platform/api/ADS.md)
   * [AI API](rundot-developer-platform/api/AI.md)

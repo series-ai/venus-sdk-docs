@@ -85,4 +85,4 @@ const time = await RundotGameAPI.time.requestTimeAsync()
 
 ---
 
-New to RUN.game? See [Getting Started](rundot-developer-platform/getting-started.md) | [Deploying Your Game](rundot-developer-platform/deploying-your-game.md) | [Troubleshooting](rundot-developer-platform/troubleshooting.md)
+New to RUN.game? See [Getting Started](rundot-developer-platform/getting-started.md) | [Deploying Your Game](rundot-developer-platform/deploying-your-game.md) | [Setting Your Game Thumbnail](rundot-developer-platform/setting-your-game-thumbnail.md) | [Troubleshooting](rundot-developer-platform/troubleshooting.md)

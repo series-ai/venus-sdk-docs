@@ -20,7 +20,7 @@ Node has tools you'll need for RUN.game development, including the npm package m
 
 Regardless of which path you choose, you'll need the RUN.game CLI to publish your game and share it.
 
-<a href="../venus-cli/installing-the-venus-cli.md" class="button primary">Install the RUN.game CLI</a>
+<a href="../rundot-cli/installing-the-rundot-cli.md" class="button primary">Install the RUN.game CLI</a>
 
 When you're done, come back here for the next step.
 {% endstep %}
@@ -46,6 +46,6 @@ We know that experienced developers often prefer setting up projects manually. H
 
 Once your game is working and ready to share, use the RUN.game CLI to upload the latest version of your game. You'll get a link back that you can share with anyone.
 
-<a href="../venus-cli/deploying-your-game-to-venus.md" class="button primary">Deploy your game to RUN.game</a>&#x20;
+<a href="../rundot-cli/deploying-your-game.md" class="button primary">Deploy your game to RUN.game</a>&#x20;
 {% endstep %}
 {% endstepper %}

@@ -41,7 +41,7 @@ Unzip the template into any location you choose.
 
 Developers, we know that you are most productive when you're using your favorite tools. So, feel free to use any IDE that you prefer for development.
 
-We do recommend Cursor, and we use it ourselves to keep things moving fast. In the [RUN.game CLI docs](../venus-cli/), we will show how you can install Cursor rules into your project to make the CLI and SDK even easier to use. We think that Cursor's also the best choice for new developers who need help getting started and who are interested in using AI to write code.
+We do recommend Cursor, and we use it ourselves to keep things moving fast. In the [RUN.game CLI docs](../rundot-cli/), we will show how you can install Cursor rules into your project to make the CLI and SDK even easier to use. We think that Cursor's also the best choice for new developers who need help getting started and who are interested in using AI to write code.
 
 <a href="https://www.cursor.com" class="button primary">Get Cursor</a>
 
@@ -52,7 +52,7 @@ To begin development, simply open the folder you unzipped above in your code edi
 
 ### Initialize your game
 
-If you didn't already install the RUN.game CLI, [install it first.](../venus-cli/installing-the-venus-cli.md)
+If you didn't already install the RUN.game CLI, [install it first.](../rundot-cli/installing-the-rundot-cli.md)
 
 Open a Terminal directly inside the editor and type:
 
@@ -93,7 +93,7 @@ This will give you a link that you can open to verify that everything is working
 npm run deploy
 ```
 
-If everything is set up correctly, this will build your game, upload the build to the platform, and then return a shareable link. The link is playable by anyone on web or in the RUN.game app. This link will be unlisted, so don't worry about other people finding this game on the RUN.game platform. To make it show in search results on RUN.game, see [publishing instructions](../venus-cli/deploying-your-game-to-venus.md).
+If everything is set up correctly, this will build your game, upload the build to the platform, and then return a shareable link. The link is playable by anyone on web or in the RUN.game app. This link will be unlisted, so don't worry about other people finding this game on the RUN.game platform. To make it show in search results on RUN.game, see [publishing instructions](../rundot-cli/deploying-your-game.md).
 {% endstep %}
 
 {% step %}

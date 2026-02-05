@@ -7,5 +7,5 @@ Any genre or style of game can be made for RUN.game, as long as it's built with 
 To develop a game for RUN.game, you will need to do the following:
 
 * [Install the RUN.game CLI](./)
-* [Install the RUN.game SDK](venus-developer-platform/venus-sdk/quickstart.md)
+* [Install the RUN.game SDK](rundot-developer-platform/rundot-sdk/quickstart.md)
 

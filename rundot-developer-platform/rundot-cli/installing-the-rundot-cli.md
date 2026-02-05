@@ -109,6 +109,6 @@ rundot update
 
 ## Build a new game for RUN.game
 
-Now that you have the RUN.game CLI installed, you're all set to [build a new game for RUN.game](../creating-a-new-game-for-venus/).&#x20;
+Now that you have the RUN.game CLI installed, you're all set to [build a new game for RUN.game](../creating-a-new-game/).&#x20;
 
 {% include "../../.gitbook/includes/cli-troubleshooting.md" %}

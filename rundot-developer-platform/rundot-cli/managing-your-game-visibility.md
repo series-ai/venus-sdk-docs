@@ -35,7 +35,7 @@ rundot game set-private --help
 
 ## Deploy and set public in one command
 
-If you’re deploying a new version and want it visible immediately:
+If you're deploying a new version and want it visible immediately:
 
 ```shellscript
 rundot deploy --public

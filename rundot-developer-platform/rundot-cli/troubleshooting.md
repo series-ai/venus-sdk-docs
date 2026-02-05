@@ -25,13 +25,13 @@ icon: circle-question
 #### "Unable to load game config" error
 
 * Make sure you're running the command from your project root (where you initialized the game)
-* If the CLI can’t find your game/build info automatically, run `rundot deploy --help` (or `rundot game upload-build --help`) to see what you can pass explicitly
+* If the CLI can't find your game/build info automatically, run `rundot deploy --help` (or `rundot game upload-build --help`) to see what you can pass explicitly
 * If you have a local game config file, verify it is valid JSON and matches your current project
 
 #### "Game not found" or "Game has no version" error
 
 * Ensure you've created the game using `rundot init` (or `rundot game create`) first
-* Verify the game ID you're using is correct (see `--help` for the command you’re running)
+* Verify the game ID you're using is correct (see `--help` for the command you're running)
 * Make sure you've created at least one version using `rundot deploy` (or `rundot game upload-build`) before setting it public
 
 #### Version conflicts

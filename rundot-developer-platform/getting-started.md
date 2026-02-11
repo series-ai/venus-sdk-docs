@@ -8,23 +8,19 @@ This guide walks you through everything you need to build and publish your first
 
 {% stepper %}
 {% step %}
+#### Install Node.js
 
-### Install Node.js
-
-Node has tools you'll need for RUN.game development, including the npm package manager.
+You'll need version 20 or higher.
 
 <a href="https://nodejs.org/en/download" class="button primary">Install Node.js</a>
-
-We support Node.js 20.0 or higher.
 {% endstep %}
 
 {% step %}
-
-### Install the RUN.game CLI
+#### Install the RUN.game CLI
 
 The RUN.game CLI is what you'll use to initialize, manage, and deploy your games.
 
-#### MacOS / Linux
+**MacOS / Linux**
 
 Open a Terminal and run:
 
@@ -34,14 +30,16 @@ curl -fsSL https://github.com/series-ai/rundot-cli-releases/releases/latest/down
 
 **Restart your Terminal after installation** so it can find the CLI.
 
-#### Windows
+**Windows**
 
 Open PowerShell and run:
 
 ```powershell
 irm https://github.com/series-ai/rundot-cli-releases/releases/latest/download/install.ps1 | iex
 ```
+{% endstep %}
 
+{% step %}
 #### Verify installation
 
 ```bash
@@ -49,13 +47,10 @@ rundot --help
 ```
 
 You should see a list of available commands. If not, see [Troubleshooting](troubleshooting.md).
-
-You can always manually download the CLI [here](https://github.com/series-ai/rundot-cli-releases).
 {% endstep %}
 
 {% step %}
-
-### Install the RUN.game SDK
+#### Install the RUN.game SDK
 
 From your project's root folder:
 
@@ -69,12 +64,11 @@ The SDK is updated frequently. To update it, simply re-run the command above.
 {% endstep %}
 
 {% step %}
-
-### Create your game project
+#### Create your game project
 
 You have two options: start from a template, or set up a project from scratch.
 
-#### Option A: Start from a template
+**Option A: Start from a template**
 
 Templates make it easy to get started. Pick the one that fits your game:
 
@@ -92,7 +86,7 @@ Unzip the template, open it in your code editor, and install dependencies:
 npm install
 ```
 
-#### Option B: Build from scratch
+**Option B: Build from scratch**
 
 If you're an experienced developer and prefer setting up projects manually:
 
@@ -105,12 +99,10 @@ If you're an experienced developer and prefer setting up projects manually:
 ```
 
 2. **Build to `./dist`.** The CLI looks for your build there by default. You can [customize the build path](deploying-your-game.md#advanced-options) if needed.
-
 {% endstep %}
 
 {% step %}
-
-### Initialize your game
+#### Initialize your game
 
 From your project's root folder:
 
@@ -124,8 +116,7 @@ See [Initializing Your Game](initializing-your-game.md) for more details and man
 {% endstep %}
 
 {% step %}
-
-### Deploy to RUN.game
+#### Deploy to RUN.game
 
 Build and deploy your game:
 
@@ -140,10 +131,6 @@ See [Deploying Your Game](deploying-your-game.md) for publishing, versioning, an
 {% endstep %}
 {% endstepper %}
 
-## Recommended: Use Cursor as your editor
-
-We recommend [Cursor](https://www.cursor.com) for development. It's the best choice for developers who want AI assistance writing code and using the SDK. We use it ourselves.
-
 ## Updating the CLI
 
 The CLI will alert you when a new version is available. To update manually:
@@ -151,8 +138,3 @@ The CLI will alert you when a new version is available. To update manually:
 ```bash
 rundot update
 ```
-
-## Next steps
-
-- [Deploy and publish your game](deploying-your-game.md)
-- [Browse the SDK API reference](api/README.md) to add features like ads, multiplayer, storage, and more

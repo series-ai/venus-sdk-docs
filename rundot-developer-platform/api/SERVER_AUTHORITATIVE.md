@@ -25,6 +25,29 @@ const config = await RundotGameAPI.simulation.getConfigAsync()
 
 `getStateAsync` returns inventory quantities, active recipe runs, and disabled recipes. Pass a `roomId` to inspect shared rooms; omit it for personal state.
 
+## Resetting State
+
+```typescript
+// Reset all simulation state (inventory, active runs, slot assignments)
+const result = await RundotGameAPI.simulation.resetStateAsync()
+// { success: true, clearedRuns: 3, clearedSlots: 2, recipeExecuted: null }
+
+// Reset and re-initialize with a starter recipe
+const result = await RundotGameAPI.simulation.resetStateAsync({
+  initializeRecipe: 'starter_pack',
+})
+// { success: true, clearedRuns: 3, clearedSlots: 2, recipeExecuted: 'starter_pack' }
+```
+
+`resetStateAsync` clears all simulation state for the current player: inventory quantities are zeroed, active recipe runs are cancelled, and slot assignments are removed. Pass `initializeRecipe` to automatically execute a recipe after the reset — useful for granting a starter loadout or restoring default configuration.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | `boolean` | Whether the reset completed successfully |
+| `clearedRuns` | `number` | Number of active runs that were cancelled |
+| `clearedSlots` | `number` | Number of slot assignments that were deleted |
+| `recipeExecuted` | `string \| null` | Recipe executed after reset, if any |
+
 ## Recipe Execution
 
 ```typescript

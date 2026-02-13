@@ -72,13 +72,11 @@ You have two options: start from a template, or set up a project from scratch.
 
 Templates make it easy to get started. Pick the one that fits your game:
 
-<a href="https://drive.google.com/file/d/1k_L15UVjSwTk7FKjPgpVZKZgNv6Xodnn/view?usp=drive_link" class="button primary">2D game template (Phaser)</a>
+<a href="https://github.com/series-ai/run-template-2d-phaser/archive/refs/heads/main.zip" class="button primary">2D game template (Phaser)</a>
 
-<a href="https://drive.google.com/file/d/1XSfJZ5ds9YTVgiW_Xgp0V-zX4VC-ZsMl/view?usp=drive_link" class="button primary">3D game template (Three.js)</a>
+<a href="https://github.com/series-ai/run-template-3d-react/archive/refs/heads/main.zip" class="button primary">3D game template (React)</a>
 
-<a href="https://drive.google.com/file/d/1kOngXoOiZiH9l-5LI6wBazYCI8odMKR1/view?usp=drive_link" class="button primary">UI-heavy React game template</a>
-
-<a href="https://drive.google.com/file/d/1MUViuM1U1wdbfWs8xMWVxJd7hOiJR3pJ/view?usp=drive_link" class="button primary">Bare bones template</a>
+<a href="https://github.com/series-ai/run-template-2d-react/archive/refs/heads/main.zip" class="button primary">2D - UI-heavy React game template</a>
 
 Unzip the template, open it in your code editor, and install dependencies:
 

@@ -11,7 +11,17 @@ To use leaderboards, add one of the following to your project:
 * A `config.json` file in your project’s root directory, **or**
 * A `configs/` folder containing a `leaderboards.json` file.
 
-This file enables leaderboards and lets you configure how they work in your game.
+This file enables leaderboards and lets you configure how they work in your game.\
+\
+Minimal required configuration:
+
+```json
+{
+  "leaderboard": {
+    "requiresToken": false
+  }
+}
+```
 
 ## 🟢 Simple Mode (Default - Casual Games)
 

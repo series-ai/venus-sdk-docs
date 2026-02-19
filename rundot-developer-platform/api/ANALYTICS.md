@@ -78,6 +78,8 @@ await RundotGameAPI.analytics.trackFunnelStep(1, 'shop_opened', 'purchase', 2) /
 await RundotGameAPI.analytics.trackFunnelStep(2, 'item_selected', 'purchase', 2)
 ```
 
+If this argument is not passed, the funnel will have an order value of 0.
+
 ## User Properties
 
 Set persistent user properties for segmentation:

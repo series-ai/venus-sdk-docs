@@ -5,7 +5,8 @@ Trigger tactile feedback across supported devices without worrying about platfor
 ## Quick Start
 
 ```typescript
-import RundotGameAPI, { HapticFeedbackStyle } from '@series-inc/rundot-game-sdk/api'
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
+import { HapticFeedbackStyle } from '@series-inc/rundot-game-sdk'
 
 await RundotGameAPI.triggerHapticAsync(HapticFeedbackStyle.Success)
 await RundotGameAPI.triggerHapticAsync(HapticFeedbackStyle.Warning)
@@ -16,7 +17,7 @@ await RundotGameAPI.triggerHapticAsync(HapticFeedbackStyle.Heavy)
 
 ## Supported Styles
 
-`triggerHapticAsync` only accepts the `HapticFeedbackStyle` enum exported from `@series-inc/rundot-game-sdk/api`. Stick to the enum (or the equivalent string literal) to avoid typos.
+`triggerHapticAsync` only accepts the `HapticFeedbackStyle` enum exported from `@series-inc/rundot-game-sdk`. Stick to the enum (or the equivalent string literal) to avoid typos.
 
 | Style (`HapticFeedbackStyle`) | String literal | Typical use |
 | --- | --- | --- |

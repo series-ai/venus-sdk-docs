@@ -1,6 +1,6 @@
 # Analytics API
 
-Record gameplay telemetry, funnel steps, and user properties. Events flow to the host analytics pipeline with consistent schema and automatic attribution.
+Record gameplay telemetry and funnel steps. Events flow to the host analytics pipeline with consistent schema and automatic attribution.
 
 > **Note**: This API fires events to the analytics pipeline—it records data but does not provide analytics dashboards or reporting. Use the platform dashboard to view and analyze your recorded events.
 
@@ -9,13 +9,11 @@ Record gameplay telemetry, funnel steps, and user properties. Events flow to the
 ```typescript
 import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-await RundotGameAPI.analytics.logEvent('level_complete', {
+await RundotGameAPI.analytics.recordCustomEvent('level_complete', {
   level: 5,
   score: 1200,
   timeElapsed: 98,
 })
-
-await RundotGameAPI.analytics.setUserProperty('vip_status', 'gold')
 ```
 
 ## Best Practices
@@ -64,7 +62,7 @@ await RundotGameAPI.analytics.trackFunnelStep(3, 'checkout_started', 'purchase')
 await RundotGameAPI.analytics.trackFunnelStep(4, 'purchase_complete', 'purchase')
 ```
 
-You can optionally provide a `funnelOrder` value to indicate where a funnel occurs in your overall user joruney. 
+You can optionally provide a `funnelOrder` value to indicate where a funnel occurs in your overall user journey. 
 
 This is useful when you want to compare multiple funnels (for example, onboarding and purchase) side by side in a single dashboard while preserving their chronological order.
 
@@ -80,23 +78,11 @@ await RundotGameAPI.analytics.trackFunnelStep(2, 'item_selected', 'purchase', 2)
 
 If this argument is not passed, the funnel will have an order value of 0.
 
-## User Properties
-
-Set persistent user properties for segmentation:
-
-```typescript
-await RundotGameAPI.analytics.setUserProperty('player_level', '25')
-await RundotGameAPI.analytics.setUserProperty('subscription_tier', 'premium')
-await RundotGameAPI.analytics.setUserProperty('preferred_mode', 'pvp')
-```
-
 ## API Reference
 
-| Method                                | Returns         | Description                          |
-| ------------------------------------- | --------------- | ------------------------------------ |
-| `logEvent(name, params?)`             | `Promise<void>` | Log a named event with parameters    |
-| `recordCustomEvent(name, params?)`    | `Promise<void>` | Record a custom event with payload   |
-| `trackFunnelStep(step, name, funnel, funnelOrder)` | `Promise<void>` | Track a step in a conversion funnel  |
-| `setUserProperty(name, value)`        | `Promise<void>` | Set a user property for segmentation |
+| Method                                              | Returns         | Description                         |
+| --------------------------------------------------- | --------------- | ----------------------------------- |
+| `recordCustomEvent(name, params?)`                  | `Promise<void>` | Record a custom event with payload  |
+| `trackFunnelStep(step, name, funnel?, funnelOrder?)` | `Promise<void>` | Track a step in a conversion funnel |
 
 ##

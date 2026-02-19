@@ -64,6 +64,22 @@ await RundotGameAPI.analytics.trackFunnelStep(3, 'checkout_started', 'purchase')
 await RundotGameAPI.analytics.trackFunnelStep(4, 'purchase_complete', 'purchase')
 ```
 
+You can optionally provide a `funnelOrder` value to indicate where a funnel occurs in your overall user joruney. 
+
+This is useful when you want to compare multiple funnels (for example, onboarding and purchase) side by side in a single dashboard while preserving their chronological order.
+
+```typescript
+// Onboarding funnel
+await RundotGameAPI.analytics.trackFunnelStep(1, 'tutorial_start', 'onboarding', 1) // the 1 indicates this is the first funnel in the game
+await RundotGameAPI.analytics.trackFunnelStep(2, 'tutorial_movement', 'onboarding', 1)
+
+// Purchase funnel
+await RundotGameAPI.analytics.trackFunnelStep(1, 'shop_opened', 'purchase', 2) // the 2 indicates this is the second funnel in the game
+await RundotGameAPI.analytics.trackFunnelStep(2, 'item_selected', 'purchase', 2)
+```
+
+If this argument is not passed, the funnel will have an order value of 0.
+
 ## User Properties
 
 Set persistent user properties for segmentation:
@@ -80,7 +96,7 @@ await RundotGameAPI.analytics.setUserProperty('preferred_mode', 'pvp')
 | ------------------------------------- | --------------- | ------------------------------------ |
 | `logEvent(name, params?)`             | `Promise<void>` | Log a named event with parameters    |
 | `recordCustomEvent(name, params?)`    | `Promise<void>` | Record a custom event with payload   |
-| `trackFunnelStep(step, name, funnel)` | `Promise<void>` | Track a step in a conversion funnel  |
+| `trackFunnelStep(step, name, funnel, funnelOrder)` | `Promise<void>` | Track a step in a conversion funnel  |
 | `setUserProperty(name, value)`        | `Promise<void>` | Set a user property for segmentation |
 
 ##

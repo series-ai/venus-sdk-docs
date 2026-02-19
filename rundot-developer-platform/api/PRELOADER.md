@@ -61,18 +61,8 @@ async function loadLevel(levelId: string) {
   await RundotGameAPI.preloader.setLoaderText(`Loading Level ${levelId}...`)
   
   try {
-    // Load level assets
-    await RundotGameAPI.preloadAssets([
-      `levels/${levelId}/background.png`,
-      `levels/${levelId}/music.mp3`,
-      `levels/${levelId}/config.json`,
-    ], {
-      onProgress(progress) {
-        RundotGameAPI.preloader.setLoaderProgress(progress)
-      }
-    })
+    await loadLevelData(levelId)
     
-    // Initialize level
     initializeLevel(levelId)
   } finally {
     await RundotGameAPI.preloader.hideLoadScreen()
@@ -94,6 +84,6 @@ async function loadLevel(levelId: string) {
 - Always wrap show/hide in `try/catch`—the host might already be transitioning.
 - Use `showLoadScreen()` when navigating between scenes that require large downloads.
 - Pair hide calls with your own readiness checks to avoid flashing unpopulated UI.
-- Consider chaining with `RundotGameAPI.loadAsset` or `sharedAssets` to ensure large bundles are ready before dismissal.
+- Consider chaining with `sharedAssets` to ensure large bundles are ready before dismissal.
 - Avoid leaving the preloader up for long-standing idle states; fade to your own UI for parking experiences.
 - Dismiss the loader from `onResume` if you paused during loading to prevent stale spinners.

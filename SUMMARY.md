@@ -9,7 +9,6 @@
   * [Ads API](rundot-developer-platform/api/ADS.md)
   * [AI API](rundot-developer-platform/api/AI.md)
   * [Analytics API](rundot-developer-platform/api/ANALYTICS.md)
-  * [Assets API](rundot-developer-platform/api/ASSETS.md)
   * [Big Numbers API](rundot-developer-platform/api/BIGNUMBERS.md)
   * [Context API](rundot-developer-platform/api/CONTEXT.md)
   * [Embedded Libraries API](rundot-developer-platform/api/EMBEDDED_LIBRARIES.md)

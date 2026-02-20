@@ -70,6 +70,8 @@ async function purchaseItem(itemId: string, cost: number) {
 }
 ```
 
+You can use `hasUserMadePurchase` to check if the user has ever made a purchase on RUN. You could use this information to adjust prices in your store, or show certain bundles only to non-spenders
+
 ## Subscription Paywall with Checkout Flow 
 ```typescript
 import { useEffect, useState } from 'react';
@@ -127,6 +129,7 @@ export default Paywall;
 | `getUserSubscriptionStatus(subscriptionName)` | `Promise<SubscriptionStatusResponse \| null>` | Get the status of a supscription for the current user. null if the user doesn't have the subscription |
 | `getSubscriptionsForOffering(offeringName)` | `Promise<IapSubscription[]>` | Get a list of subscriptions available in your offering. Use these to show a paywall to the user |
 | `purchaseSubscriptionFromOffering(offeringName, productId)` | `Promise<PurchaseResponse>` | Trigger a checkout flow for a given subscription (identified by its productId from `IapSubscription` |
+| `hasUserMadePurchase()` | `Promise<boolean>` | Check if the user has ever made a purchase on RUN |
 
 ## Best Practices
 

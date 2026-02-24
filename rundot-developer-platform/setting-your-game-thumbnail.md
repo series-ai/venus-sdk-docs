@@ -8,7 +8,7 @@ Your game's thumbnail is the image players see on the RUN.game Explore page, in 
 
 ## How It Works
 
-Place a file called `thumbnail.jpg` in your project's `public/` folder:
+Place a file called `thumbnail.jpg` in your project's `public/` folder. **The image must be exactly 512×512 pixels** — the deploy command will fail if the dimensions are wrong.
 
 ```
 my-game/
@@ -22,16 +22,16 @@ my-game/
 When you run `rundot deploy`, the CLI automatically picks up `thumbnail.jpg` from `public/` and uploads it with your build.
 
 {% hint style="warning" %}
-If you deploy without a `thumbnail.jpg`, the CLI will prompt you about it. You can continue without one, but your game won't look great in search results.
+The deploy command will fail if you have not changed the thumbnail from the default one. Replace the default placeholder with your own `thumbnail.jpg` before deploying.
 {% endhint %}
 
-## Auto-Generated Thumbnails
+## Replacing the Default Thumbnail
 
-If you don't provide a custom thumbnail (or if the file is the default placeholder from a template), the RUN.game platform will automatically generate a thumbnail for your game. This is fine for early development, but you should replace it with a custom one before publishing.
+Projects created from a template include a default placeholder thumbnail. You must replace it with your own image before deploying — the CLI will not allow a deploy with the default thumbnail.
 
 ## Tips
 
-* **Use a 1:1 aspect ratio** (square) for best results across all surfaces.
+* **Dimensions:** Exactly **512×512 pixels** (required; deploy fails otherwise).
 * **Keep it simple** — the thumbnail appears small in search results, so bold colors and minimal text work best.
 * **Show gameplay** — screenshots or stylized game art help players understand what your game is about.
 * **File format:** JPEG (`.jpg .jpeg`). Keep the file size reasonable for fast uploads.

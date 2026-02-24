@@ -73,8 +73,8 @@ This deploys your game to a tag labelled **staging** on the RUN.game platform. S
 
 1. Be fully functional and work as expected.
 2. Not contain any controversial or offensive content.
-3. Have a thumbnail named `thumbnail.jpeg` in the **public** folder (not in the project root).
-4. Have a thumbnail no larger than 256×256 pixels.
+3. Have a jpg formatted thumbnail named `thumbnail.jpg` in the **public** folder (not in the project root).
+4. Have a thumbnail that is exactly 512×512 pixels.
 5. Have a name and description (set via `rundot init --name` and `--description`, or the game set-name/set-description commands).
 
 {% endstep %}

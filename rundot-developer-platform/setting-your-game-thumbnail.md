@@ -31,7 +31,7 @@ If you don't provide a custom thumbnail (or if the file is the default placehold
 
 ## Tips
 
-- **Use a 1:1 aspect ratio** (square) for best results across all surfaces.
-- **Keep it simple** — the thumbnail appears small in search results, so bold colors and minimal text work best.
-- **Show gameplay** — screenshots or stylized game art help players understand what your game is about.
-- **File format:** JPEG (`.jpg`). Keep the file size reasonable for fast uploads.
+* **Use a 1:1 aspect ratio** (square) for best results across all surfaces.
+* **Keep it simple** — the thumbnail appears small in search results, so bold colors and minimal text work best.
+* **Show gameplay** — screenshots or stylized game art help players understand what your game is about.
+* **File format:** JPEG (`.jpg .jpeg`). Keep the file size reasonable for fast uploads.

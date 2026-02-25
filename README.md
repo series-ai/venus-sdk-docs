@@ -41,6 +41,7 @@ const time = await RundotGameAPI.time.requestTimeAsync()
 
 | API | What it does |
 | --- | --- |
+| [Assets](rundot-developer-platform/api/ASSETS.md) | Load game assets from the CDN with caching, preloading, and WebView support. |
 | [Shared Assets](rundot-developer-platform/api/SHARED_ASSETS.md) | Download host-provisioned asset bundles shared across titles. |
 
 ### Game Systems

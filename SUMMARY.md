@@ -26,6 +26,7 @@
   * [Purchases API](rundot-developer-platform/api/PURCHASES.md)
   * [Safe Areas API](rundot-developer-platform/api/SAFE_AREA.md)
   * [Server Authoritative API (BETA)](rundot-developer-platform/api/SERVER_AUTHORITATIVE.md)
+  * [Assets API](rundot-developer-platform/api/ASSETS.md)
   * [Shared Assets API](rundot-developer-platform/api/SHARED_ASSETS.md)
   * [Sharing API](rundot-developer-platform/api/SHARING.md)
   * [Storage API](rundot-developer-platform/api/STORAGE.md)

@@ -6,22 +6,21 @@ Competitive leaderboards with three security levels. Choose based on your game's
 
 ## Setup
 
-To use leaderboards, add one of the following to your project:
-
-* A `config.json` file in your project’s root directory, **or**
-* A `configs/` folder containing a `leaderboards.json` file.
-
-This file enables leaderboards and lets you configure how they work in your game.\
-\
-Minimal required configuration:
+Leaderboard behavior is driven by your `game.config.json` file in the project root. Add a `leaderboard` key to enable and configure leaderboards:
 
 ```json
 {
+  "gameId": "your-game-id",
+  "relativePathToBuildFolder": "./dist",
   "leaderboard": {
     "requiresToken": false
   }
 }
 ```
+
+This configuration is uploaded with your game when you deploy. The server reads it to determine security mode, score bounds, time periods, and anti-cheat rules. If you omit the `leaderboard` key entirely, leaderboards still work with sensible defaults (simple mode, no tokens, alltime + daily periods).
+
+***
 
 ## 🟢 Simple Mode (Default - Casual Games)
 
@@ -41,7 +40,7 @@ const result = await RundotGameAPI.leaderboard.submitScore({
 console.log(`Your rank: ${result.rank}`)
 ```
 
-**Minimal Configuration:**
+**Configuration:**
 
 ```json
 {
@@ -150,6 +149,27 @@ const result = await RundotGameAPI.leaderboard.submitScore({
 
 ***
 
+## Score Ordering
+
+By default, leaderboards rank higher scores first (best for points-based games). For time trials, golf, or any game where lower is better, set `scoreOrder` to `"lowest"`:
+
+```json
+{
+  "leaderboard": {
+    "scoreOrder": "lowest"
+  }
+}
+```
+
+| Value | Ranking | Example use cases |
+| --- | --- | --- |
+| `"highest"` (default) | Higher scores rank better | Points, combos, distance |
+| `"lowest"` | Lower scores rank better | Speed runs, time trials, golf |
+
+This is purely a server-side config option — the SDK calls (`submitScore`, `getPagedScores`, etc.) work identically regardless of ordering.
+
+***
+
 ## Query Methods (Same for All Modes)
 
 All query methods work identically regardless of security mode:
@@ -236,9 +256,10 @@ const dailyScores = await RundotGameAPI.leaderboard.getPagedScores({
 
 Uses defaults:
 
-* Single mode: `"default"`
-* Single period: `"alltime"` (permanent)
-* Basic rate limiting (30s between submissions)
+* Mode: `"default"`
+* Periods: `"alltime"` and `"daily"`
+* Score ordering: highest first
+* Rate limiting: 60s between submissions
 
 ***
 
@@ -252,11 +273,14 @@ Uses defaults:
     "enableScoreSealing": false,      // Requires requiresToken=true
     "scoreSealingSecret": "secret",   // Required if enableScoreSealing=true
     
+    // Score ordering
+    "scoreOrder": "highest",          // "highest" (default) or "lowest" (for time trials, golf, etc.)
+    
     // Score bounds
     "minScore": 0,
     "maxScore": 999999999,
     "minDurationSec": 10,
-    "maxDurationSec": 600,
+    "maxDurationSec": 3600,
     
     // Game modes (optional - omit for single default mode)
     "modes": {
@@ -264,7 +288,7 @@ Uses defaults:
       "hard": { "displayName": "Hard Mode" }
     },
     
-    // Time periods (optional - omit for single alltime period)
+    // Time periods (optional - omit for alltime + daily default)
     "periods": {
       "alltime": { "displayName": "All Time", "type": "alltime" },
       "daily": { "displayName": "Daily", "type": "daily" }
@@ -311,7 +335,7 @@ Uses defaults:
 
 ## Best Practices
 
-* Configure score bounds, durations, and anti-cheat settings in your game's `config.json`.
+* Configure score bounds, durations, and anti-cheat settings in your `game.config.json`.
 * Use token or score-sealing modes for competitive or high-value rewards.
 * Log submissions and responses for customer support audits.
 * Treat this API as BETA; monitor release notes for schema or validation changes.
@@ -323,6 +347,7 @@ Uses defaults:
 ## Features
 
 * **Three Security Levels**: Simple, Token, Sealed - choose based on game stakes
+* **Score Ordering**: Highest-first (default) or lowest-first for time trials and golf
 * **Multiple Modes**: Support different game modes (classic, hard, etc.)
 * **Time Periods**: Daily, weekly, monthly, and all-time leaderboards
 * **Anti-Cheat**: Rate limiting, trust scores, shadow banning, optional session validation & sealing

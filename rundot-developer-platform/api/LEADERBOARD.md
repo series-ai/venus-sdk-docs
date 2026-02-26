@@ -6,7 +6,7 @@ Competitive leaderboards with three security levels. Choose based on your game's
 
 ## Setup
 
-Leaderboard behavior is driven by your `game.config.json` file in the project root. Add a `leaderboard` key to enable and configure leaderboards:
+Leaderboard behavior is driven by your `config.json` file in the project root. Add a `leaderboard` key to enable and configure leaderboards:
 
 ```json
 {

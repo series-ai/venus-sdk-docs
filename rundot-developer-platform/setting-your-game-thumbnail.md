@@ -34,4 +34,4 @@ Projects created from a template include a default placeholder thumbnail. You mu
 * **Dimensions:** Exactly **512×512 pixels** (required; deploy fails otherwise).
 * **Keep it simple** — the thumbnail appears small in search results, so bold colors and minimal text work best.
 * **Show gameplay** — screenshots or stylized game art help players understand what your game is about.
-* **File format:** JPEG (`.jpg .jpeg`). Keep the file size reasonable for fast uploads.
+* **File format:** JPG (`.jpg`). Keep the file size reasonable for fast uploads.

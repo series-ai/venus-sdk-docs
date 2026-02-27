@@ -83,16 +83,16 @@ function Paywall() {
   // fetch all subscriptions for your offering
   useEffect(() => {
     RundotGameAPI.iap
-      .getSubscriptionsForOffering('premium')
+      .getSubscriptionsForOffering('premium') // replace 'premium' with your offering
       .then(setSubscriptions);
   }, []);
 
   // if the user wants to make a purchase, call the purchaseSubscriptionFromOffering method to trigger
   // the checkout flow
-  const handlePurchase = async (productId: string) => {
+  const handlePurchase = async (subscriptionOfferingId: string) => {
     const result = await RundotGameAPI.iap.purchaseSubscriptionFromOffering(
-      'premium',
-      productId
+      'premium', // replace 'premium' with your offering
+      subscriptionOfferingId
     );
     if (result.success) {
       alert('Thanks for subscribing!');
@@ -103,7 +103,7 @@ function Paywall() {
     <div>
       <h2>Go Premium</h2>
       {subscriptions.map((sub) => (
-        <button key={sub.productId} onClick={() => handlePurchase(sub.productId)}>
+        <button key={sub.offeringId} onClick={() => handlePurchase(sub.offeringId)}>
           <strong>{sub.description}</strong>
           <span>
             /* price is a float, so this could be 14.99 or 4.99 */
@@ -127,8 +127,8 @@ export default Paywall;
 | `openStore()` | `Promise<void>` | Open the native RunBucks store |
 | `getCurrencyIcon()` | `Promise<string>` | Get the RunBucks icon URL for UI |
 | `getUserSubscriptionStatus(subscriptionName)` | `Promise<SubscriptionStatusResponse \| null>` | Get the status of a supscription for the current user. null if the user doesn't have the subscription |
-| `getSubscriptionsForOffering(offeringName)` | `Promise<IapSubscription[]>` | Get a list of subscriptions available in your offering. Use these to show a paywall to the user |
-| `purchaseSubscriptionFromOffering(offeringName, productId)` | `Promise<PurchaseResponse>` | Trigger a checkout flow for a given subscription (identified by its productId from `IapSubscription` |
+| `getSubscriptionsForOffering(offeringId)` | `Promise<IapSubscription[]>` | Get a list of subscriptions available in your offering. Use these to show a paywall to the user |
+| `purchaseSubscriptionFromOffering(offeringId, productId)` | `Promise<PurchaseResponse>` | Trigger a checkout flow for a given subscription (identified by its productId from `IapSubscription` |
 | `hasUserMadePurchase()` | `Promise<boolean>` | Check if the user has ever made a purchase on RUN |
 
 ## Best Practices

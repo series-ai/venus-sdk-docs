@@ -176,6 +176,90 @@ interface StorefrontResponse {
 }
 ```
 
+### Purchase
+
+Buy an item. The SDK generates an `idempotencyKey` to prevent duplicate charges on retry.
+
+```typescript
+const idempotencyKey = crypto.randomUUID()
+const result = await RundotGameAPI.shop.purchase('speed_boost', idempotencyKey)
+
+console.log('Order:', result.order.orderId)
+console.log('Status:', result.order.status) // 'fulfilled'
+console.log('Paid:', result.order.finalPrice.value)
+```
+
+If the player has insufficient funds, the platform automatically opens the currency purchase flow. If the catalog has been updated since the player last fetched it, the SDK throws a stale catalog error — re-fetch the catalog and retry.
+
+### Get Order
+
+Retrieve a specific order by ID.
+
+```typescript
+const result = await RundotGameAPI.shop.getOrder(orderId)
+const order = result.order
+
+console.log('Status:', order.status)
+for (const entry of order.statusHistory) {
+  console.log(`  ${entry.status} @ ${entry.timestamp}`)
+}
+```
+
+### Get Order History
+
+Retrieve recent orders for the current game.
+
+```typescript
+const result = await RundotGameAPI.shop.getOrderHistory({ limit: 10 })
+for (const order of result.orders) {
+  console.log(`${order.orderId}: ${order.itemId} — ${order.status}`)
+}
+```
+
+### Request Refund
+
+Refund a recent purchase. The player gets their currency back and the entitlements are removed.
+
+```typescript
+const result = await RundotGameAPI.shop.requestRefund(orderId, 'changed_mind')
+
+console.log('Status:', result.order.status) // 'refunded'
+console.log('Refund amount:', result.order.refund.amount.value)
+```
+
+**Refund reason codes:** `changed_mind`, `accidental_purchase`, `not_as_expected`, `technical_issue`, `other`
+
+**Refund constraints:**
+- The item must have `refundEligible: true` in the config
+- The request must be within `refundWindowHours` of the purchase
+- Consumable entitlements must not have been used (quantity must equal what was originally granted)
+- Non-refundable items (e.g., `refundEligible: false`) are always rejected
+
+## Client-Side Analytics Events
+
+The platform automatically tracks server-side analytics for purchases (`shop_purchase`), failed purchases (`shop_purchase_failed`), and refunds (`shop_refund`).
+
+For client-side shop analytics, send the following events via `RundotGameAPI.analytics.logEvent()`:
+
+| Event | When to Fire | Properties |
+|---|---|---|
+| `shop_item_viewed` | Player views an item detail page | `item_id`, `item_name`, `item_category`, `price` |
+| `shop_item_click_purchase` | Player taps the purchase button | `item_id`, `item_name`, `price` |
+| `shop_item_cancel_purchase` | Player cancels/dismisses the purchase confirmation | `item_id`, `item_name`, `price` |
+| `shop_item_view_duration` | Player leaves an item detail page | `item_id`, `duration_ms` |
+
+```typescript
+// Example: track item viewed
+RundotGameAPI.analytics.logEvent('shop_item_viewed', {
+  item_id: item.itemId,
+  item_name: item.name,
+  item_category: item.category,
+  price: item.resolvedPrice.finalPrice.value,
+})
+```
+
+## Type Reference
+
 ### StorefrontItem
 
 ```typescript
@@ -206,5 +290,41 @@ interface StorefrontItem {
       discountPrice?: { type: string; value: string }
     }[]
   }
+}
+```
+
+### ShopOrder
+
+```typescript
+interface ShopOrder {
+  orderId: string
+  userId: string
+  gameId: string
+  configId: string
+  itemId: string
+  itemSnapshot: {
+    name: string
+    price: { type: string; value: string }
+    entitlements: { itemId: string; quantity: number; consumable: boolean; durationDays?: number }[]
+  }
+  originalPrice: { type: string; value: string }
+  finalPrice: { type: string; value: string }
+  appliedSales: {
+    saleId: string
+    discountType: string
+    discountValue: number
+    discountPrice?: { type: string; value: string }
+  }[]
+  status: string
+  statusHistory: { status: string; timestamp: string; reason?: string }[]
+  refund: null | {
+    amount: { type: string; value: string }
+    reasonCode: string
+    requestedAt: string
+    processedAt: string
+  }
+  idempotencyKey: string
+  createdAt: string
+  updatedAt: string
 }
 ```

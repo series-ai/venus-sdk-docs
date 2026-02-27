@@ -14,9 +14,11 @@ import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
 const launchParams = await RundotGameAPI.context.launchParams
 const shareParams = await RundotGameAPI.context.shareParams
+const notificationParams = await RundotGameAPI.context.notificationParams
 
 console.log('Launch parameters:', launchParams)
 console.log('Share parameters:', shareParams)
+console.log('Notification parameters:', notificationParams)
 ```
 
 ## Payload Guidelines
@@ -29,3 +31,4 @@ console.log('Share parameters:', shareParams)
 
 * Inspect `RundotGameAPI.context.launchParams` on boot to determine how you want your game to load early on.
 * Inspect `RundotGameAPI.context.shareParams` on boot and branch gameplay early. Players expect to land in the invited context immediately.
+* Inspect `RundotGameAPI.context.notificationParams` to handle launches from push notifications — e.g. `roomId` to auto-join a room, or custom payload from a `send_notification` effect.

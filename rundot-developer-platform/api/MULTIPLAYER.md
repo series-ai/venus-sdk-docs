@@ -381,6 +381,63 @@ Always call both `leaveRoomAsync` and your subscription's unsubscribe function w
 
 ---
 
+## Push Notifications
+
+Turn-based rooms can send push notifications when a turn advances or a game ends. Notifications are configured in `game.config.json` under `rooms.notifications` — no client code required.
+
+### Configuration
+
+```json
+{
+  "rooms": {
+    "gameType": "chess",
+    "notifications": {
+      "onTurnStart": {
+        "title": "Chess",
+        "body": "It's your turn! {{previousPlayerName}} just moved."
+      },
+      "onGameEnd": {
+        "title": "Chess — Game Over",
+        "body": "{{finisherName}} won by {{endReason}}!"
+      }
+    }
+  }
+}
+```
+
+Both templates are optional. If omitted, no notifications are sent for that event.
+
+### Template Variables
+
+**`onTurnStart`** — sent to the next player after a turn advances:
+
+| Variable | Description |
+|---|---|
+| `{{currentPlayerName}}` | Username of the player whose turn it is now |
+| `{{previousPlayerName}}` | Username of the player who just moved |
+| `{{roomName}}` | Room name |
+| `{{turnNumber}}` | Current turn number (1-based) |
+| `{{gameType}}` | Game type from room config |
+| `{{roomId}}` | Room ID |
+
+**`onGameEnd`** — sent to all players except the one who made the final move:
+
+| Variable | Description |
+|---|---|
+| `{{winnerName}}` | Username of the winner (empty if draw) |
+| `{{finisherName}}` | Username of the player who made the final move |
+| `{{endReason}}` | End reason (e.g. `"checkmate"`, `"resignation"`, `"completed"`) |
+| `{{roomName}}` | Room name |
+| `{{gameType}}` | Game type from room config |
+| `{{roomId}}` | Room ID |
+
+### Behavior
+
+- **Mutually exclusive:** A move that ends the game sends `onGameEnd` only, not `onTurnStart`.
+- **Self-notification guard:** The player who made the move/ended the game is never notified.
+- **Tap action:** Tapping the notification opens the game via `appId`. The `roomId` is delivered in `context.notificationParams.roomId` so your game can auto-join/resume the relevant room on launch.
+- **No config = no notifications:** Omitting `notifications` entirely results in silent no-op.
+
 ## Room Properties
 
 `RundotGameRoom` includes:

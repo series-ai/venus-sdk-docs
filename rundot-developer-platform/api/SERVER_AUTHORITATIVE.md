@@ -163,6 +163,61 @@ unsubscribe()
 **Filters:** subscribe by `entities`, `tags`, `activeRuns`, and/or `roomId`.  
 Only entities marked `clientViewable: true` in your simulation config are streamed to clients.
 
+## Push Notifications
+
+Recipes can send push notifications to any player using the `send_notification` effect.
+
+### Example Recipe
+
+```json
+{
+  "challenge_opponent": {
+    "duration": 0,
+    "inputs": { "targetId": { "type": "string" } },
+    "beginEffects": [
+      {
+        "type": "send_notification",
+        "recipientProfileId": "{{inputs.targetId}}",
+        "title": "Battle Challenge!",
+        "body": "A player has challenged you to battle!"
+      }
+    ]
+  }
+}
+```
+
+### Effect Properties
+
+| Property | Type | Required | Description |
+|---|---|---|---|
+| `type` | `"send_notification"` | Yes | Effect type |
+| `recipientProfileId` | `string` | Yes | Profile ID of the recipient. Supports template substitution (e.g. `{{inputs.targetId}}`, `{{profileId}}`). |
+| `title` | `string` | Yes | Notification title. Supports template substitution. |
+| `body` | `string` | Yes | Notification body. Supports template substitution. |
+| `payload` | `Record<string, string>` | No | Key-value pairs delivered to your game via `context.notificationParams` on launch. Values support template substitution. |
+| `as` | `string` | No | Store the result in `{{results.<as>}}` for downstream effects. Returns `{ sent: true, recipientId }` or `{ sent: false, error }`. |
+
+### Behavior
+
+- `appId` is automatically set from the game's execution context — tapping the notification opens your game.
+- `payload` entries are JSON-serialized and delivered as `context.notificationParams` when the recipient opens the game from the notification. Access them via `RundotAPI.context.notificationParams`.
+- If `recipientProfileId` fails to resolve (e.g. missing input), the effect is skipped with a warning — it does not abort the recipe.
+- Braze API failures are caught and logged; they do not abort recipe execution.
+- The effect is awaited (not fire-and-forget), so `as` captures the result before downstream effects run. Note: Braze has a 10-second timeout that blocks the recipe chain if the API is slow.
+
+### Template Variables
+
+All standard recipe template variables are supported:
+
+| Variable | Description |
+|---|---|
+| `{{profileId}}` / `{{executorId}}` | Profile ID of the player who triggered the recipe |
+| `{{roomId}}` | Current room ID (if room-scoped) |
+| `{{inputs.<key>}}` | Recipe input values |
+| `{{results.<key>}}` | Results from earlier effects (via `as`) |
+| `{{entities.<id>}}` | Current inventory quantity for an entity |
+| `{{now}}` | Current timestamp (ms) |
+
 ## Best Practices
 
 - Batch operations with `executeBatchOperationsAsync` when you need atomic updates.

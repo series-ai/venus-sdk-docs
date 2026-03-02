@@ -99,6 +99,19 @@ console.log('Generated image:', result.imageUrl)
 console.log('Prompt used:', result.prompt)
 ```
 
+### Background Removal
+
+Generate images with transparent backgrounds by setting `removeBackground: true`. The output is always a PNG with an alpha channel.
+
+```typescript
+const result = await RundotGameAPI.imageGen.generate({
+  prompt: 'A cartoon cat character',
+  removeBackground: true,
+})
+
+// result.imageUrl points to a transparent PNG
+```
+
 ### Aspect Ratios
 
 | Ratio | Best For |
@@ -129,6 +142,7 @@ console.log('Prompt used:', result.prompt)
 | `aspectRatio` | `string` | Image dimensions (default: `'1:1'`) |
 | `referenceImages` | `string[]` | URLs of reference images |
 | `seed` | `number` | Seed for reproducible results |
+| `removeBackground` | `boolean` | Remove background and return a transparent PNG |
 
 ---
 

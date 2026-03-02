@@ -4,6 +4,20 @@ icon: circle-question
 
 # Troubleshooting
 
+## First Steps
+
+Before diving into specific issues, make sure you're running the latest versions. Many bugs are fixed in newer releases.
+
+```bash
+# Update the SDK
+npm install @series-inc/rundot-game-sdk@latest
+
+# Update the CLI
+rundot update
+```
+
+If the issue persists after updating, check the sections below.
+
 ## CLI Issues
 
 #### "Session expired" or authentication errors
@@ -73,14 +87,6 @@ If you're using Vite, open `vite.config.js` and add:
 }
 ```
 
-#### How do I update the SDK?
-
-From your project's root folder:
-
-```bash
-npm install @series-inc/rundot-game-sdk@latest
-```
-
 #### Ads do not work in my game
 
 Ads are currently not supported on Desktop, but will be in a future SDK update.
@@ -93,5 +99,4 @@ If you're using a VPN, the ads won't be able to load.
 * Check the command help: `rundot --help`
 * Check specific command help: `rundot <command> --help`
   * e.g., `rundot login --help`, `rundot init --help`, `rundot deploy --help`, `rundot game --help`
-* Make sure you're on the latest version by running `rundot update`
 * Check the [GitHub releases](https://github.com/series-inc/rundot_cli_releases/releases) for changelogs and known issues

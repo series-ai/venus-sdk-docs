@@ -93,10 +93,28 @@ const result = await RundotGameAPI.imageGen.generate({
     'https://example.com/reference.png'
   ],
   seed: 12345,             // For reproducible results
+  model: 'gemini-3.1-flash-image-preview', // Optional, this is the default
 })
 
 console.log('Generated image:', result.imageUrl)
 console.log('Prompt used:', result.prompt)
+```
+
+### Model Selection
+
+Two models are available:
+
+| Model | Codename | Best For |
+|-------|----------|----------|
+| `gemini-3.1-flash-image-preview` (default) | Nano Banana 2 | Fast, cost-efficient generation. Pro-level quality at Flash speed. |
+| `gemini-3-pro-image-preview` | Nano Banana Pro | Studio-quality 4K visuals, complex layouts, precise text rendering. |
+
+```typescript
+// Use the Pro model for higher quality
+const result = await RundotGameAPI.imageGen.generate({
+  prompt: 'A detailed fantasy landscape with text overlay "Game Over"',
+  model: 'gemini-3-pro-image-preview',
+})
 ```
 
 ### Background Removal
@@ -140,9 +158,10 @@ const result = await RundotGameAPI.imageGen.generate({
 | `prompt` | `string` | Text description of desired image (required) |
 | `negativePrompt` | `string` | What to avoid in the image |
 | `aspectRatio` | `string` | Image dimensions (default: `'1:1'`) |
-| `referenceImages` | `string[]` | URLs of reference images |
+| `referenceImages` | `string[]` | URLs or data URIs of reference images |
 | `seed` | `number` | Seed for reproducible results |
 | `removeBackground` | `boolean` | Remove background and return a transparent PNG |
+| `model` | `ImageGenModel` | Model to use (default: `'gemini-3.1-flash-image-preview'`) |
 
 ---
 

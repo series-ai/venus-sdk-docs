@@ -6,68 +6,86 @@ Build real-time multiplayer sessions backed by the RUN.game Rooms service. Creat
 
 Multiplayer behavior is driven by the `rooms` key in your project's `config.json`. This file is uploaded with your game when you deploy — the server reads it to configure matchmaking, room creation defaults, turn-based rules, and more.
 
-Add a `rooms` key to your `config.json`:
+Add a `rooms` key to your `config.json`. The key inside `rooms` is your **game type** — it doubles as the matchmaking identifier:
 
 ```json
 {
   "rooms": {
-    "gameType": "your-game-type",
-    "minPlayers": 2,
-    "maxPlayers": 4
+    "your-game-type": {
+      "minPlayers": 2,
+      "maxPlayers": 4
+    }
   }
 }
 ```
 
 If you omit `rooms` entirely, the server applies sensible defaults (free-form, 1–4 players, no turn order). Every field below is optional — only set what you need to override.
 
+> **Multi-game-type apps:** If your app supports multiple game modes that need separate matchmaking pools, add one entry per game type:
+> ```json
+> {
+>   "rooms": {
+>     "classic": { "minPlayers": 2, "maxPlayers": 2 },
+>     "party":   { "minPlayers": 2, "maxPlayers": 8 }
+>   }
+> }
+> ```
+
 ### Full config reference
 
 ```json
 {
   "rooms": {
-    "gameType": "chess",
-    "rulesPreset": "blitz_v1",
-    "minPlayers": 2,
-    "maxPlayers": 2,
-    "playerRoles": ["white", "black"],
-    "playerInitialization": "random",
-    "matchmaking": {
-      "defaultCriteria": {
-        "hasSpace": true,
-        "isPrivate": false
-      }
-    },
-    "createOptions": {
+    "chess": {
+      "rulesPreset": "blitz_v1",
+      "minPlayers": 2,
       "maxPlayers": 2,
-      "isPrivate": false,
-      "customMetadata": {
-        "timeControl": "blitz"
-      }
-    },
-    "privateMatchDefaults": {
-      "allowCustomCode": true,
-      "createOptions": {
-        "isPrivate": true,
-        "maxPlayers": 4
-      }
-    },
-    "defaultRules": {
-      "turnBased": true,
-      "allowedMessageTypes": {
-        "playing": {
-          "piece_move": { "requiredFields": ["from", "to"] },
-          "resign": { "requiredFields": ["resignedBy"] }
+      "playerRoles": ["white", "black"],
+      "playerInitialization": "random",
+      "matchmaking": {
+        "defaultCriteria": {
+          "hasSpace": true,
+          "isPrivate": false
         }
-      }
-    },
-    "notifications": {
-      "onTurnStart": {
-        "title": "Your turn!",
-        "body": "It's your move in {{roomName}}"
       },
-      "onGameEnd": {
-        "title": "Game over",
-        "body": "{{winnerName}} won in {{roomName}}"
+      "createOptions": {
+        "maxPlayers": 2,
+        "isPrivate": false,
+        "customMetadata": {
+          "timeControl": "blitz"
+        }
+      },
+      "privateMatchDefaults": {
+        "allowCustomCode": true,
+        "createOptions": {
+          "isPrivate": true,
+          "maxPlayers": 4
+        }
+      },
+      "defaultRules": {
+        "turnBased": true,
+        "allowedMessageTypes": {
+          "playing": {
+            "piece_move": { "requiredFields": ["from", "to"] },
+            "resign": { "requiredFields": ["resignedBy"] }
+          }
+        }
+      },
+      "notifications": {
+        "onTurnStart": {
+          "title": "Your turn!",
+          "body": "It's your move in {{roomName}}"
+        },
+        "onGameEnd": {
+          "title": "Game over",
+          "body": "{{winnerName}} won in {{roomName}}"
+        },
+        "onMessage": {
+          "chat": {
+            "title": "{{senderName}} in {{roomName}}",
+            "body": "Sent you a message"
+          }
+        }
       }
     }
   }
@@ -76,9 +94,10 @@ If you omit `rooms` entirely, the server applies sensible defaults (free-form, 1
 
 ### Config fields
 
+The key of each entry inside `rooms` is the **game type** — it's the identifier used for matchmaking and room filtering.
+
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `gameType` | `string` | your app ID | Identifier used for matchmaking and room filtering |
 | `rulesPreset` | `string` | `"default"` | Named preset for server-side rule sets |
 | `minPlayers` | `number` | `1` | Minimum players required. When reached in a `waiting` room, the game **auto-starts** |
 | `maxPlayers` | `number` | `4` | Maximum players allowed in a room |
@@ -88,7 +107,7 @@ If you omit `rooms` entirely, the server applies sensible defaults (free-form, 1
 | `createOptions` | `object` | — | Default options merged into every `createRoomAsync` call |
 | `privateMatchDefaults` | `object` | — | Defaults for private match creation. `allowCustomCode` enables custom room codes |
 | `defaultRules` | `object` | — | Server-side validation rules (see below) |
-| `notifications` | `object` | — | Push notification templates for turn start and game end |
+| `notifications` | `object` | — | Push notification templates for turn start, game end, and room messages |
 
 ### `defaultRules` fields
 
@@ -101,9 +120,11 @@ If you omit `rooms` entirely, the server applies sensible defaults (free-form, 1
 
 ### Notification template variables
 
-Templates in `notifications.onTurnStart` and `notifications.onGameEnd` support these variables:
+Templates in `notifications.onTurnStart`, `notifications.onGameEnd`, and `notifications.onMessage.<messageType>` support these variables:
 
-`{{currentPlayerName}}`, `{{previousPlayerName}}`, `{{roomName}}`, `{{turnNumber}}`, `{{gameType}}`, `{{roomId}}`, `{{winnerName}}`, `{{endReason}}`, `{{finisherName}}`
+`{{currentPlayerName}}`, `{{previousPlayerName}}`, `{{roomName}}`, `{{turnNumber}}`, `{{gameType}}`, `{{roomId}}`, `{{winnerName}}`, `{{endReason}}`, `{{finisherName}}`, `{{senderName}}`, `{{roomCode}}`
+
+Additionally, `onMessage` templates receive any keys from the message's `metadata` as template variables.
 
 ---
 
@@ -329,11 +350,13 @@ For turn-based games, set `defaultRules.turnBased` to `true` in your `config.jso
 ```json
 {
   "rooms": {
-    "maxPlayers": 2,
-    "playerRoles": ["white", "black"],
-    "playerInitialization": "random",
-    "defaultRules": {
-      "turnBased": true
+    "chess": {
+      "maxPlayers": 2,
+      "playerRoles": ["white", "black"],
+      "playerInitialization": "random",
+      "defaultRules": {
+        "turnBased": true
+      }
     }
   }
 }
@@ -383,29 +406,36 @@ Always call both `leaveRoomAsync` and your subscription's unsubscribe function w
 
 ## Push Notifications
 
-Turn-based rooms can send push notifications when a turn advances or a game ends. Notifications are configured in `game.config.json` under `rooms.notifications` — no client code required.
+Rooms can send push notifications when a turn advances, a game ends, or a room message is created. Notifications are configured in `config.json` under `rooms.<gameType>.notifications` — no client code required.
 
 ### Configuration
 
 ```json
 {
   "rooms": {
-    "gameType": "chess",
-    "notifications": {
-      "onTurnStart": {
-        "title": "Chess",
-        "body": "It's your turn! {{previousPlayerName}} just moved."
-      },
-      "onGameEnd": {
-        "title": "Chess — Game Over",
-        "body": "{{finisherName}} won by {{endReason}}!"
+    "chess": {
+      "notifications": {
+        "onTurnStart": {
+          "title": "Chess",
+          "body": "It's your turn! {{previousPlayerName}} just moved."
+        },
+        "onGameEnd": {
+          "title": "Chess — Game Over",
+          "body": "{{finisherName}} won by {{endReason}}!"
+        },
+        "onMessage": {
+          "chat": {
+            "title": "{{senderName}} in {{roomName}}",
+            "body": "Sent you a message"
+          }
+        }
       }
     }
   }
 }
 ```
 
-Both templates are optional. If omitted, no notifications are sent for that event.
+All templates are optional. If omitted, no notifications are sent for that event.
 
 ### Template Variables
 
@@ -431,10 +461,22 @@ Both templates are optional. If omitted, no notifications are sent for that even
 | `{{gameType}}` | Game type from room config |
 | `{{roomId}}` | Room ID |
 
+**`onMessage.<messageType>`** — sent to all room members except the sender when a message of the matching type is created:
+
+| Variable | Description |
+|---|---|
+| `{{senderName}}` | Username of the message sender |
+| `{{roomName}}` | Room name |
+| `{{roomCode}}` | Room invite code |
+| `{{gameType}}` | Game type from room config |
+| `{{roomId}}` | Room ID |
+| `{{<metadataKey>}}` | Any key from the message's `metadata` object is available as a variable |
+
 ### Behavior
 
 - **Mutually exclusive:** A move that ends the game sends `onGameEnd` only, not `onTurnStart`.
-- **Self-notification guard:** The player who made the move/ended the game is never notified.
+- **Self-notification guard:** The player who made the move/ended the game/sent the message is never notified.
+- **Placeholder usernames:** If a player has an auto-generated placeholder username, it appears as "A player" in notifications.
 - **Tap action:** Tapping the notification opens the game via `appId`. The `roomId` is delivered in `context.notificationParams.roomId` so your game can auto-join/resume the relevant room on launch.
 - **No config = no notifications:** Omitting `notifications` entirely results in silent no-op.
 

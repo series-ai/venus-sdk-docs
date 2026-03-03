@@ -1,4 +1,4 @@
-# Implementing an Energy System (BETA)
+# Simulation: Energy System (BETA)
 
 Add a regenerating energy/stamina system to your game. Players spend energy to take actions (start battles, enter dungeons) and it refills automatically over time — even while offline.
 

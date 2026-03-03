@@ -1,4 +1,4 @@
-# Implementing a Gacha System (BETA)
+# Simulation: Gacha System (BETA)
 
 Add randomized loot boxes, booster packs, and gacha pulls to your game. Players open packs to receive random rewards from weighted pools, with pity counters, rarity guarantees, and new-item bias — all validated server-side.
 

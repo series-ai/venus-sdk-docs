@@ -51,11 +51,11 @@ const time = await RundotGameAPI.time.requestTimeAsync()
 | [Experiments](rundot-developer-platform/api/EXPERIMENTS.md) | Run A/B tests, feature flags, and feature gates. |
 | [Big Numbers](rundot-developer-platform/api/BIGNUMBERS.md) | Handle exponential economies without losing precision. |
 | [Multiplayer (BETA)](rundot-developer-platform/api/MULTIPLAYER.md) | Build synchronous multiplayer sessions with real-time updates. |
-| [Server-Authoritative (BETA)](rundot-developer-platform/api/SERVER_AUTHORITATIVE.md) | Drive authoritative game state through the simulation system. |
-| [Simulation Config (BETA)](rundot-developer-platform/api/SIMULATION_CONFIG.md) | Define entities, recipes, loot tables, and lifecycle hooks in JSON config. |
-| [Energy System (BETA)](rundot-developer-platform/api/ENERGY_SYSTEM.md) | Implement regenerating energy/stamina with offline catch-up. |
-| [Gacha System (BETA)](rundot-developer-platform/api/GACHA_SYSTEM.md) | Add loot boxes with weighted pools, pity counters, and guarantees. |
-| [Building Timers (BETA)](rundot-developer-platform/api/BUILDING_TIMERS.md) | Timed upgrades, build queues, and passive resource generation. |
+| [Simulation API (BETA)](rundot-developer-platform/api/SERVER_AUTHORITATIVE.md) | Drive authoritative game state through the simulation system. |
+| [Simulation: Config Reference (BETA)](rundot-developer-platform/api/SIMULATION_CONFIG.md) | Define entities, recipes, loot tables, and lifecycle hooks in JSON config. |
+| [Simulation: Energy System (BETA)](rundot-developer-platform/api/ENERGY_SYSTEM.md) | Implement regenerating energy/stamina with offline catch-up. |
+| [Simulation: Gacha System (BETA)](rundot-developer-platform/api/GACHA_SYSTEM.md) | Add loot boxes with weighted pools, pity counters, and guarantees. |
+| [Simulation: Building Timers (BETA)](rundot-developer-platform/api/BUILDING_TIMERS.md) | Timed upgrades, build queues, and passive resource generation. |
 | [Sharing](rundot-developer-platform/api/SHARING.md) | Share links, generate QR codes, and handle share parameters. |
 | [Leaderboards (BETA)](rundot-developer-platform/api/LEADERBOARD.md) | Competitive leaderboards with multiple security levels. |
 

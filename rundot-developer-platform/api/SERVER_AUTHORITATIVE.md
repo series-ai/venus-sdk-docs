@@ -1,4 +1,4 @@
-# Server-Authoritative API (BETA)
+# Simulation API (BETA)
 
 Drive authoritative game state through the RUN.game simulation system. Execute recipes, manage inventories and slots, and resolve dynamic fields directly from the platform.
 

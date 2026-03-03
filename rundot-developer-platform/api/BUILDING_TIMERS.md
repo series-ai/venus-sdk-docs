@@ -1,4 +1,4 @@
-# Implementing Timed Actions & Build Queues (BETA)
+# Simulation: Building Timers (BETA)
 
 Add timed actions to your game — building upgrades, crafting, research, or any action that takes real time to complete. Includes build queues (one upgrade at a time), passive resource generation, and collecting completed results.
 

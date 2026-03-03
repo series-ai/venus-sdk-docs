@@ -1,8 +1,8 @@
-# Simulation Config Reference (BETA)
+# Simulation: Config Reference (BETA)
 
 Define your game's server-authoritative state, actions, and randomized rewards entirely through JSON configuration. This reference covers the full config schema — entities, recipes, loot tables, and lifecycle hooks.
 
-> This page is the config-authoring companion to the [Server-Authoritative API](SERVER_AUTHORITATIVE.md), which documents the client SDK methods. If you're looking for a specific pattern (energy systems, gacha, timers), see the recipe docs first — they include complete configs inline.
+> This page is the config-authoring companion to the [Simulation API](SERVER_AUTHORITATIVE.md), which documents the client SDK methods. If you're looking for a specific pattern (energy systems, gacha, timers), see the recipe docs first — they include complete configs inline.
 
 ***
 

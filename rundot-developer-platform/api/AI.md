@@ -32,10 +32,14 @@ console.log('Available models:', models)
 ```
 
 Commonly available production models:
-- `gpt-4o`
+- `gpt-5-mini`
 - `gpt-4o-mini`
-- `claude-3-5-sonnet-latest`
+- `claude-sonnet-4-6`
+- `claude-haiku-4-5`
 - `deepseek/deepseek-chat`
+- `o4-mini`
+
+> **Tip:** Call `getAvailableCompletionModels()` at runtime to discover the full up-to-date list, which includes additional OpenAI, Claude, DeepSeek, and Mistral models.
 
 ### Chat Completion Parameters
 

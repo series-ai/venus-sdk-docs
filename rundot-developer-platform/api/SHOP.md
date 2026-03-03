@@ -26,7 +26,7 @@ Add a `shop` key to your game's `config.json`:
         "name": "Speed Boost",
         "description": "Double movement speed for 60 seconds",
         "category": "consumable",
-        "price": { "type": "vbucks", "value": "100" },
+        "price": { "type": "bucks", "value": "100" },
         "entitlements": [
           { "itemId": "speed_boost_effect", "quantity": 1, "consumable": true }
         ],
@@ -98,12 +98,12 @@ Sales are separate objects that reference items by `itemId`. Items don't need mo
 ## Price Structure
 
 ```json
-{ "type": "vbucks", "value": "100" }
+{ "type": "bucks", "value": "100" }
 ```
 
 | Price Type | Description |
 |---|---|
-| `vbucks` | RunBucks (platform hard currency) |
+| `bucks` | RunBucks (platform hard currency) |
 | `direct_purchase` | Direct FIAT purchase (not yet supported in v1) |
 
 The `value` field is a string to support decimal precision for direct purchases.

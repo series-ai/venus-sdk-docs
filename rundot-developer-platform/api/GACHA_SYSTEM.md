@@ -6,6 +6,23 @@ Add randomized loot boxes, booster packs, and gacha pulls to your game. Players 
 
 ***
 
+## Where Config Goes
+
+All JSON config on this page goes in your project's server config — either a single `config.json` file or split across files in a `config/` directory. Each file must have a top-level `"simulation"` key. The CLI uploads config automatically when you `rundot deploy`.
+
+```
+my-game/
+├── config.json                      ← option A: all-in-one (add "simulation" key)
+├── config/                          ← option B: split files for complex games
+│   └── boosters.config.json
+├── game.config.json                 ← game ID + build settings only (separate)
+└── package.json
+```
+
+> `game.config.json` is for CLI metadata only. Simulation config goes in `config.json` or the `config/` directory.
+
+***
+
 ## What You'll Build
 
 - Booster packs that players open for randomized rewards

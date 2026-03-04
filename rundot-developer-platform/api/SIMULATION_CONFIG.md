@@ -6,9 +6,75 @@ Define your game's server-authoritative state, actions, and randomized rewards e
 
 ***
 
+## Project Setup
+
+Simulation config is uploaded to the server when you `rundot deploy`. There are two ways to organize it:
+
+### Option A: Single `config.json` File (Simple Games)
+
+For games with a small amount of simulation config, add a `simulation` key to your project's `config.json` file:
+
+```
+my-game/
+├── config.json                      ← simulation config goes here
+├── src/
+├── dist/
+├── game.config.json                 ← game ID + build settings (separate file)
+└── package.json
+```
+
+```json
+{
+  "simulation": {
+    "entities": { ... },
+    "recipes": { ... },
+    "lootTables": { ... }
+  }
+}
+```
+
+This is the same `config.json` used for `leaderboard` and `rooms` config. You can combine them in one file.
+
+### Option B: `config/` Directory (Complex Games)
+
+For games with many entities and recipes, split config across multiple files in a `config/` directory:
+
+```
+my-game/
+├── config/                          ← simulation config split across files
+│   ├── energy-system.config.json
+│   ├── boosters.config.json
+│   ├── store.config.json
+│   └── player-initialization.config.json
+├── src/
+├── dist/
+├── game.config.json                 ← game ID + build settings (separate file)
+└── package.json
+```
+
+Each file must have a top-level `"simulation"` key:
+
+```json
+{
+  "simulation": {
+    "entities": { ... },
+    "recipes": { ... }
+  }
+}
+```
+
+The CLI deep-merges all `*.config.json` files into a single simulation config at deploy time. One file per domain is a good pattern.
+
+### Important
+
+- **`config.json`** and **`config/`** are for server config (simulation, leaderboard, rooms, etc.)
+- **`game.config.json`** is a separate file for local CLI metadata only (`gameId`, `relativePathToDistFolder`, `usesPreloader`) — simulation config does not go there
+
+***
+
 ## Config Structure
 
-Simulation config is defined as JSON objects with a top-level `simulation` key. You can split config across multiple files — the platform merges them at deploy time.
+Each config file's `simulation` object can contain any combination of these top-level keys:
 
 ```json
 {
@@ -20,6 +86,8 @@ Simulation config is defined as JSON objects with a top-level `simulation` key. 
   }
 }
 ```
+
+Files are merged by key — if two files both define `entities`, their entities are combined. If two files define the same entity ID, the last file wins.
 
 ***
 

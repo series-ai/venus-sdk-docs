@@ -4,7 +4,20 @@ Build real-time multiplayer sessions backed by the RUN.game Rooms service. Creat
 
 ## Setup: config.json
 
-Multiplayer behavior is driven by the `rooms` key in your project's `config.json`. This file is uploaded with your game when you deploy — the server reads it to configure matchmaking, room creation defaults, turn-based rules, and more.
+Multiplayer behavior is driven by the `rooms` key in your project's `config.json`:
+
+```
+my-game/
+├── config.json                      ← add "rooms" key here
+├── src/
+├── dist/
+├── game.config.json                 ← game ID + build settings only (separate file)
+└── package.json
+```
+
+This is the same `config.json` used for other server config (`leaderboard`, `simulation`, etc.). It is uploaded with your game when you `rundot deploy` — the server reads it to configure matchmaking, room creation defaults, turn-based rules, and more.
+
+> `game.config.json` is a separate file for local CLI metadata (`gameId`, `relativePathToDistFolder`). Rooms config does not go there.
 
 Add a `rooms` key to your `config.json`. The key inside `rooms` is your **game type** — it doubles as the matchmaking identifier:
 

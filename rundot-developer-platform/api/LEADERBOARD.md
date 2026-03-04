@@ -6,19 +6,28 @@ Competitive leaderboards with three security levels. Choose based on your game's
 
 ## Setup
 
-Leaderboard behavior is driven by your `config.json` file in the project root. Add a `leaderboard` key to enable and configure leaderboards:
+Leaderboard behavior is driven by your project's `config.json` file. Add a `leaderboard` key to enable and configure leaderboards:
+
+```
+my-game/
+├── config.json                      ← add "leaderboard" key here
+├── src/
+├── dist/
+├── game.config.json                 ← game ID + build settings only (separate file)
+└── package.json
+```
 
 ```json
 {
-  "gameId": "your-game-id",
-  "relativePathToBuildFolder": "./dist",
   "leaderboard": {
     "requiresToken": false
   }
 }
 ```
 
-This configuration is uploaded with your game when you deploy. The server reads it to determine security mode, score bounds, time periods, and anti-cheat rules. If you omit the `leaderboard` key entirely, leaderboards still work with sensible defaults (simple mode, no tokens, alltime + daily periods).
+This is the same `config.json` used for other server config (`rooms`, `simulation`, etc.). It is uploaded with your game when you `rundot deploy`. The server reads it to determine security mode, score bounds, time periods, and anti-cheat rules. If you omit the `leaderboard` key entirely, leaderboards still work with sensible defaults (simple mode, no tokens, alltime + daily periods).
+
+> `game.config.json` is a separate file for local CLI metadata (`gameId`, `relativePathToDistFolder`). Leaderboard config does not go there.
 
 ***
 

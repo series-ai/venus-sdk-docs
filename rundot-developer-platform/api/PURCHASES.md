@@ -72,7 +72,8 @@ async function purchaseItem(itemId: string, cost: number) {
 
 You can use `hasUserMadePurchase` to check if the user has ever made a purchase on RUN. You could use this information to adjust prices in your store, or show certain bundles only to non-spenders
 
-## Subscription Paywall with Checkout Flow 
+## Subscription Paywall with Checkout Flow
+
 ```typescript
 import { useEffect, useState } from 'react';
 import { IapSubscription } from './types';
@@ -120,21 +121,39 @@ export default Paywall;
 
 ## API Reference
 
-| Method | Returns | Description |
-|--------|---------|-------------|
-| `getHardCurrencyBalance()` | `Promise<number>` | Get player's current RunBucks balance |
-| `spendCurrency(itemId, amount)` | `Promise<{ success, newBalance }>` | Spend RunBucks on an item |
-| `openStore()` | `Promise<void>` | Open the native RunBucks store |
-| `getCurrencyIcon()` | `Promise<string>` | Get the RunBucks icon URL for UI |
-| `getUserSubscriptionStatus(subscriptionName)` | `Promise<SubscriptionStatusResponse \| null>` | Get the status of a supscription for the current user. null if the user doesn't have the subscription |
-| `getSubscriptionsForOffering(offeringId)` | `Promise<IapSubscription[]>` | Get a list of subscriptions available in your offering. Use these to show a paywall to the user |
-| `purchaseSubscriptionFromOffering(offeringId, productId)` | `Promise<PurchaseResponse>` | Trigger a checkout flow for a given subscription (identified by its productId from `IapSubscription` |
-| `hasUserMadePurchase()` | `Promise<boolean>` | Check if the user has ever made a purchase on RUN |
+| Method                                                    | Returns                                       | Description                                                                                           |
+| --------------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `getHardCurrencyBalance()`                                | `Promise<number>`                             | Get player's current RunBucks balance                                                                 |
+| `spendCurrency(itemId, amount)`                           | `Promise<{ success, newBalance }>`            | Spend RunBucks on an item                                                                             |
+| `openStore()`                                             | `Promise<void>`                               | Open the native RunBucks store                                                                        |
+| `getCurrencyIcon()`                                       | `Promise<string>`                             | Get the RunBucks icon URL for UI                                                                      |
+| `getUserSubscriptionStatus(subscriptionName)`             | `Promise<SubscriptionStatusResponse \| null>` | Get the status of a supscription for the current user. null if the user doesn't have the subscription |
+| `getSubscriptionsForOffering(offeringId)`                 | `Promise<IapSubscription[]>`                  | Get a list of subscriptions available in your offering. Use these to show a paywall to the user       |
+| `purchaseSubscriptionFromOffering(offeringId, productId)` | `Promise<PurchaseResponse>`                   | Trigger a checkout flow for a given subscription (identified by its productId from `IapSubscription`  |
+| `hasUserMadePurchase()`                                   | `Promise<boolean>`                            | Check if the user has ever made a purchase on RUN                                                     |
+
+## Current Subscription Offerings
+
+### Core (`run_game_core_subscriptions`)
+
+<table><thead><tr><th width="263.6875">productId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$1.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$7.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$79.99</td><td>Yearly</td></tr></tbody></table>
+
+### Plus (`run_game_plus_subscriptions`)
+
+<table><thead><tr><th width="263.6875">productId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$2.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$11.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$119.99</td><td>Yearly</td></tr></tbody></table>
+
+### Prime (`run_game_prime_subscriptions`)
+
+<table><thead><tr><th width="263.6875">productId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$9.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$34.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$299.99</td><td>Yearly</td></tr></tbody></table>
+
+### Ultimate (`run_game_ultimate_subscriptions`)
+
+<table><thead><tr><th width="263.6875">productId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$14.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$39.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$349.99</td><td>Yearly</td></tr></tbody></table>
 
 ## Best Practices
 
-- Check balances before attempting to spend to avoid bouncing players with generic errors.
-- Handle rejections gracefully—users may cancel or payments can fail mid-flow.
-- Persist receipts or transaction IDs from the result payload if you need audit trails on your backend.
-- Combine with `RundotGameAPI.analytics` to attribute purchases by SKU.
-- Always show the player's current balance in your shop UI.
+* Check balances before attempting to spend to avoid bouncing players with generic errors.
+* Handle rejections gracefully—users may cancel or payments can fail mid-flow.
+* Persist receipts or transaction IDs from the result payload if you need audit trails on your backend.
+* Combine with `RundotGameAPI.analytics` to attribute purchases by SKU.
+* Always show the player's current balance in your shop UI.

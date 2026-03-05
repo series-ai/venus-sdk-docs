@@ -10,7 +10,7 @@ Entitlements are server-authoritative records of player ownership. The server is
 - **Consumed** by the game client via the SDK when a player uses a consumable item
 - **Queried** by the game client to check what the player owns
 
-Each entitlement is scoped to a `(userId, gameId, itemId)` tuple. If a player is granted the same item multiple times, the quantity is incremented on the existing entitlement rather than creating duplicates.
+Each entitlement is scoped to a `(userId, gameId, entitlementId)` tuple. If a player is granted the same entitlement multiple times, the quantity is incremented on the existing entitlement rather than creating duplicates.
 
 ## Entitlement Types
 
@@ -30,7 +30,7 @@ Get all active entitlements for the current player in the current game.
 const entitlements = await RundotGameAPI.entitlements.listEntitlements()
 
 for (const ent of entitlements) {
-  console.log(`${ent.itemId}: qty=${ent.quantity}, consumable=${ent.consumable}`)
+  console.log(`${ent.entitlementId}: qty=${ent.quantity}, consumable=${ent.consumable}`)
   if (ent.expiresAt) {
     console.log(`  Expires: ${new Date(ent.expiresAt).toISOString()}`)
   }
@@ -39,7 +39,7 @@ for (const ent of entitlements) {
 
 ### Get Quantity
 
-Check how many of a specific item the player owns. Returns `0` if the entitlement doesn't exist or is not active.
+Check how many of a specific entitlement the player owns. Returns `0` if the entitlement doesn't exist or is not active.
 
 ```typescript
 const coins = await RundotGameAPI.entitlements.getQuantity('gold_coins')
@@ -56,7 +56,7 @@ Use up a quantity of a consumable entitlement. The server deducts the quantity a
 
 ```typescript
 const updated = await RundotGameAPI.entitlements.consumeEntitlement(
-  'health_potion',  // itemId
+  'health_potion',  // entitlementId
   1,                // quantity to consume
 )
 
@@ -129,11 +129,11 @@ Retrieve the audit trail of all entitlement changes (grants, consumes, revokes, 
 const entries = await RundotGameAPI.entitlements.getLedger()
 
 for (const entry of entries) {
-  console.log(`${entry.action} ${entry.itemId}: ${entry.change} (balance: ${entry.balanceAfter})`)
+  console.log(`${entry.action} ${entry.entitlementId}: ${entry.change} (balance: ${entry.balanceAfter})`)
 }
 ```
 
-**Filter by item:**
+**Filter by entitlement:**
 
 ```typescript
 const coinHistory = await RundotGameAPI.entitlements.getLedger('gold_coins')
@@ -156,10 +156,10 @@ const page2 = await RundotGameAPI.entitlements.getLedger(undefined, 20, lastEntr
 
 ```typescript
 interface Entitlement {
-  entitlementId: string
+  docId: string
   userId: string
   gameId: string
-  itemId: string
+  entitlementId: string
   quantity: number
   consumable: boolean
   status: 'active' | 'revoked' | 'expired'
@@ -177,7 +177,7 @@ interface LedgerEntry {
   ledgerId: string
   userId: string
   gameId: string
-  itemId: string
+  entitlementId: string
   change: number               // positive for grants, negative for consumes/revokes
   action: 'grant' | 'consume' | 'revoke' | 'expire'
   source: string               // 'purchase', 'battlepass', 'progression', 'reward', 'admin'
@@ -193,9 +193,9 @@ interface LedgerEntry {
 | Method | Description |
 |---|---|
 | `listEntitlements()` | Get all active entitlements for the current game |
-| `getQuantity(itemId)` | Get current quantity for a specific item (0 if not owned) |
-| `consumeEntitlement(itemId, quantity, callback?, reason?, referenceId?)` | Consume a quantity of a consumable entitlement |
-| `getLedger(itemId?, limit?, startAfter?)` | Get audit trail of entitlement changes |
+| `getQuantity(entitlementId)` | Get current quantity for a specific entitlement (0 if not owned) |
+| `consumeEntitlement(entitlementId, quantity, callback?, reason?, referenceId?)` | Consume a quantity of a consumable entitlement |
+| `getLedger(entitlementId?, limit?, startAfter?)` | Get audit trail of entitlement changes |
 
 ## Error Handling
 
@@ -203,10 +203,10 @@ All methods throw on failure. Common errors:
 
 | Error | Cause |
 |---|---|
-| `Entitlement not found` | Item doesn't exist or is not active for this player |
+| `Entitlement not found` | Entitlement doesn't exist or is not active for this player |
 | `Entitlement is not consumable` | Tried to consume a non-consumable entitlement |
 | `Insufficient quantity` | Tried to consume more than the player owns |
-| `Duplicate referenceId` | A different item was already processed with this referenceId |
+| `Duplicate referenceId` | A different entitlement was already processed with this referenceId |
 
 ```typescript
 try {

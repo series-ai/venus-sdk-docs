@@ -28,7 +28,7 @@ Add a `shop` key to your game's `config.json`:
         "category": "consumable",
         "price": { "type": "bucks", "value": "100" },
         "entitlements": [
-          { "itemId": "speed_boost_effect", "quantity": 1, "consumable": true }
+          { "entitlementId": "speed_boost_effect", "quantity": 1, "consumable": true }
         ],
         "assets": { "icon": "speed_icon.png" },
         "unique": false,
@@ -114,7 +114,7 @@ Each item must specify what the player receives on purchase:
 
 ```json
 {
-  "itemId": "speed_boost_effect",
+  "entitlementId": "speed_boost_effect",
   "quantity": 1,
   "consumable": true,
   "durationDays": 7
@@ -123,7 +123,7 @@ Each item must specify what the player receives on purchase:
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `itemId` | string | Yes | ID of the entitlement to grant |
+| `entitlementId` | string | Yes | ID of the entitlement to grant |
 | `quantity` | number | Yes | How many to grant (must be > 0) |
 | `consumable` | boolean | Yes | Whether this is consumed on use |
 | `durationDays` | number | No | For time-bound items, how long it lasts |
@@ -277,7 +277,7 @@ interface StorefrontItem {
   sortOrder: number
   releasedAt: number | null
   expiresAt: number | null
-  entitlements: { itemId: string; quantity: number; consumable: boolean; durationDays?: number }[]
+  entitlements: { entitlementId: string; quantity: number; consumable: boolean; durationDays?: number }[]
   refundEligible: boolean
   refundWindowHours: number
   resolvedPrice: {
@@ -305,7 +305,7 @@ interface ShopOrder {
   itemSnapshot: {
     name: string
     price: { type: string; value: string }
-    entitlements: { itemId: string; quantity: number; consumable: boolean; durationDays?: number }[]
+    entitlements: { entitlementId: string; quantity: number; consumable: boolean; durationDays?: number }[]
   }
   originalPrice: { type: string; value: string }
   finalPrice: { type: string; value: string }

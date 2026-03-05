@@ -121,34 +121,25 @@ export default Paywall;
 
 ## API Reference
 
-| Method                                                    | Returns                                       | Description                                                                                           |
-| --------------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `getHardCurrencyBalance()`                                | `Promise<number>`                             | Get player's current RunBucks balance                                                                 |
-| `spendCurrency(itemId, amount)`                           | `Promise<{ success, newBalance }>`            | Spend RunBucks on an item                                                                             |
-| `openStore()`                                             | `Promise<void>`                               | Open the native RunBucks store                                                                        |
-| `getCurrencyIcon()`                                       | `Promise<string>`                             | Get the RunBucks icon URL for UI                                                                      |
-| `getUserSubscriptionStatus(subscriptionName)`             | `Promise<SubscriptionStatusResponse \| null>` | Get the status of a supscription for the current user. null if the user doesn't have the subscription |
-| `getSubscriptionsForOffering(offeringId)`                 | `Promise<IapSubscription[]>`                  | Get a list of subscriptions available in your offering. Use these to show a paywall to the user       |
-| `purchaseSubscriptionFromOffering(offeringId, productId)` | `Promise<PurchaseResponse>`                   | Trigger a checkout flow for a given subscription (identified by its productId from `IapSubscription`  |
-| `hasUserMadePurchase()`                                   | `Promise<boolean>`                            | Check if the user has ever made a purchase on RUN                                                     |
+<table><thead><tr><th width="276.2265625">Method</th><th>Returns</th><th>Description</th></tr></thead><tbody><tr><td><code>getHardCurrencyBalance()</code></td><td><code>Promise&#x3C;number></code></td><td>Get player's current RunBucks balance</td></tr><tr><td><code>spendCurrency(itemId, amount)</code></td><td><code>Promise&#x3C;{ success, newBalance }></code></td><td>Spend RunBucks on an item</td></tr><tr><td><code>openStore()</code></td><td><code>Promise&#x3C;void></code></td><td>Open the native RunBucks store</td></tr><tr><td><code>getCurrencyIcon()</code></td><td><code>Promise&#x3C;string></code></td><td>Get the RunBucks icon URL for UI</td></tr><tr><td><p><code>getUserSubscriptionStatus(</code></p><p><code>subscriptionName)</code></p></td><td><code>Promise&#x3C;SubscriptionStatusResponse | null></code></td><td>Get the status of a supscription for the current user. null if the user doesn't have the subscription</td></tr><tr><td><p><code>getSubscriptionsForOffering(</code></p><p><code>offeringId)</code></p></td><td><code>Promise&#x3C;IapSubscription[]></code></td><td>Get a list of subscriptions available in your offering. Use these to show a paywall to the user. <br><br><strong>Note:</strong> This method accepts an <code>offeringId</code> of the parent offering ex. <code>run_game_core_subscriptions</code>. It returns a list of offerings for that parent offering, with the actual individual subscription options, which also have an <code>offeringId</code>. The child <code>offeringId</code> should be used to make the actual purchase based on the time frame of the subscription along with the parent <code>OfferingId</code></td></tr><tr><td><code>purchaseSubscriptionFromOffering(offeringId, productId)</code></td><td><code>Promise&#x3C;PurchaseResponse></code></td><td>Trigger a checkout flow for a given subscription (identified by its productId from <code>IapSubscription</code><br><br><strong>Note:</strong> This method accepts the parent <code>offeringId</code>, and the child <code>offeringId</code> as the secondary parameter.</td></tr><tr><td><code>hasUserMadePurchase()</code></td><td><code>Promise&#x3C;boolean></code></td><td>Check if the user has ever made a purchase on RUN</td></tr></tbody></table>
 
 ## Current Subscription Offerings
 
-### Core (`run_game_core_subscriptions`)
+### Core (offeringId: `run_game_core_subscriptions`)
 
-<table><thead><tr><th width="263.6875">productId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$1.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$7.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$79.99</td><td>Yearly</td></tr></tbody></table>
+<table><thead><tr><th width="263.6875">offeringId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$1.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$7.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$79.99</td><td>Yearly</td></tr></tbody></table>
 
-### Plus (`run_game_plus_subscriptions`)
+### Plus (offeringId: `run_game_plus_subscriptions`)
 
-<table><thead><tr><th width="263.6875">productId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$2.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$11.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$119.99</td><td>Yearly</td></tr></tbody></table>
+<table><thead><tr><th width="263.6875">offeringId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$2.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$11.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$119.99</td><td>Yearly</td></tr></tbody></table>
 
-### Prime (`run_game_prime_subscriptions`)
+### Prime (offeringId: `run_game_prime_subscriptions`)
 
-<table><thead><tr><th width="263.6875">productId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$9.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$34.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$299.99</td><td>Yearly</td></tr></tbody></table>
+<table><thead><tr><th width="263.6875">offeringId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$9.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$34.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$299.99</td><td>Yearly</td></tr></tbody></table>
 
-### Ultimate (`run_game_ultimate_subscriptions`)
+### Ultimate (offeringId: `run_game_ultimate_subscriptions`)
 
-<table><thead><tr><th width="263.6875">productId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$14.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$39.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$349.99</td><td>Yearly</td></tr></tbody></table>
+<table><thead><tr><th width="263.6875">offeringId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$14.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$39.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$349.99</td><td>Yearly</td></tr></tbody></table>
 
 ## Best Practices
 

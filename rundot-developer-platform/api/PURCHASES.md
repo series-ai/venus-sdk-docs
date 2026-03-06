@@ -76,41 +76,45 @@ You can use `hasUserMadePurchase` to check if the user has ever made a purchase 
 
 ```typescript
 import { useEffect, useState } from 'react';
-import { IapSubscription } from './types';
+import { RunSubscriptionsResponse } from '@series-inc/rundot-game-sdk/api';
 
 function Paywall() {
-  const [subscriptions, setSubscriptions] = useState<IapSubscription[]>([]);
+  const [subscriptions, setSubscriptions] = useState<RunSubscriptionsResponse>({});
 
-  // fetch all subscriptions for your offering
+  // Fetch all subscriptions across all tiers, or pass a tier to filter
   useEffect(() => {
     RundotGameAPI.iap
-      .getSubscriptionsForOffering('premium') // replace 'premium' with your offering
+      .getSubscriptions() // optionally pass a tier: getSubscriptions('CORE') if you want just CORE subscriptions
       .then(setSubscriptions);
   }, []);
 
-  // if the user wants to make a purchase, call the purchaseSubscriptionFromOffering method to trigger
-  // the checkout flow
-  const handlePurchase = async (subscriptionOfferingId: string) => {
-    const result = await RundotGameAPI.iap.purchaseSubscriptionFromOffering(
-      'premium', // replace 'premium' with your offering
-      subscriptionOfferingId
-    );
+  // Trigger the checkout flow for a given tier + interval
+  const handlePurchase = async (tier: SubscriptionTier, interval: SubscriptionInterval) => {
+    const result = await RundotGameAPI.iap.purchaseSubscription(tier, interval);
     if (result.success) {
       alert('Thanks for subscribing!');
+    } else {
+      // handle error
     }
   };
 
   return (
     <div>
-      <h2>Go Premium</h2>
-      {subscriptions.map((sub) => (
-        <button key={sub.offeringId} onClick={() => handlePurchase(sub.offeringId)}>
-          <strong>{sub.description}</strong>
-          <span>
-            /* price is a float, so this could be 14.99 or 4.99 */
-            {sub.currencyCode} {sub.price} / {sub.packageType}
-          </span>
-        </button>
+      {Object.entries(subscriptions).map(([tier, packages]) => (
+        <div key={tier}>
+          <h2>{tier}</h2>
+          {packages.map((sub) => (
+            <button
+              key={sub.interval}
+              onClick={() => handlePurchase(tier as SubscriptionTier, sub.interval)}
+            >
+              <strong>{sub.description}</strong>
+              <span>
+                {sub.currencyCode} {sub.price} / {sub.interval}
+              </span>
+            </button>
+          ))}
+        </div>
       ))}
     </div>
   );
@@ -119,9 +123,26 @@ function Paywall() {
 export default Paywall;
 ```
 
+## Checking Subscription Status
+Use isUserSubscribed to gate content or features behind a subscription tier. This method respects tier hierarchy—if a user has a higher tier than the one being checked, it returns true. The tier hierarchy is (lowest to highest) Core, Plus, Prime, Ultimate
+```typescript
+// Returns true if the user has CORE, PLUS, PRIME, or ULTIMATE
+const hasCoreAccess = await RundotGameAPI.iap.isUserSubscribed('CORE');
+
+// Returns true only if the user has ULTIMATE
+const hasUltimateAccess = await RundotGameAPI.iap.isUserSubscribed('ULTIMATE');
+
+// Example: gate a feature behind PLUS or higher
+if (await RundotGameAPI.iap.isUserSubscribed('PLUS')) {
+  unlockPlusFeatures();
+} else {
+  showUpgradePrompt();
+}
+```
+
 ## API Reference
 
-<table><thead><tr><th width="276.2265625">Method</th><th>Returns</th><th>Description</th></tr></thead><tbody><tr><td><code>getHardCurrencyBalance()</code></td><td><code>Promise&#x3C;number></code></td><td>Get player's current RunBucks balance</td></tr><tr><td><code>spendCurrency(itemId, amount)</code></td><td><code>Promise&#x3C;{ success, newBalance }></code></td><td>Spend RunBucks on an item</td></tr><tr><td><code>openStore()</code></td><td><code>Promise&#x3C;void></code></td><td>Open the native RunBucks store</td></tr><tr><td><code>getCurrencyIcon()</code></td><td><code>Promise&#x3C;string></code></td><td>Get the RunBucks icon URL for UI</td></tr><tr><td><p><code>getUserSubscriptionStatus(</code></p><p><code>subscriptionName)</code></p></td><td><code>Promise&#x3C;SubscriptionStatusResponse | null></code></td><td>Get the status of a supscription for the current user. null if the user doesn't have the subscription</td></tr><tr><td><p><code>getSubscriptionsForOffering(</code></p><p><code>offeringId)</code></p></td><td><code>Promise&#x3C;IapSubscription[]></code></td><td>Get a list of subscriptions available in your offering. Use these to show a paywall to the user. <br><br><strong>Note:</strong> This method accepts an <code>offeringId</code> of the parent offering ex. <code>run_game_core_subscriptions</code>. It returns a list of offerings for that parent offering, with the actual individual subscription options, which also have an <code>offeringId</code>. The child <code>offeringId</code> should be used to make the actual purchase based on the time frame of the subscription along with the parent <code>OfferingId</code></td></tr><tr><td><code>purchaseSubscriptionFromOffering(offeringId, productId)</code></td><td><code>Promise&#x3C;PurchaseResponse></code></td><td>Trigger a checkout flow for a given subscription (identified by its productId from <code>IapSubscription</code><br><br><strong>Note:</strong> This method accepts the parent <code>offeringId</code>, and the child <code>offeringId</code> as the secondary parameter.</td></tr><tr><td><code>hasUserMadePurchase()</code></td><td><code>Promise&#x3C;boolean></code></td><td>Check if the user has ever made a purchase on RUN</td></tr></tbody></table>
+<table><thead><tr><th width="276.2265625">Method</th><th>Returns</th><th>Description</th></tr></thead><tbody><tr><td><code>getHardCurrencyBalance()</code></td><td><code>Promise&#x3C;number></code></td><td>Get player's current RunBucks balance</td></tr><tr><td><code>spendCurrency(itemId, amount)</code></td><td><code>Promise&#x3C;{ success, newBalance }></code></td><td>Spend RunBucks on an item</td></tr><tr><td><code>openStore()</code></td><td><code>Promise&#x3C;void></code></td><td>Open the native RunBucks store</td></tr><tr><td><code>getCurrencyIcon()</code></td><td><code>Promise&#x3C;string></code></td><td>Get the RunBucks icon URL for UI</td></tr><tr><td><p><code>isUserSubscribed(</code></p><p><code>tier)</code></p></td><td><code>Promise&#x3C;boolean></code></td><td>Check if the user has a certain subscription tier. Will also return true if the user has a higher subscription tier.</td></tr><tr><td><p><code>getSubscriptions(</code></p><p><code>tier)</code></p></td><td><code>Promise&#x3C;RunSubscriptionsResponse></code></td><td>Get a list of subscriptions available by tier. Use these to show a paywall to the user. You can optionally pass a tier to this method to get subscriptions for that tier only.</td></tr><tr><td><code>purchaseSubscription(tier, interval)</code></td><td><code>Promise&#x3C;PurchaseSubscriptionResponse></code></td><td>Trigger a checkout flow for a given subscription (identified by its tier and interval</td></tr><tr><td><code>hasUserMadePurchase()</code></td><td><code>Promise&#x3C;boolean></code></td><td>Check if the user has ever made a purchase on RUN</td></tr></tbody></table>
 
 ## Current Subscription Offerings
 

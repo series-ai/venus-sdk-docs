@@ -29,6 +29,7 @@
   * [Safe Areas API](rundot-developer-platform/api/SAFE_AREA.md)
   * [Shared Assets API](rundot-developer-platform/api/SHARED_ASSETS.md)
   * [Sharing API](rundot-developer-platform/api/SHARING.md)
+  * [Shop API](readme/shop-api.md)
   * [Simulation API (BETA)](rundot-developer-platform/api/SERVER_AUTHORITATIVE.md)
   * [Simulation: Building Timers (BETA)](rundot-developer-platform/api/BUILDING_TIMERS.md)
   * [Simulation: Config Reference (BETA)](rundot-developer-platform/api/SIMULATION_CONFIG.md)

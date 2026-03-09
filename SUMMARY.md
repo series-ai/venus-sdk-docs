@@ -37,3 +37,4 @@
   * [Time API](rundot-developer-platform/api/TIME.md)
   * [UGC API (BETA)](rundot-developer-platform/api/UGC.md)
 * [Entitlements API](entitlements-api.md)
+* [Entitlements API](entitlements-api-1.md)

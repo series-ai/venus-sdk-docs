@@ -13,6 +13,7 @@
   * [Big Numbers API](rundot-developer-platform/api/BIGNUMBERS.md)
   * [Context API](rundot-developer-platform/api/CONTEXT.md)
   * [Embedded Libraries API](rundot-developer-platform/api/EMBEDDED_LIBRARIES.md)
+  * [Entitlements API](readme/entitlements-api.md)
   * [Environment API](rundot-developer-platform/api/ENVIRONMENT.md)
   * [Experiments API](rundot-developer-platform/api/EXPERIMENTS.md)
   * [Haptics API](rundot-developer-platform/api/HAPTICS.md)
@@ -36,5 +37,3 @@
   * [Storage API](rundot-developer-platform/api/STORAGE.md)
   * [Time API](rundot-developer-platform/api/TIME.md)
   * [UGC API (BETA)](rundot-developer-platform/api/UGC.md)
-* [Entitlements API](entitlements-api.md)
-* [Entitlements API](entitlements-api-1.md)

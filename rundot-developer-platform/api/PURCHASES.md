@@ -144,23 +144,91 @@ if (await RundotGameAPI.iap.isUserSubscribed('PLUS')) {
 
 <table><thead><tr><th width="276.2265625">Method</th><th>Returns</th><th>Description</th></tr></thead><tbody><tr><td><code>getHardCurrencyBalance()</code></td><td><code>Promise&#x3C;number></code></td><td>Get player's current RunBucks balance</td></tr><tr><td><code>spendCurrency(itemId, amount)</code></td><td><code>Promise&#x3C;{ success, newBalance }></code></td><td>Spend RunBucks on an item</td></tr><tr><td><code>openStore()</code></td><td><code>Promise&#x3C;void></code></td><td>Open the native RunBucks store</td></tr><tr><td><code>getCurrencyIcon()</code></td><td><code>Promise&#x3C;string></code></td><td>Get the RunBucks icon URL for UI</td></tr><tr><td><p><code>isUserSubscribed(</code></p><p><code>tier)</code></p></td><td><code>Promise&#x3C;boolean></code></td><td>Check if the user has a certain subscription tier. Will also return true if the user has a higher subscription tier.</td></tr><tr><td><p><code>getSubscriptions(</code></p><p><code>tier)</code></p></td><td><code>Promise&#x3C;RunSubscriptionsResponse></code></td><td>Get a list of subscriptions available by tier. Use these to show a paywall to the user. You can optionally pass a tier to this method to get subscriptions for that tier only.</td></tr><tr><td><code>purchaseSubscription(tier, interval)</code></td><td><code>Promise&#x3C;PurchaseSubscriptionResponse></code></td><td>Trigger a checkout flow for a given subscription (identified by its tier and interval</td></tr><tr><td><code>hasUserMadePurchase()</code></td><td><code>Promise&#x3C;boolean></code></td><td>Check if the user has ever made a purchase on RUN</td></tr></tbody></table>
 
-## Current Subscription Offerings
+---
 
-### Core (offeringId: `run_game_core_subscriptions`)
+## Subscription Offerings
 
-<table><thead><tr><th width="263.6875">offeringId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$1.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$7.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$79.99</td><td>Yearly</td></tr></tbody></table>
+### Tier: CORE
 
-### Plus (offeringId: `run_game_plus_subscriptions`)
+<table><thead><tr><th>Interval</th><th>Price</th></tr></thead><tbody><tr><td>WEEKLY</td><td>$1.99</td></tr><tr><td>MONTHLY</td><td>$7.99</td></tr><tr><td>ANNUAL</td><td>$79.99</td></tr></tbody></table>
 
-<table><thead><tr><th width="263.6875">offeringId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$2.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$11.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$119.99</td><td>Yearly</td></tr></tbody></table>
+```ts
+// Returns true if the user has CORE or higher
+const hasCoreAccess = await RundotGameAPI.iap.isUserSubscribed('CORE');
+```
 
-### Prime (offeringId: `run_game_prime_subscriptions`)
+```ts
+RundotGameAPI.iap.getSubscriptions() // optionally pass a tier: getSubscriptions('CORE') if you want just CORE subscriptions
 
-<table><thead><tr><th width="263.6875">offeringId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$9.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$34.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$299.99</td><td>Yearly</td></tr></tbody></table>
+const result = await RundotGameAPI.iap.purchaseSubscription('CORE', 'weekly');
+// or
+const result = await RundotGameAPI.iap.purchaseSubscription('CORE', 'monthly');
+// or
+const result = await RundotGameAPI.iap.purchaseSubscription('CORE', 'annual');
+```
 
-### Ultimate (offeringId: `run_game_ultimate_subscriptions`)
+---
 
-<table><thead><tr><th width="263.6875">offeringId</th><th>Price</th><th width="242.5625">Renewal Duration</th></tr></thead><tbody><tr><td><code>$rc_weekly</code></td><td>$14.99</td><td>Once a Week</td></tr><tr><td><code>$rc_monthly</code></td><td>$39.99</td><td>Once a Month</td></tr><tr><td><code>$rc_annual</code></td><td>$349.99</td><td>Yearly</td></tr></tbody></table>
+### Tier: PLUS
+
+<table><thead><tr><th>Interval</th><th>Price</th></tr></thead><tbody><tr><td>WEEKLY</td><td>$2.99</td></tr><tr><td>MONTHLY</td><td>$11.99</td></tr><tr><td>ANNUAL</td><td>$119.99</td></tr></tbody></table>
+
+```ts
+// Returns true if the user has PLUS or higher
+const hasPlusAccess = await RundotGameAPI.iap.isUserSubscribed('PLUS');
+```
+
+```ts
+RundotGameAPI.iap.getSubscriptions() // optionally pass a tier: getSubscriptions('PLUS') if you want just PLUS subscriptions
+
+const result = await RundotGameAPI.iap.purchaseSubscription('PLUS', 'weekly');
+// or
+const result = await RundotGameAPI.iap.purchaseSubscription('PLUS', 'monthly');
+// or
+const result = await RundotGameAPI.iap.purchaseSubscription('PLUS', 'annual');
+```
+
+---
+
+### Tier: PRIME
+
+<table><thead><tr><th>Interval</th><th>Price</th></tr></thead><tbody><tr><td>WEEKLY</td><td>$9.99</td></tr><tr><td>MONTHLY</td><td>$34.99</td></tr><tr><td>ANNUAL</td><td>$299.99</td></tr></tbody></table>
+
+```ts
+// Returns true if the user has PRIME or higher
+const hasPrimeAccess = await RundotGameAPI.iap.isUserSubscribed('PRIME');
+```
+
+```ts
+RundotGameAPI.iap.getSubscriptions() // optionally pass a tier: getSubscriptions('PRIME') if you want just PRIME subscriptions
+
+const result = await RundotGameAPI.iap.purchaseSubscription('PRIME', 'weekly');
+// or
+const result = await RundotGameAPI.iap.purchaseSubscription('PRIME', 'monthly');
+// or
+const result = await RundotGameAPI.iap.purchaseSubscription('PRIME', 'annual');
+```
+
+---
+
+### Tier: ULTIMATE
+
+<table><thead><tr><th>Interval</th><th>Price</th></tr></thead><tbody><tr><td>WEEKLY</td><td>$14.99</td></tr><tr><td>MONTHLY</td><td>$39.99</td></tr><tr><td>ANNUAL</td><td>$349.99</td></tr></tbody></table>
+
+```ts
+// Returns true if the user has ULTIMATE or higher
+const hasUltimateAccess = await RundotGameAPI.iap.isUserSubscribed('ULTIMATE');
+```
+
+```ts
+RundotGameAPI.iap.getSubscriptions() // optionally pass a tier: getSubscriptions('ULTIMATE') if you want just ULTIMATE subscriptions
+
+const result = await RundotGameAPI.iap.purchaseSubscription('ULTIMATE', 'weekly');
+// or
+const result = await RundotGameAPI.iap.purchaseSubscription('ULTIMATE', 'monthly');
+// or
+const result = await RundotGameAPI.iap.purchaseSubscription('ULTIMATE', 'annual');
+```
 
 ## Best Practices
 

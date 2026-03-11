@@ -6,6 +6,7 @@
   * [Deploying Your Game](rundot-developer-platform/deploying-your-game.md)
   * [Setting Your Game Thumbnail](rundot-developer-platform/setting-your-game-thumbnail.md)
   * [Troubleshooting](rundot-developer-platform/troubleshooting.md)
+  * [Access Gate API](rundot-developer-platform/api/ACCESS_GATE.md)
   * [Ads API](rundot-developer-platform/api/ADS.md)
   * [AI API](rundot-developer-platform/api/AI.md)
   * [Analytics API](rundot-developer-platform/api/ANALYTICS.md)

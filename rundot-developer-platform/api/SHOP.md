@@ -52,6 +52,34 @@ Add a `shop` key to your game's `config.json`:
         "startsAt": 0,
         "endsAt": 4102444800000,
         "active": true
+      },
+      {
+        "saleId": "episode_sale",
+        "targetId": "episodes",
+        "targetType": "collection",
+        "discountType": "percentage",
+        "discountValue": 20,
+        "regions": [],
+        "startsAt": 0,
+        "endsAt": 4102444800000,
+        "active": true,
+        "itemFilter": { "tags": ["premium"] }
+      }
+    ],
+    "collections": [
+      {
+        "collectionId": "episodes",
+        "price": { "type": "bucks", "value": "50" },
+        "entitlement": { "consumable": false },
+        "refundEligible": true,
+        "refundWindowHours": 24,
+        "items": [
+          {
+            "itemId": "ep-premium-1",
+            "tags": ["premium"],
+            "priceOverride": { "type": "bucks", "value": "100" }
+          }
+        ]
       }
     ]
   }
@@ -81,12 +109,13 @@ Add a `shop` key to your game's `config.json`:
 
 ## Sale Fields
 
-Sales are separate objects that reference items by `itemId`. Items don't need modification to go on sale, and multiple sales can be scheduled in advance.
+Sales are separate objects that reference items or collections by ID. Items don't need modification to go on sale, and multiple sales can be scheduled in advance.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `saleId` | string | Yes | Unique identifier for the sale |
-| `targetId` | string | Yes | `itemId` of the item on sale |
+| `targetId` | string | Yes | `itemId` (when targeting items) or `collectionId` (when targeting collections) |
+| `targetType` | enum | No | `item` (default) or `collection` |
 | `discountType` | enum | Yes | `percentage` or `fixed_price` |
 | `discountValue` | number | Yes | Percentage (0–100) when `discountType` is `percentage` |
 | `discountPrice` | object | No | Override price `{ type, value }` when `discountType` is `fixed_price` |
@@ -94,6 +123,9 @@ Sales are separate objects that reference items by `itemId`. Items don't need mo
 | `startsAt` | number | Yes | Start timestamp (ms since epoch) |
 | `endsAt` | number | Yes | End timestamp (ms since epoch) |
 | `active` | boolean | Yes | Whether the sale is active |
+| `itemFilter` | object | No | Only for collection sales. Narrows which items the sale applies to: `{ tags?: string[], itemIds?: string[] }` |
+
+When `targetType` is `collection`, the sale applies to all items in the collection by default. Use `itemFilter` to narrow it — for example, `{ "tags": ["premium"] }` only discounts items whose override entry has the `"premium"` tag. Items without overrides (or without matching tags) are unaffected by filtered sales.
 
 ## Price Structure
 
@@ -136,6 +168,39 @@ Each item must specify what the player receives on purchase:
 | `non_consumable` | Permanent ownership (e.g., skins, characters) |
 | `time_bound` | Expires after a duration (e.g., subscriptions, passes) |
 
+## Collections
+
+Collections let you sell large catalogs (episodes, chapters, level packs) without listing every item in the config. A collection defines shared defaults — price, entitlement shape, refund policy — and the server trusts the client to know what items exist.
+
+Any `(collectionId, itemId)` pair is valid. Items without an override entry use the collection's defaults. Only items that deviate from defaults need to be listed.
+
+### Collection Fields
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `collectionId` | string | Yes | Unique identifier for the collection |
+| `price` | object | Yes | Default price `{ type, value }` for all items |
+| `entitlement` | object | Yes | `{ consumable: boolean, durationDays?: number }` |
+| `refundEligible` | boolean | Yes | Default refund policy |
+| `refundWindowHours` | number | Yes | Default refund window |
+| `items` | array | No | Item overrides — only items that deviate from defaults |
+
+### Item Override Fields
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `itemId` | string | Yes | The item being overridden |
+| `tags` | string[] | No | Tags for sale targeting |
+| `priceOverride` | object | No | Override price `{ type, value }` |
+| `refundEligibleOverride` | boolean | No | Override refund eligibility |
+| `refundWindowHoursOverride` | number | No | Override refund window |
+
+### Entitlement Mapping
+
+Collection entitlements are derived automatically: the entitlement ID is `${collectionId}_${itemId}`, quantity is 1, and `consumable`/`durationDays` come from the collection config. No per-item entitlement configuration is needed.
+
+Non-consumable collection items are treated as unique — a player cannot purchase the same item twice.
+
 ## SDK Usage
 
 ### Get Catalog
@@ -173,7 +238,41 @@ console.log('Entitlements:', item.entitlements)
 interface StorefrontResponse {
   configId: string        // Server config version ID
   items: StorefrontItem[]
+  collections?: StorefrontCollection[]
 }
+```
+
+### Resolve Collection Item Price
+
+The storefront includes collection info with pre-resolved pricing. Use `resolveCollectionItemPrice` to look up the price for any item in a collection locally — no server round-trip needed.
+
+```typescript
+const storefront = await RundotGameAPI.shop.getCatalog()
+
+// Get the price for any episode — even ones not listed in the config
+const price = RundotGameAPI.shop.resolveCollectionItemPrice(storefront, 'episodes', 'ep-42')
+if (price) {
+  console.log(`Price: ${price.finalPrice.value}`) // Uses collection defaults
+}
+
+// Override items get their own resolved price
+const premiumPrice = RundotGameAPI.shop.resolveCollectionItemPrice(storefront, 'episodes', 'ep-premium-1')
+if (premiumPrice) {
+  console.log(`Premium price: ${premiumPrice.finalPrice.value}`) // Uses override price
+}
+```
+
+### Purchase Collection Item
+
+Buy an item from a collection. Like regular purchases, pass an `idempotencyKey` to prevent duplicates.
+
+```typescript
+const idempotencyKey = crypto.randomUUID()
+const result = await RundotGameAPI.shop.purchaseCollectionItem('episodes', 'ep-42', idempotencyKey)
+
+console.log('Order:', result.order.orderId)
+console.log('Status:', result.order.status) // 'fulfilled'
+console.log('Collection:', result.order.collectionId) // 'episodes'
 ```
 
 ### Purchase
@@ -293,6 +392,34 @@ interface StorefrontItem {
 }
 ```
 
+### StorefrontCollection
+
+```typescript
+interface StorefrontCollection {
+  collectionId: string
+  price: { type: string; value: string }
+  entitlement: { consumable: boolean; durationDays?: number }
+  refundEligible: boolean
+  refundWindowHours: number
+  resolvedDefaults: {
+    originalPrice: { type: string; value: string }
+    finalPrice: { type: string; value: string }
+    appliedSales: { saleId: string; discountType: string; discountValue: number; discountPrice?: { type: string; value: string } }[]
+  }
+  items: {
+    itemId: string
+    resolvedPrice: {
+      originalPrice: { type: string; value: string }
+      finalPrice: { type: string; value: string }
+      appliedSales: { saleId: string; discountType: string; discountValue: number; discountPrice?: { type: string; value: string } }[]
+    }
+  }[]
+}
+```
+
+- **`resolvedDefaults`** — the collection's default price with any collection-wide sales applied. Use this for items without overrides.
+- **`items`** — only items with overrides are listed, each with its own `resolvedPrice`.
+
 ### ShopOrder
 
 ```typescript
@@ -301,6 +428,7 @@ interface ShopOrder {
   userId: string
   gameId: string
   configId: string
+  collectionId?: string | null  // Set for collection purchases
   itemId: string
   itemSnapshot: {
     name: string

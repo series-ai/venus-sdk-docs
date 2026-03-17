@@ -1,534 +1,552 @@
 # Multiplayer API (BETA)
 
-Build real-time multiplayer sessions backed by the RUN.game Rooms service. Create or join rooms, stream updates, and coordinate turn-based or free-form play.
+Server-authoritative real-time multiplayer rooms. Game logic runs on the server in a `GameRoom` class; clients connect via `ServerRoom` to exchange messages.
 
-## Setup: config.json
+***
 
-Multiplayer behavior is driven by the `rooms` key in your project's `config.json`:
+## Overview
+
+The multiplayer system has two parts:
+
+- **Server** — You write a `GameRoom` subclass that holds all game state and validates every action. The server is the single source of truth.
+- **Client** — Players connect through `ServerRoom` and send typed messages.
+
+```typescript
+// Client — join by matchmaking or room code
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
+const room = await RundotGameAPI.realtime.joinOrCreateRoom<MyProtocol>('tictactoe')
+const room = await RundotGameAPI.realtime.joinRoomByCode<MyProtocol>('HX9KWR')
+
+// Server
+import { GameRoom } from '@series-inc/rundot-game-sdk/mp-server'
+export default class TicTacToe extends GameRoom<MyProtocol> { ... }
+```
+
+***
+
+## Setup
+
+### Vite plugin
+
+Add `rundotMultiplayerPlugin` to your `vite.config.ts`. This builds your server room code, copies `rooms.config.json` to `dist/`, and starts a local dev server for testing:
+
+```typescript
+import { defineConfig } from 'vite'
+import { rundotMultiplayerPlugin } from '@series-inc/rundot-game-sdk/vite'
+
+export default defineConfig({
+  plugins: [
+    rundotMultiplayerPlugin(),
+  ],
+})
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `configPath` | `string` | `'rooms.config.json'` | Path to your rooms config file |
+| `devPort` | `number` | `3001` | Port for the local dev server |
+| `threaded` | `boolean` | `false` | Run dev rooms in Worker Threads |
+| `maxBundleSize` | `number` | `5242880` | Max server bundle size in bytes (5 MB) |
+
+### rooms.config.json
+
+Room types are defined in a standalone `rooms.config.json` file at your project root (not the shared `config.json`):
 
 ```
 my-game/
-├── config.json                      ← add "rooms" key here
+├── rooms.config.json                ← room type definitions
+├── config.json                      ← other server config (leaderboard, etc.)
 ├── src/
+│   └── rooms/
+│       └── TicTacToe.ts             ← GameRoom subclass
 ├── dist/
-├── game.config.json                 ← game ID + build settings only (separate file)
 └── package.json
 ```
 
-This is the same `config.json` used for other server config (`leaderboard`, `simulation`, etc.). It is uploaded with your game when you `rundot deploy` — the server reads it to configure matchmaking, room creation defaults, turn-based rules, and more.
-
-> `game.config.json` is a separate file for local CLI metadata (`gameId`, `relativePathToDistFolder`). Rooms config does not go there.
-
-Add a `rooms` key to your `config.json`. The key inside `rooms` is your **game type** — it doubles as the matchmaking identifier:
-
 ```json
 {
-  "rooms": {
-    "your-game-type": {
-      "minPlayers": 2,
-      "maxPlayers": 4
-    }
-  }
-}
-```
-
-If you omit `rooms` entirely, the server applies sensible defaults (free-form, 1–4 players, no turn order). Every field below is optional — only set what you need to override.
-
-> **Multi-game-type apps:** If your app supports multiple game modes that need separate matchmaking pools, add one entry per game type:
-> ```json
-> {
->   "rooms": {
->     "classic": { "minPlayers": 2, "maxPlayers": 2 },
->     "party":   { "minPlayers": 2, "maxPlayers": 8 }
->   }
-> }
-> ```
-
-### Full config reference
-
-```json
-{
-  "rooms": {
-    "chess": {
-      "rulesPreset": "blitz_v1",
-      "minPlayers": 2,
-      "maxPlayers": 2,
-      "playerRoles": ["white", "black"],
-      "playerInitialization": "random",
-      "matchmaking": {
-        "defaultCriteria": {
-          "hasSpace": true,
-          "isPrivate": false
-        }
-      },
-      "createOptions": {
+  "rooms": [
+    {
+      "type": "tictactoe",
+      "file": "src/rooms/TicTacToe.ts",
+      "config": {
         "maxPlayers": 2,
-        "isPrivate": false,
-        "customMetadata": {
-          "timeControl": "blitz"
-        }
-      },
-      "privateMatchDefaults": {
-        "allowCustomCode": true,
-        "createOptions": {
-          "isPrivate": true,
-          "maxPlayers": 4
-        }
-      },
-      "defaultRules": {
-        "turnBased": true,
-        "allowedMessageTypes": {
-          "playing": {
-            "piece_move": { "requiredFields": ["from", "to"] },
-            "resign": { "requiredFields": ["resignedBy"] }
-          }
-        }
-      },
-      "notifications": {
-        "onTurnStart": {
-          "title": "Your turn!",
-          "body": "It's your move in {{roomName}}"
-        },
-        "onGameEnd": {
-          "title": "Game over",
-          "body": "{{winnerName}} won in {{roomName}}"
-        },
-        "onMessage": {
-          "chat": {
-            "title": "{{senderName}} in {{roomName}}",
-            "body": "Sent you a message"
-          }
-        }
+        "allowReconnect": true,
+        "reconnectTimeout": 30
       }
     }
+  ]
+}
+```
+
+The file is uploaded with your game when you `rundot deploy`. The server reads it to register your room types.
+
+### Room type fields
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `type` | `string` | *required* | Room type identifier used for matchmaking (e.g. `"tictactoe"`, `"lobby"`) |
+| `file` | `string` | *required* | Path to the file exporting the `GameRoom` subclass, relative to project root |
+| `export` | `string` | `"default"` | Named export of the `GameRoom` class |
+| `singleton` | `boolean` | `false` | When true, only one room of this type exists. All players join the same room (no matchmaking). |
+| `config` | `RoomConfig` | — | Room configuration overrides (see table below) |
+
+### RoomConfig fields
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `maxPlayers` | `number` | `10` | Maximum number of players allowed in the room |
+| `idleTimeout` | `number` | `300` | Time in seconds before an empty room is disposed (5 min) |
+| `autoPersist` | `boolean` | `true` | Whether to auto-persist state on a debounced interval |
+| `persistInterval` | `number` | `5000` | Debounce interval for auto-persist in milliseconds |
+| `allowReconnect` | `boolean` | `true` | Whether to allow reconnections after disconnect |
+| `reconnectTimeout` | `number` | `30` | Time in seconds to hold a player slot for reconnection |
+| `startLocked` | `boolean` | `false` | Whether the room starts locked (no new joins) |
+| `metadata` | `object` | — | Custom metadata passed to the room on creation |
+
+**Multi-room-type apps:** Add one entry per game mode:
+
+```json
+{
+  "rooms": [
+    { "type": "classic", "file": "src/rooms/Classic.ts" },
+    { "type": "party", "file": "src/rooms/Party.ts", "config": { "maxPlayers": 8 } }
+  ]
+}
+```
+
+***
+
+## Quick Start
+
+### Server: TicTacToe room
+
+```typescript
+import { GameRoom, type GameMessage, type GameRoomProps } from '@series-inc/rundot-game-sdk/mp-server'
+import type { Player, LeaveReason } from '@series-inc/rundot-game-sdk/mp-server'
+
+// -- Messages --
+interface MoveMessage { type: 'move'; position: number }
+interface ChatMessage { type: 'chat'; text: string }
+interface BoardUpdate { type: 'boardUpdate'; board: string[]; currentTurn: 'X' | 'O' }
+type MyProtocol = MoveMessage | ChatMessage | BoardUpdate
+
+export default class TicTacToe extends GameRoom<MyProtocol> {
+  private board: string[] = Array(9).fill('')
+  private currentTurn: 'X' | 'O' = 'X'
+
+  onCreate() {
+    this.log.info('Room created')
+  }
+
+  onPlayerJoin(player: Player) {
+    this.log.info('Player joined', { id: player.id })
+    if (this.playerCount >= 2) this.lock()
+  }
+
+  onGameMessage(message: GameMessage<MyProtocol>) {
+    const { sender, payload } = message
+    switch (payload.type) {
+      case 'move':
+        this.board[payload.position] = this.currentTurn
+        this.currentTurn = this.currentTurn === 'X' ? 'O' : 'X'
+        this.broadcast({ type: 'boardUpdate', board: this.board, currentTurn: this.currentTurn })
+        break
+      case 'chat':
+        this.broadcast({ type: 'chat', text: `${sender.username}: ${payload.text}` })
+        break
+    }
+  }
+
+  onPlayerLeave(player: Player, reason: LeaveReason) {
+    this.log.info('Player left', { id: player.id, reason })
   }
 }
 ```
 
-### Config fields
-
-The key of each entry inside `rooms` is the **game type** — it's the identifier used for matchmaking and room filtering.
-
-| Field | Type | Default | Description |
-|---|---|---|---|
-| `rulesPreset` | `string` | `"default"` | Named preset for server-side rule sets |
-| `minPlayers` | `number` | `1` | Minimum players required. When reached in a `waiting` room, the game **auto-starts** |
-| `maxPlayers` | `number` | `4` | Maximum players allowed in a room |
-| `playerRoles` | `string[]` | — | Roles assigned to players on game start (e.g., `["white", "black"]`) |
-| `playerInitialization` | `string` | — | How roles are assigned: `"random"`, `"assigned"`, or `"first-come-first-served"` |
-| `matchmaking` | `object` | — | Default criteria for `joinOrCreateRoomAsync` |
-| `createOptions` | `object` | — | Default options merged into every `createRoomAsync` call |
-| `privateMatchDefaults` | `object` | — | Defaults for private match creation. `allowCustomCode` enables custom room codes |
-| `defaultRules` | `object` | — | Server-side validation rules (see below) |
-| `notifications` | `object` | — | Push notification templates for turn start, game end, and room messages |
-
-### `defaultRules` fields
-
-| Field | Type | Default | Description |
-|---|---|---|---|
-| `turnBased` | `boolean` | `false` | Whether the game enforces turn order |
-| `minPlayers` | `number` | `1` | Minimum players for the rule engine |
-| `maxPlayers` | `number` | `4` | Maximum players for the rule engine |
-| `allowedMessageTypes` | `object` | — | Per-phase validation of move types. Keys are phases (`waiting`, `playing`, `ended`), values map move types to `{ requiredFields: string[] }` |
-
-### Notification template variables
-
-Templates in `notifications.onTurnStart`, `notifications.onGameEnd`, and `notifications.onMessage.<messageType>` support these variables:
-
-`{{currentPlayerName}}`, `{{previousPlayerName}}`, `{{roomName}}`, `{{turnNumber}}`, `{{gameType}}`, `{{roomId}}`, `{{winnerName}}`, `{{endReason}}`, `{{finisherName}}`, `{{senderName}}`, `{{roomCode}}`
-
-Additionally, `onMessage` templates receive any keys from the message's `metadata` as template variables.
-
----
-
-## Quick Start
+### Client: connect and play
 
 ```typescript
 import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
-const result = await RundotGameAPI.rooms.joinOrCreateRoomAsync({
-  matchCriteria: { hasSpace: true },
-  createOptions: { maxPlayers: 4, name: 'Game Room' },
-})
+// Join or create a room
+const room = await RundotGameAPI.realtime.joinOrCreateRoom<MyProtocol>('tictactoe')
 
-const unsubscribe = await RundotGameAPI.rooms.subscribeAsync(result.room, {
-  onData(event) {
-    console.log('Room updated:', event.roomData)
+// Listen for updates
+room.on({
+  onMessage(msg) {
+    if (msg.type === 'boardUpdate') renderBoard(msg.board)
+    if (msg.type === 'chat') showChat(msg.text)
+  },
+  onPlayerJoined(player) {
+    console.log(`${player.username} joined`)
+  },
+  onPlayerLeft(playerId) {
+    console.log(`Player ${playerId} left`)
   },
 })
+
+// Send a move
+room.send({ type: 'move', position: 4 })
+
+// Leave when done
+room.leave()
 ```
 
----
+***
 
-## Game Lifecycle
+## Server: GameRoom
 
-Every room progresses through three phases, tracked in `room.customMetadata.rules.gameState.phase`:
+### Defining messages
 
-**`waiting`** — Room is created, players join. The lobby phase.
+`GameRoom` takes one type parameter:
 
-**`playing`** — Game is in progress. Moves are proposed and validated.
-
-**`ended`** — Game is complete. Winner and end reason are recorded.
-
-### Auto-start
-
-When the number of players in a `waiting` room reaches `minPlayers` from your config, the server **automatically starts the game**. This:
-- Sets `phase` to `playing`
-- Shuffles turn order (for turn-based games)
-- Sets `currentPlayer` to the first player in the shuffled order
-- Assigns `gameRole` from `playerRoles` if `playerInitialization` is configured
-
-To disable auto-start, set `minPlayers` to a value higher than `maxPlayers` (or omit it to keep the default of `1`), then start manually with `startRoomGameAsync`.
-
-### Manual start
-
-Only the room creator (host) can manually start the game:
+- **`P`** — A discriminated union of message types (the protocol). Every member must have a `{ type: string }` field. This union covers both client-to-server and server-to-client messages.
 
 ```typescript
-const myProfileId = RundotGameAPI.getProfile().id
-const hostProfileId = latestSnapshot?.customMetadata?.rules?.hostProfileId
+// Messages — discriminated union
+interface PlaceMessage { type: 'place'; x: number; y: number }
+interface ForfeitMessage { type: 'forfeit' }
+interface BoardUpdate { type: 'boardUpdate'; board: number[][]; scores: Record<string, number> }
+type Messages = PlaceMessage | ForfeitMessage | BoardUpdate
 
-if (myProfileId === hostProfileId) {
-  await RundotGameAPI.rooms.startRoomGameAsync(room, {
-    gameConfig: { countdownMs: 3000 },
-    turnOrder: ['profileId_1', 'profileId_2'],
-  })
+export default class MyGame extends GameRoom<Messages> {
+  private board: number[][] = []
+  private scores: Record<string, number> = {}
+  private phase: 'waiting' | 'playing' | 'ended' = 'waiting'
 }
 ```
 
-If you provide `turnOrder`, it must be a permutation of the current players. If omitted, the server generates one automatically.
+### Lifecycle hooks
 
-### Ending a game
+All hooks are optional. They can be `async` or synchronous.
 
-The server detects game end when a proposed move includes `isGameOver: true` in `gameSpecificState`:
-
-```typescript
-await RundotGameAPI.rooms.proposeMoveAsync(room, {
-  moveType: 'game_end',
-  gameSpecificState: {
-    isGameOver: true,
-    winner: 'profileId_of_winner',
-    endReason: 'checkmate',
-  },
-})
-```
-
-This sets `phase` to `ended`, records the `winner` and `endReason`, and dispatches the `onGameEnd` push notification if configured.
-
----
-
-## Creating & Joining Rooms
+| Hook | When it's called |
+|---|---|
+| `onCreate()` | Room is first created. Initialize game data here. |
+| `onPlayerJoin(player)` | A player requests to join. Call `this.reject()` to deny. |
+| `onGameMessage(message)` | A player sends a typed message. `message.sender` is the player, `message.payload` is the typed message. Switch on `message.payload.type` to narrow. |
+| `onPlayerLeave(player, reason)` | A player leaves. `reason` is `'leave'`, `'disconnect'`, or `'kick'`. |
+| `onDispose()` | Room is about to be destroyed. Final cleanup. |
+| `onRestore(snapshot)` | Room is restored from a persisted snapshot (crash recovery). State keys are auto-applied before this hook; use it to restore server-only data. |
+| `onMigrate(snapshot, oldVersion)` | Room is restored but the bundle version changed. Migrate state between versions here. |
 
 ```typescript
-// Create a room explicitly
-const room = await RundotGameAPI.rooms.createRoomAsync({
-  maxPlayers: 4,
-  gameType: 'chess',
-  isPrivate: false,
-  name: 'Epic Chess Match',
-  customMetadata: { skillLevel: 'intermediate' },
-  data: { turnDuration: 30 },
-})
+onCreate() {
+  this.board = Array(9).fill('')
+  this.clock.setInterval('tick', () => this.onTick(), 1000)
+}
 
-// Matchmaking: join an existing room or create a new one
-const result = await RundotGameAPI.rooms.joinOrCreateRoomAsync({
-  matchCriteria: { gameType: 'chess', hasSpace: true },
-  createOptions: { maxPlayers: 2, name: 'Quick Match' },
-})
-// result: { action: 'joined' | 'created', room, playersJoined }
+onPlayerJoin(player: Player) {
+  if (this.phase !== 'waiting') {
+    this.reject({ reason: 'Game already started' })
+  }
+}
 
-// Join by invite code (auto-generated 6-character alphanumeric code)
-const room = await RundotGameAPI.rooms.joinRoomByCodeAsync('ABC123')
+onGameMessage(message: GameMessage<Messages>) {
+  switch (message.payload.type) {
+    case 'place':
+      this.handlePlace(message.sender, message.payload)
+      break
+    case 'forfeit':
+      this.handleForfeit(message.sender)
+      break
+  }
+}
 
-// List rooms you currently belong to
-const rooms = await RundotGameAPI.rooms.getUserRoomsAsync({ includeArchived: false })
+onPlayerLeave(player: Player, reason: LeaveReason) {
+  delete this.scores[player.id]
+  this.broadcast({ type: 'boardUpdate', board: this.board, scores: this.scores })
+}
+
+onDispose() {
+  this.log.info('Room disposed')
+}
 ```
 
-Parameters you pass to `createRoomAsync` and `joinOrCreateRoomAsync` are merged with the defaults from your `config.json`'s `rooms.createOptions`, so you only need to specify overrides.
+### Messaging
 
----
-
-## Real-Time Subscriptions
+Send typed messages to clients (these arrive via `onMessage` / `onPrivateMessage` on the client):
 
 ```typescript
-const unsubscribe = await RundotGameAPI.rooms.subscribeAsync(room, {
-  onData(event) {
-    // Fires on any room document change (players, phase, game state, etc.)
-    // event.roomData: full room snapshot
-    updateGameUI(event.roomData)
-  },
-  onMessages(event) {
-    // Fires for chat and broadcast messages
-    // event.type: 'H5_ROOM_MESSAGE_RECEIVED' | 'H5_ROOM_MESSAGE_UPDATED' | 'H5_ROOM_MESSAGE_DELETED'
-    // event.message: { id, senderId, type, content, metadata, timestamp }
-    handleChatMessage(event.message)
-  },
-  onGameEvents(event) {
-    // Fires when proposed moves are created or their validation status changes
-    // event.proposedMoveData: { moveType, gameSpecificState, serverGenericValidationStatus, ... }
-    // event.changeType: 'added' | 'modified' | 'removed'
-    handleMove(event.proposedMoveData)
-  },
-})
+// Broadcast to all players
+this.broadcast({ type: 'chat', text: 'Game starting!' })
+
+// Send to a specific player
+this.sendTo(playerId, { type: 'hint', text: 'Your turn' })
 ```
 
-Always unsubscribe when done:
+### Room control
 
 ```typescript
-unsubscribe()
+// Lock — prevent new players from joining
+this.lock()
+
+// Unlock — allow new joins again
+this.unlock()
+
+// Kick a player (triggers onPlayerLeave with reason 'kick')
+this.kick(playerId, 'inactivity')
+
+// Reject a join (call inside onPlayerJoin — throws, so nothing after it runs)
+this.reject({ reason: 'Room is full' })
 ```
 
----
+### Persistence
 
-## Room Data & Messaging
+Override `getPersistState()` to control what gets persisted for crash recovery:
 
 ```typescript
-const roomData = await RundotGameAPI.rooms.getRoomDataAsync(room)
+private board: string[] = []
+private currentTurn: 'X' | 'O' = 'X'
+private moveHistory: Array<{ player: string; pos: number }> = []
 
-await RundotGameAPI.rooms.sendRoomMessageAsync(room, {
-  message: { type: 'chat', text: 'Good game!' },
-  metadata: { timestamp: Date.now() },
-})
-```
-
-Room messages are for chat or lightweight event broadcasts. For game state changes, use `proposeMoveAsync` instead.
-
-### Authoritative state
-
-Game state is managed server-side under `room.customMetadata.rules`:
-
-- `rules.gameState.phase` — canonical phase: `'waiting'`, `'playing'`, or `'ended'`
-- `rules.hostProfileId` — the room creator's profile ID (only they can start the game or kick players)
-- `rules.gameState.currentPlayer` — whose turn it is (turn-based games)
-- `rules.gameState.turnOrder` — ordered list of profile IDs
-- `rules.gameState.turnCount` — number of turns completed
-- `rules.gameState.playerStates` — per-player state including `status`, `role`, `gameRole`, `joinedAt`
-
----
-
-## Game Moves
-
-### Proposing a move
-
-```typescript
-const result = await RundotGameAPI.rooms.proposeMoveAsync(room, {
-  moveType: 'piece_move',
-  gameSpecificState: { from: 'e2', to: 'e4' },
-  clientContext: { timestamp: Date.now() },
-  clientProposalId: 'move_123',
-})
-// result: { proposedMoveId: string }
-```
-
-The `gameSpecificState` is merged into the official game state when the server validates the move.
-
-### Server-side validation
-
-When a move is proposed, the server validates it automatically:
-
-1. **Phase check** — game must be in `playing` phase
-2. **Turn check** (turn-based games) — `currentPlayer` must match the proposer (resignations are exempt)
-3. **Move type check** — if `allowedMessageTypes` is configured, the move type must be allowed for the current phase
-4. **Resignation security** — for resignation moves, `resignedBy` must match the proposer's profile ID
-
-Each proposed move carries validation statuses:
-- `serverGenericValidationStatus`: `'pending'` | `'valid'` | `'invalid'`
-- `serverCustomValidationStatus`: `'pending'` | `'valid'` | `'invalid'` | `'not_applicable'`
-- `clientConsensusStatus`: `'pending'` | `'valid'` | `'disputed'` | `'superceded'`
-
-For turn-based games, valid moves automatically advance `currentPlayer` to the next player in `turnOrder`.
-
-### Optimistic state
-
-When a move is proposed, the room document is immediately updated with `optimisticGameState` and `lastProposedMoveId` — before server validation completes. Use this for responsive UIs that show the proposed state while waiting for confirmation.
-
-### Peer validation (optional)
-
-For games that use client-side move validation in addition to server validation:
-
-```typescript
-await RundotGameAPI.rooms.validateMoveAsync(room, move.proposedMoveId, {
-  isValid: true,
-  reason: null,
-  validatorId: RundotGameAPI.getProfile().id,
-})
-```
-
----
-
-## Turn-Based Games
-
-For turn-based games, set `defaultRules.turnBased` to `true` in your `config.json`:
-
-```json
-{
-  "rooms": {
-    "chess": {
-      "maxPlayers": 2,
-      "playerRoles": ["white", "black"],
-      "playerInitialization": "random",
-      "defaultRules": {
-        "turnBased": true
-      }
-    }
+protected getPersistState() {
+  return {
+    board: this.board,
+    currentTurn: this.currentTurn,
+    moveHistory: this.moveHistory,
   }
 }
 ```
 
-The server enforces turn order — only `currentPlayer` can propose moves. After each valid move, `currentPlayer` advances to the next player in `turnOrder` (wrapping around at the end).
+Call `this.save()` to immediately persist. With `autoPersist: true` (the default), state is also auto-saved on a debounced interval (`persistInterval`, default 5000ms).
+
+On crash recovery, `onRestore(snapshot)` is called with the persisted data. Use it to restore your fields:
 
 ```typescript
-// Check if it's my turn
-const gameState = latestSnapshot?.customMetadata?.rules?.gameState
-const myProfileId = RundotGameAPI.getProfile().id
-
-if (gameState?.currentPlayer === myProfileId) {
-  await RundotGameAPI.rooms.proposeMoveAsync(room, {
-    moveType: 'piece_move',
-    gameSpecificState: { from: 'e2', to: 'e4' },
-  })
+onRestore(snapshot: Record<string, unknown>) {
+  this.board = (snapshot.board as string[]) ?? []
+  this.currentTurn = (snapshot.currentTurn as 'X' | 'O') ?? 'X'
+  this.moveHistory = (snapshot.moveHistory as typeof this.moveHistory) ?? []
 }
 ```
 
----
+### Clock
 
-## Room Management
-
-### Kicking a player
-
-Only the room creator can kick players:
+Named timers with auto-cleanup and crash-recovery support:
 
 ```typescript
-await RundotGameAPI.rooms.kickPlayerAsync(room, targetProfileId, {
-  reason: 'inactivity',
-})
+// Repeating interval
+this.clock.setInterval('turnTimer', () => {
+  this.timeLeft--
+  if (this.timeLeft <= 0) this.endTurn()
+  this.broadcast({ type: 'timerUpdate', timeLeft: this.timeLeft })
+}, 1000)
+
+// One-shot timeout
+this.clock.setTimeout('gameStart', () => {
+  this.phase = 'playing'
+  this.broadcast({ type: 'phaseChange', phase: 'playing' })
+}, 3000)
+
+// Clear a timer
+this.clock.clear('turnTimer')
+
+// Check if a timer is active
+this.clock.has('turnTimer') // boolean
 ```
 
-Kicking a player removes them from the room and updates `turnOrder` / `currentPlayer` if needed.
-
-### Leaving a room
+Timers are automatically serialized and restored on crash recovery. In `onRestore`, re-register your timers with the same names — the harness adjusts their remaining time automatically so they resume where they left off rather than restarting from zero:
 
 ```typescript
-await RundotGameAPI.rooms.leaveRoomAsync(room)
-unsubscribe()
-```
-
-Always call both `leaveRoomAsync` and your subscription's unsubscribe function when a player exits to free their slot.
-
----
-
-## Push Notifications
-
-Rooms can send push notifications when a turn advances, a game ends, or a room message is created. Notifications are configured in `config.json` under `rooms.<gameType>.notifications` — no client code required.
-
-### Configuration
-
-```json
-{
-  "rooms": {
-    "chess": {
-      "notifications": {
-        "onTurnStart": {
-          "title": "Chess",
-          "body": "It's your turn! {{previousPlayerName}} just moved."
-        },
-        "onGameEnd": {
-          "title": "Chess — Game Over",
-          "body": "{{finisherName}} won by {{endReason}}!"
-        },
-        "onMessage": {
-          "chat": {
-            "title": "{{senderName}} in {{roomName}}",
-            "body": "Sent you a message"
-          }
-        }
-      }
-    }
-  }
+onRestore(snapshot: Record<string, unknown>) {
+  this.board = (snapshot.board as string[]) ?? []
+  this.timeLeft = (snapshot.timeLeft as number) ?? 30
+  // Re-register timers with the same names — harness adjusts remaining time
+  this.clock.setInterval('turnTimer', () => this.onTick(), 1000)
+  this.clock.setTimeout('gameStart', () => this.startGame(), 3000)
 }
 ```
 
-All templates are optional. If omitted, no notifications are sent for that event.
+All timers are cleared automatically when the room is disposed.
 
-### Template Variables
+### Logger
 
-**`onTurnStart`** — sent to the next player after a turn advances:
+Structured logging available on `this.log`:
 
-| Variable | Description |
-|---|---|
-| `{{currentPlayerName}}` | Username of the player whose turn it is now |
-| `{{previousPlayerName}}` | Username of the player who just moved |
-| `{{roomName}}` | Room name |
-| `{{turnNumber}}` | Current turn number (1-based) |
-| `{{gameType}}` | Game type from room config |
-| `{{roomId}}` | Room ID |
+```typescript
+this.log.info('Game started', { playerCount: this.playerCount })
+this.log.warn('Invalid move attempted', { playerId: sender.id })
+this.log.error('Unexpected state', { phase: this.phase })
+this.log.debug('Processing message', { type: payload.type })
+```
 
-**`onGameEnd`** — sent to all players except the one who made the final move:
+### Player object
 
-| Variable | Description |
-|---|---|
-| `{{winnerName}}` | Username of the winner (empty if draw) |
-| `{{finisherName}}` | Username of the player who made the final move |
-| `{{endReason}}` | End reason (e.g. `"checkmate"`, `"resignation"`, `"completed"`) |
-| `{{roomName}}` | Room name |
-| `{{gameType}}` | Game type from room config |
-| `{{roomId}}` | Room ID |
-
-**`onMessage.<messageType>`** — sent to all room members except the sender when a message of the matching type is created:
-
-| Variable | Description |
-|---|---|
-| `{{senderName}}` | Username of the message sender |
-| `{{roomName}}` | Room name |
-| `{{roomCode}}` | Room invite code |
-| `{{gameType}}` | Game type from room config |
-| `{{roomId}}` | Room ID |
-| `{{<metadataKey>}}` | Any key from the message's `metadata` object is available as a variable |
-
-### Behavior
-
-- **Mutually exclusive:** A move that ends the game sends `onGameEnd` only, not `onTurnStart`.
-- **Self-notification guard:** The player who made the move/ended the game/sent the message is never notified.
-- **Placeholder usernames:** If a player has an auto-generated placeholder username, it appears as "A player" in notifications.
-- **Tap action:** Tapping the notification opens the game via `appId`. The `roomId` is delivered in `context.notificationParams.roomId` so your game can auto-join/resume the relevant room on launch.
-- **No config = no notifications:** Omitting `notifications` entirely results in silent no-op.
-
-## Room Properties
-
-`RundotGameRoom` includes:
+The `Player` object is passed to lifecycle hooks and available via `this.players` (a `ReadonlyMap<string, Player>`):
 
 | Property | Type | Description |
 |---|---|---|
-| `id` | `string` | Unique room identifier |
-| `name` | `string` | Room display name |
-| `players` | `string[]` | Profile IDs of current players |
-| `maxPlayers` | `number` | Maximum players allowed |
-| `gameType` | `string` | Game type identifier |
-| `isPrivate` | `boolean` | Whether the room is hidden from public matchmaking |
-| `status` | `string` | `'active'`, `'paused'`, or `'archived'` |
-| `customMetadata` | `object` | Contains `rules` with game state, host ID, and more |
-| `data` | `object` | Arbitrary key-value data attached to the room |
-| `roomCode` | `string` | Auto-generated 6-character alphanumeric invite code |
-| `admins` | `string[]` | Profile IDs of room admins |
-| `createdBy` | `string` | Profile ID of the room creator |
-| `createdAt` | `number` | Creation timestamp |
-| `updatedAt` | `number` | Last update timestamp |
-| `version` | `number` | Incremented on each room update |
+| `id` | `string` (readonly) | Unique player identifier (profileId from RUN.game) |
+| `username` | `string` (readonly) | Display name |
+| `avatarUrl` | `string \| null` (readonly) | Avatar URL, if available |
+| `joinedAt` | `number` (readonly) | Timestamp when the player joined (ms since epoch) |
+| `connected` | `boolean` | Whether the player is currently connected (updates on disconnect/reconnect) |
 
----
+```typescript
+// Iterate all players
+for (const [id, player] of this.players) {
+  if (!player.connected) continue
+  this.sendTo(id, { type: 'ping' })
+}
 
-## Environment Separation
+// Get player count
+this.playerCount // shorthand for this.players.size
+```
 
-Rooms are segregated by `versionTag` (e.g., `'production'` vs `'development'`). Rooms created during development never appear in production matchmaking, and vice versa.
+***
 
----
+## Client: Connecting and Playing
+
+### Creating and joining rooms
+
+All methods return a `ServerRoom<P>` typed with your message union:
+
+```typescript
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
+
+// Create a new room
+const room = await RundotGameAPI.realtime.createRoom<MyProtocol>('tictactoe')
+
+// Join by room code (the 6-char code, e.g. "HX9KWR")
+const room = await RundotGameAPI.realtime.joinRoomByCode<MyProtocol>('HX9KWR')
+
+// Matchmaking: join an existing room or create one
+const room = await RundotGameAPI.realtime.joinOrCreateRoom<MyProtocol>('tictactoe')
+```
+
+### Room properties
+
+| Property | Type | Description |
+|---|---|---|
+| `roomCode` | `string` | Shareable 6-character room code (e.g. `"HX9KWR"`) |
+| `playerId` | `string` | The current player's ID |
+| `locked` | `boolean` | Whether the room is locked (no new joins) |
+| `latency` | `number` | Current latency in ms (round-trip / 2) |
+| `connectionState` | `ConnectionState` | `'connecting'`, `'connected'`, `'reconnecting'`, or `'disconnected'` |
+
+### Events
+
+Register event handlers with `room.on()`:
+
+```typescript
+room.on({
+  onMessage(message) {
+    // Broadcast message from the server
+    if (message.type === 'chat') showChat(message.text)
+  },
+  onPrivateMessage(message) {
+    // Message sent only to this player (via sendTo on the server)
+  },
+  onPlayerJoined(player) {
+    // player: { id, username, avatarUrl }
+    showJoinNotification(player.username)
+  },
+  onPlayerLeft(playerId) {
+    removePlayerFromUI(playerId)
+  },
+  onLock() {
+    disableInviteButton()
+  },
+  onUnlock() {
+    enableInviteButton()
+  },
+  onError(error) {
+    showError(error)
+  },
+  onDisconnect() {
+    showDisconnectedOverlay()
+  },
+  onReconnecting() {
+    showReconnectingSpinner()
+  },
+  onReconnected() {
+    hideReconnectingSpinner()
+  },
+})
+```
+
+All callbacks are optional — only register the ones you need.
+
+### Sending messages
+
+Send typed messages to the server room (arrives in `onGameMessage` on the server):
+
+```typescript
+room.send({ type: 'move', position: 4 })
+room.send({ type: 'chat', text: 'Good game!' })
+```
+
+### Leaving
+
+```typescript
+room.leave()
+```
+
+This closes the connection and triggers `onPlayerLeave` on the server with reason `'leave'`.
+
+### Server time
+
+Get the estimated server time (local time adjusted by server offset):
+
+```typescript
+const serverNow = room.getServerTime() // ms since epoch
+```
+
+Useful for synchronized countdowns or time-based game logic.
+
+***
+
+## Reconnection
+
+Players automatically reconnect with exponential backoff when the connection drops.
+
+### Server-side
+
+- `allowReconnect` (default `true`) — enables reconnection. When a player disconnects, their slot is held for `reconnectTimeout` seconds (default 30).
+- While disconnected, `player.connected` is `false`. The player is still in `this.players` — they are only removed when the reconnect timeout expires (triggering `onPlayerLeave` with reason `'disconnect'`).
+
+```typescript
+onGameMessage(message: GameMessage<Messages>) {
+  if (!message.sender.connected) return // ignore messages from disconnected players (shouldn't happen, but defensive)
+  // ...
+}
+```
+
+### Client-side
+
+The client fires connection events as the state changes:
+
+| Event | When |
+|---|---|
+| `onReconnecting` | Connection dropped, attempting to reconnect |
+| `onReconnected` | Successfully reconnected — connection resumes |
+| `onDisconnect` | Reconnection failed or timed out — connection is closed |
+
+```typescript
+room.on({
+  onReconnecting() { showSpinner('Reconnecting...') },
+  onReconnected() { hideSpinner() },
+  onDisconnect() { showGameOver('Connection lost') },
+})
+```
+
+Monitor the connection state at any time via `room.connectionState`:
+
+```typescript
+if (room.connectionState === 'reconnecting') {
+  disableInput()
+}
+```
+
+***
 
 ## Best Practices
 
-- Treat `customMetadata.rules.gameState` as the single source of truth for game lifecycle state
-- Treat `customMetadata.rules.hostProfileId` as the canonical room host identity
-- Always call both `unsubscribe()` and `leaveRoomAsync()` when a player exits
-- Use `proposeMoveAsync` for all game state changes — not `sendRoomMessageAsync`
-- Set `isGameOver: true` in your final move's `gameSpecificState` to properly end the game
-- Configure `allowedMessageTypes` in `defaultRules` to restrict which move types are valid per phase
-- Use `minPlayers` carefully — reaching it in a `waiting` room triggers auto-start
+- **Use messages for all client updates** — broadcast game state changes via typed messages. Use `onPlayerJoin` return values (`joinData`) to send initial state to new players.
+- **Use typed messages** — define a discriminated union for `P` and switch on `payload.type` in `onGameMessage`. This gives you full type safety and autocompletion.
+- **Handle disconnects gracefully** — check `player.connected` before time-sensitive logic. Skip disconnected players' turns rather than stalling the game.
+- **Lock when full** — call `this.lock()` in `onPlayerJoin` when you have enough players to prevent extra joins during gameplay.
+- **Persist strategically** — use `this.save()` after critical state changes (game start, round end). Rely on `autoPersist` for routine saves.
+- **Use the clock for timing** — prefer `this.clock.setInterval()` / `this.clock.setTimeout()` over raw `setInterval` / `setTimeout` for automatic cleanup and crash-recovery support.

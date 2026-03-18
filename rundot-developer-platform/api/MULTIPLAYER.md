@@ -547,6 +547,5 @@ if (room.connectionState === 'reconnecting') {
 - **Use messages for all client updates** — broadcast game state changes via typed messages. Use `onPlayerJoin` return values (`joinData`) to send initial state to new players.
 - **Use typed messages** — define a discriminated union for `P` and switch on `payload.type` in `onGameMessage`. This gives you full type safety and autocompletion.
 - **Handle disconnects gracefully** — check `player.connected` before time-sensitive logic. Skip disconnected players' turns rather than stalling the game.
-- **Lock when full** — call `this.lock()` in `onPlayerJoin` when you have enough players to prevent extra joins during gameplay.
 - **Persist strategically** — use `this.save()` after critical state changes (game start, round end). Rely on `autoPersist` for routine saves.
 - **Use the clock for timing** — prefer `this.clock.setInterval()` / `this.clock.setTimeout()` over raw `setInterval` / `setTimeout` for automatic cleanup and crash-recovery support.

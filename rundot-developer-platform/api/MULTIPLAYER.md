@@ -228,7 +228,7 @@ All hooks are optional. They can be `async` or synchronous.
 | `onGameMessage(message)` | A player sends a typed message. `message.sender` is the player, `message.payload` is the typed message. Switch on `message.payload.type` to narrow. |
 | `onPlayerLeave(player, reason)` | A player leaves. `reason` is `'leave'`, `'disconnect'`, or `'kick'`. |
 | `onDispose()` | Room is about to be destroyed. Final cleanup. |
-| `onRestore(snapshot)` | Room is restored from a persisted snapshot (crash recovery). State keys are auto-applied before this hook; use it to restore server-only data. |
+| `onRestore(snapshot)` | Room is restored from a persisted snapshot (crash recovery). The snapshot contains everything returned by `getPersistState()` — use it to manually restore your fields. |
 | `onMigrate(snapshot, oldVersion)` | Room is restored but the bundle version changed. Migrate state between versions here. |
 
 ```typescript
@@ -370,6 +370,11 @@ this.log.info('Game started', { playerCount: this.playerCount })
 this.log.warn('Invalid move attempted', { playerId: sender.id })
 this.log.error('Unexpected state', { phase: this.phase })
 this.log.debug('Processing message', { type: payload.type })
+this.log.critical('Fatal room error', { error: 'something broke' })
+
+// Create a child logger with additional context fields
+const playerLog = this.log.child({ playerId: sender.id })
+playerLog.info('Player action') // includes playerId in every entry
 ```
 
 ### Player object
@@ -544,7 +549,7 @@ if (room.connectionState === 'reconnecting') {
 
 ## Best Practices
 
-- **Use messages for all client updates** — broadcast game state changes via typed messages. Use `onPlayerJoin` return values (`joinData`) to send initial state to new players.
+- **Use messages for all client updates** — broadcast game state changes via typed messages. Use `this.sendTo(player.id, ...)` inside `onPlayerJoin` to send initial state to new players.
 - **Use typed messages** — define a discriminated union for `P` and switch on `payload.type` in `onGameMessage`. This gives you full type safety and autocompletion.
 - **Handle disconnects gracefully** — check `player.connected` before time-sensitive logic. Skip disconnected players' turns rather than stalling the game.
 - **Persist strategically** — use `this.save()` after critical state changes (game start, round end). Rely on `autoPersist` for routine saves.

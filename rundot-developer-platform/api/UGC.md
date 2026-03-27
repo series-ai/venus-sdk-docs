@@ -10,8 +10,10 @@ The UGC API enables games to let users create, share, and discover community con
 
 **Key Features:**
 - 📤 **Publish** content with JSON metadata (up to 100KB)
-- 🔍 **Browse** community content with sorting and pagination
+- 🔍 **Browse** community content with sorting, pagination, and author filtering
 - 📋 **List** your own published content
+- 📦 **Batch Fetch** multiple entries by ID
+- 👥 **Follow Creators** and track follower/following counts
 - ❤️ **Like/Unlike** content (with optimistic updates)
 - 📊 **Track Usage** when content is imported/used
 - 🚩 **Report** inappropriate content
@@ -55,6 +57,13 @@ for (const entry of catalog.entries) {
   console.log(`  Liked by me: ${entry.isLikedByMe}`)
 }
 
+// Browse a specific creator's content
+const creatorContent = await RundotAPI.ugc.browse({
+  contentType: 'character',
+  authorId: 'creator-profile-id',
+  sortBy: 'recent'
+})
+
 // Pagination
 if (catalog.nextCursor) {
   const nextPage = await RundotAPI.ugc.browse({
@@ -81,6 +90,20 @@ await RundotAPI.ugc.update({
 
 // Delete content
 await RundotAPI.ugc.delete(entry.id)
+```
+
+### Batch Fetching Entries
+
+Retrieve multiple entries by ID in a single request (max 100):
+
+```typescript
+const result = await RundotAPI.ugc.getMany({
+  entryIds: ['entry-id-1', 'entry-id-2', 'entry-id-3']
+})
+
+for (const entry of result.entries) {
+  console.log(`${entry.title} - Liked by me: ${entry.isLikedByMe}`)
+}
 ```
 
 ---
@@ -138,6 +161,50 @@ await RundotAPI.ugc.report({
 
 ---
 
+## Creator Following
+
+Follow and unfollow content creators, check follow status, and retrieve follower/following counts.
+
+### Follow / Unfollow
+
+```typescript
+// Follow a creator
+await RundotAPI.ugc.follow(creatorProfileId)
+
+// Unfollow a creator
+await RundotAPI.ugc.unfollow(creatorProfileId)
+```
+
+### Check Follow Status
+
+```typescript
+const { isFollowing } = await RundotAPI.ugc.isFollowing(creatorProfileId)
+console.log(`Following: ${isFollowing}`)
+```
+
+### Get Follow Counts
+
+```typescript
+const counts = await RundotAPI.ugc.getFollowCounts(creatorProfileId)
+console.log(`Followers: ${counts.followerCount}`)
+console.log(`Following: ${counts.followingCount}`)
+```
+
+### Building a Creator Profile
+
+Combine following with browse to build a creator profile page:
+
+```typescript
+// Get creator's follow stats and content in parallel
+const [counts, { isFollowing }, content] = await Promise.all([
+  RundotAPI.ugc.getFollowCounts(creatorProfileId),
+  RundotAPI.ugc.isFollowing(creatorProfileId),
+  RundotAPI.ugc.browse({ authorId: creatorProfileId, sortBy: 'recent' })
+])
+```
+
+---
+
 ## Data Model
 
 ### UGC Entry
@@ -161,14 +228,37 @@ interface UgcEntry {
 }
 ```
 
+### Browse Parameters
+
+```typescript
+interface UgcBrowseParams {
+  contentType?: string           // Filter by content type
+  authorId?: string              // Filter by creator's profile ID
+  cursor?: string                // Pagination cursor
+  limit?: number                 // Page size
+  sortBy?: 'recent' | 'mostLiked' | 'mostUsed' | `idx_${string}`
+  sortOrder?: 'asc' | 'desc'
+  filters?: Record<string, unknown>  // Indexed field filters
+}
+```
+
 ### Browse Response
 
 ```typescript
 interface UgcBrowseResponse {
-  entries: Array<UgcEntry & { 
+  entries: Array<UgcEntry & {
     isLikedByMe?: boolean  // Whether current user liked this
   }>
   nextCursor?: string  // For pagination
+}
+```
+
+### Follow Counts
+
+```typescript
+interface UgcFollowCounts {
+  followerCount: number
+  followingCount: number
 }
 ```
 
@@ -291,6 +381,8 @@ async function getCatalog() {
 | Content type format | Alphanumeric, `_`, `-` |
 | Max content type length | 64 characters |
 | Usage tracking | Once per user per entry per day |
+| `getMany` batch size | Max 100 entry IDs per request |
+| Self-follow | Not allowed (server rejects) |
 
 ---
 
@@ -307,7 +399,9 @@ async function getCatalog() {
 ## Features Summary
 
 - **CRUD Operations**: Create, read, update, delete user content
-- **Community Browse**: Discover public content with sorting
+- **Community Browse**: Discover public content with sorting and author filtering
+- **Batch Fetch**: Retrieve multiple entries by ID in a single request
+- **Creator Following**: Follow/unfollow creators with follower and following counts
 - **Engagement**: Likes, usage tracking, reporting
 - **Pagination**: Cursor-based pagination for large datasets
 - **Flexible Data**: Store any JSON structure (up to 100KB)

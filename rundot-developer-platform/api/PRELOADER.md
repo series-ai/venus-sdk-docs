@@ -2,6 +2,10 @@
 
 Opt into the native RUN.game loading screen to smooth your startup and handoff into gameplay. The preloader covers your app while heavy assets load and can be dismissed once you're ready to present UI.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Always wrap SDK calls in `try/catch` or attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 ## Quick Start
 
 ```typescript

@@ -2,6 +2,7 @@
 
 * [RUN.game SDK](README.md)
   * [Getting Started](rundot-developer-platform/getting-started.md)
+  * [Error Handling](rundot-developer-platform/error-handling.md)
   * [Initializing Your Game](rundot-developer-platform/initializing-your-game.md)
   * [Deploying Your Game](rundot-developer-platform/deploying-your-game.md)
   * [Setting Your Game Thumbnail](rundot-developer-platform/setting-your-game-thumbnail.md)

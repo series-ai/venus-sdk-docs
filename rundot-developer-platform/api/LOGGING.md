@@ -2,6 +2,10 @@
 
 Stream structured logs to the RUN.game host for debugging, telemetry, and support. The logging API mirrors console semantics while tagging messages with your game instance.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Even fire-and-forget calls like `log()` return promises that can fail. Always attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 > **Mobile Debugging**: This API allows creators to get logs from mobile devices where console access isn't available. Logs are collected and can be viewed through support tools for debugging production issues.
 
 ## Quick Start

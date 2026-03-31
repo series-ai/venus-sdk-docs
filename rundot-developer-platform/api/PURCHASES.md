@@ -6,6 +6,10 @@ Let players spend RunBucks to buy digital goods and entitlements in your game. T
 
 RunBucks are the platform's hard currency. Players acquire RunBucks through the platform store, then spend them inside games for digital goods, power-ups, cosmetics, or other entitlements.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Always wrap SDK calls in `try/catch` or attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 > **Note**: "In-App Purchases" refers to FIAT transactions on the platform or in-game. This API specifically handles **RunBucks purchases**—transactions where users spend RunBucks inside your game.
 
 ## Quick Start

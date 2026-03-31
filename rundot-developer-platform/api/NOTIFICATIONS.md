@@ -2,6 +2,10 @@
 
 Schedule reminders, re-engagement prompts, and timed events using local notifications. The host persists schedules and surfaces alerts even when your game is suspended.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Always wrap SDK calls in `try/catch` or attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 ## Quick Start
 
 ```typescript

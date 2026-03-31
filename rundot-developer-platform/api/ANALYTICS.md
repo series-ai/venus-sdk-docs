@@ -2,6 +2,10 @@
 
 Record gameplay telemetry and funnel steps. Events flow to the host analytics pipeline with consistent schema and automatic attribution.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Even fire-and-forget calls like `recordCustomEvent()` return promises that can fail. Always attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 > **Note**: This API fires events to the analytics pipeline—it records data but does not provide analytics dashboards or reporting. Use the platform dashboard to view and analyze your recorded events.
 
 ## Quick Start

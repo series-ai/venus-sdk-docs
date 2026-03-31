@@ -2,6 +2,10 @@
 
 Access data about the context in which your game is currently running. Determine how your game shoul act depending on what data is is being given.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Always wrap SDK calls in `try/catch` or attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 Here are some examples for what you might use it for:
 
 * Load a custom runtime configuration to choose how you want your game to load

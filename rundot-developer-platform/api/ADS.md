@@ -2,6 +2,10 @@
 
 Monetize your game with rewarded videos and interstitials. The host manages presentation; your game just requests placements and reacts to the result.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Always wrap SDK calls in `try/catch` or attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 {% hint style="danger" %}
 Ads are not currently supported on Desktop. \
 Calling the Ads API on Desktop will show a universal link to the mobile app.&#x20;

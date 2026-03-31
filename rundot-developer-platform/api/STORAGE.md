@@ -2,6 +2,10 @@
 
 Persist player data at the right scope using the  storage helpers. The SDK exposes multiple layers—device cache, app storage, global storage—and a convenience `RundotGameAPI.storage` namespace when you want a single save bucket.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Always wrap SDK calls in `try/catch` or attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 ## Choosing a Scope
 
 | API                          | Persists where?                        | Typical usage                                      |

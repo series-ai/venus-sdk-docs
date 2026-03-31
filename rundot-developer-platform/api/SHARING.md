@@ -2,6 +2,10 @@
 
 Store shared content and create share parameters. Recipients can jump straight into your content.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Always wrap SDK calls in `try/catch` or attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 Here are some examples for what you might use it for:
 
 * Store a user-created level and share a link to it, allowing anyone to play it

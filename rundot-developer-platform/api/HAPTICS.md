@@ -2,6 +2,10 @@
 
 Trigger tactile feedback across supported devices without worrying about platform differences.  normalizes style names and falls back gracefully when hardware lacks vibration support.
 
+{% hint style="warning" %}
+All SDK methods can reject — unhandled rejections crash the app. Even fire-and-forget calls like `triggerHapticAsync()` return promises that can fail. Always attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
+{% endhint %}
+
 ## Quick Start
 
 ```typescript

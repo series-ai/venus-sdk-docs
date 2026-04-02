@@ -126,13 +126,13 @@ rundot game --help
 ### game set-name
 
 ```bash
-rundot game set-name --name "New Game Name"
+rundot game set-name "New Game Name"
 ```
 
 ### game set-description
 
 ```bash
-rundot game set-description --description "New description"
+rundot game set-description "New description"
 ```
 
 ### game list-versions

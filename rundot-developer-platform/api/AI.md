@@ -14,7 +14,7 @@ Use chat completions for hints, NPC dialogue, dynamic content, and more.
 import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
 
 const response = await RundotGameAPI.ai.requestChatCompletionAsync({
-  model: 'gpt-4o-mini',
+  model: 'gpt-5.4-mini',
   messages: [
     { role: 'user', content: 'Give me a tip for this puzzle.' },
   ],
@@ -32,20 +32,20 @@ console.log('Available models:', models)
 ```
 
 Commonly available production models:
-- `gpt-5-mini`
-- `gpt-4o-mini`
-- `claude-sonnet-4-6`
+- `gpt-5`
+- `gpt-5.4-mini`
 - `claude-haiku-4-5`
+- `claude-sonnet-4-6`
+- `claude-opus-4-1`
 - `deepseek/deepseek-chat`
-- `o4-mini`
 
-> **Tip:** Call `getAvailableCompletionModels()` at runtime to discover the full up-to-date list, which includes additional OpenAI, Claude, DeepSeek, and Mistral models.
+> **Tip:** Call `getAvailableCompletionModels()` at runtime to discover the current model list.
 
 ### Chat Completion Parameters
 
 ```typescript
 const response = await RundotGameAPI.ai.requestChatCompletionAsync({
-  model: 'gpt-4o-mini',
+  model: 'gpt-5.4-mini',
   messages: [
     { role: 'system', content: 'You are a helpful game assistant.' },
     { role: 'user', content: 'How do I defeat the boss?' },

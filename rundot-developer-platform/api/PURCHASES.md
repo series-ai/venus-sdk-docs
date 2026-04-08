@@ -45,7 +45,7 @@ document.querySelector('#currency-icon').src = icon
 async function purchaseItem(itemId: string, cost: number) {
   // 1. Attempt purchase
   try {
-    // On mobile, spendCurrency includes an automatic hard currency purchase flow if the user does not have enough
+    // spendCurrency includes an automatic hard currency purchase flow if the user does not have enough
     const result = await RundotGameAPI.iap.spendCurrency(itemId, cost)
 
     // 2. Track the purchase
@@ -57,17 +57,6 @@ async function purchaseItem(itemId: string, cost: number) {
       })
       
       return { success: true, newBalance: result.newBalance }
-    }
-
-    // 3. Prompt to buy more hard currency on web if needed
-    if (result.didPromptPurchase) {
-      const balance = await RundotGameAPI.iap.getHardCurrencyBalance()
-
-      if (balance < cost) {
-        // Not enough RunBucks - prompt to buy more
-        await RundotGameAPI.iap.openStore()
-        return { success: false, reason: 'insufficient_funds' }
-      }
     }
 
     return { success: false, reason: 'purchase_failed' }

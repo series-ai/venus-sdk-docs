@@ -28,7 +28,7 @@ my-game/
 │           └── levels.json
 ├── src/
 │   └── ...
-└── game.config.json
+└── game.config.{env}.json
 ```
 
 {% hint style="warning" %}

@@ -13,7 +13,7 @@ my-game/
 ├── config.json                      ← add "leaderboard" key here
 ├── src/
 ├── dist/
-├── game.config.json                 ← game ID + build settings only (separate file)
+├── game.config.{env}.json                 ← game ID + build settings only (separate file)
 └── package.json
 ```
 
@@ -27,7 +27,7 @@ my-game/
 
 This is the same `config.json` used for other server config (`rooms`, `simulation`, etc.). It is uploaded with your game when you `rundot deploy`. The server reads it to determine security mode, score bounds, time periods, and anti-cheat rules. If you omit the `leaderboard` key entirely, leaderboards still work with sensible defaults (simple mode, no tokens, alltime + daily periods).
 
-> `game.config.json` is a separate file for local CLI metadata (`gameId`, `relativePathToDistFolder`). Leaderboard config does not go there.
+> `game.config.{env}.json` is a separate file for local CLI metadata (`gameId`, `relativePathToDistFolder`). Leaderboard config does not go there.
 
 ***
 
@@ -344,7 +344,7 @@ Uses defaults:
 
 ## Best Practices
 
-* Configure score bounds, durations, and anti-cheat settings in your `game.config.json`.
+* Configure score bounds, durations, and anti-cheat settings in your `game.config.{env}.json`.
 * Use token or score-sealing modes for competitive or high-value rewards.
 * Log submissions and responses for customer support audits.
 * Treat this API as BETA; monitor release notes for schema or validation changes.

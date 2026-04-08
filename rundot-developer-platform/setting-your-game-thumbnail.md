@@ -15,7 +15,7 @@ my-game/
 ├── public/
 │   └── thumbnail.jpg
 ├── src/
-├── game.config.json
+├── game.config.{env}.json
 └── ...
 ```
 

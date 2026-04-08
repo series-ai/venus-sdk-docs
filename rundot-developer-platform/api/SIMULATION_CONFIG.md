@@ -19,7 +19,7 @@ my-game/
 ├── config.json                      ← simulation config goes here
 ├── src/
 ├── dist/
-├── game.config.json                 ← game ID + build settings (separate file)
+├── game.config.{env}.json                 ← game ID + build settings (separate file)
 └── package.json
 ```
 
@@ -48,7 +48,7 @@ my-game/
 │   └── player-initialization.config.json
 ├── src/
 ├── dist/
-├── game.config.json                 ← game ID + build settings (separate file)
+├── game.config.{env}.json                 ← game ID + build settings (separate file)
 └── package.json
 ```
 
@@ -68,7 +68,7 @@ The CLI deep-merges all `*.config.json` files into a single simulation config at
 ### Important
 
 - **`config.json`** and **`config/`** are for server config (simulation, leaderboard, rooms, etc.)
-- **`game.config.json`** is a separate file for local CLI metadata only (`gameId`, `relativePathToDistFolder`, `usesPreloader`) — simulation config does not go there
+- **`game.config.{env}.json`** is a separate file for local CLI metadata only (`gameId`, `relativePathToDistFolder`, `usesPreloader`) — simulation config does not go there
 
 ***
 

@@ -100,7 +100,7 @@ rundot deploy --bump patch
 
 **Deploy command options:**
 
-* `--game-id`: The game ID to deploy (reads from `game.config.json` if not provided)
+* `--game-id`: The game ID to deploy (reads from `game.config.{env}.json` if not provided)
 * `--build-path`: Path to your game's distribution/build folder
 * `--bump`: Version bump type — `major`, `minor`, or `patch` (default: `minor`)
 * `--uses-preloader`: Whether the game uses the RUN.game SDK preloader
@@ -156,4 +156,4 @@ rundot game add-editors "dev1@example.com dev2@example.com"
 rundot game remove-editors "former-teammate@example.com"
 ```
 
-All `game` subcommands accept `--game-id` to target a specific game (reads from `game.config.json` if not provided).
+All `game` subcommands accept `--game-id` to target a specific game (reads from `game.config.{env}.json` if not provided).

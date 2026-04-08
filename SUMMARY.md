@@ -40,3 +40,4 @@
   * [Storage API](rundot-developer-platform/api/STORAGE.md)
   * [Time API](rundot-developer-platform/api/TIME.md)
   * [UGC API (BETA)](rundot-developer-platform/api/UGC.md)
+  * [Video API (BETA)](rundot-developer-platform/api/VIDEO.md)

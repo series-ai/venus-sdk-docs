@@ -58,6 +58,7 @@ const time = await RundotGameAPI.time.requestTimeAsync()
 | [Simulation: Building Timers (BETA)](rundot-developer-platform/api/BUILDING_TIMERS.md) | Timed upgrades, build queues, and passive resource generation. |
 | [Sharing](rundot-developer-platform/api/SHARING.md) | Share links, generate QR codes, and handle share parameters. |
 | [Leaderboards (BETA)](rundot-developer-platform/api/LEADERBOARD.md) | Competitive leaderboards with multiple security levels. |
+| [Video (BETA)](rundot-developer-platform/api/VIDEO.md) | Hand off video playback to native Picture-in-Picture (iOS only). |
 
 ### Device & Environment
 

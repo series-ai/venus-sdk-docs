@@ -108,7 +108,7 @@ From your project's root folder:
 rundot init
 ```
 
-This walks you through naming and configuring your game for the RUN.game platform. It creates a `game.config.json` file that stores your game ID and build settings.
+This walks you through naming and configuring your game for the RUN.game platform. It creates a `game.config.prod.json` file that stores your game ID and build settings.
 
 See [Initializing Your Game](initializing-your-game.md) for more details and manual options.
 {% endstep %}

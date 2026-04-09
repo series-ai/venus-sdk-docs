@@ -28,7 +28,7 @@ rundot init --help
 
 ## Under the hood
 
-After initialization, a `game.config.{env}.json` file is created in your project root that stores your game's configuration:
+After initialization, a `game.config.prod.json` file is created in your project root that stores your game's configuration:
 
 ```json
 {

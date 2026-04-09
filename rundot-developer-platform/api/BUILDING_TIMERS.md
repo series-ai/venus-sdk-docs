@@ -15,11 +15,11 @@ my-game/
 ├── config.json                      ← option A: all-in-one (add "simulation" key)
 ├── config/                          ← option B: split files for complex games
 │   └── buildings.config.json
-├── game.config.{env}.json                 ← game ID + build settings only (separate)
+├── game.config.prod.json                 ← game ID + build settings only (separate)
 └── package.json
 ```
 
-> `game.config.{env}.json` is for CLI metadata only. Simulation config goes in `config.json` or the `config/` directory.
+> `game.config.prod.json` is for CLI metadata only. Simulation config goes in `config.json` or the `config/` directory.
 
 ***
 

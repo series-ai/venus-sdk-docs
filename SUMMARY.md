@@ -10,6 +10,7 @@
   * [Access Gate API](rundot-developer-platform/api/ACCESS_GATE.md)
   * [Ads API](rundot-developer-platform/api/ADS.md)
   * [AI API](rundot-developer-platform/api/AI.md)
+  * [App API (BETA)](rundot-developer-platform/api/APP.md)
   * [Analytics API](rundot-developer-platform/api/ANALYTICS.md)
   * [Assets API](rundot-developer-platform/api/ASSETS.md)
   * [Big Numbers API](rundot-developer-platform/api/BIGNUMBERS.md)

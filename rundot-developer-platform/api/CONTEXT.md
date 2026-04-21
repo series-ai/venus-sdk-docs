@@ -31,8 +31,34 @@ console.log('Notification parameters:', notificationParams)
 * Keep your runtime configuration under \~100 KB for the same reason.
 * Use compact identifiers (IDs, short strings) and fetch bulky data from your backend.
 
+## Game-to-Game Navigation Context
+
+When your game is launched via [game-to-game navigation](NAVIGATION.md), two additional context fields may be present:
+
+```typescript
+const context = RundotGameAPI.context
+
+if (context.g2gLaunch) {
+  // This game was launched from another game
+  console.log('Launch data from source game:', context.g2gLaunch)
+}
+
+if (context.g2gReturn) {
+  // The player returned from a game we navigated to
+  console.log('Return data:', context.g2gReturn)
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `g2gLaunch` | `Record<string, any> \| undefined` | Data from the source game that launched this game |
+| `g2gReturn` | `Record<string, any> \| undefined` | Data restored after returning from a game this game navigated to |
+
+Both are `undefined` when the game is launched normally. See the [Navigation API](NAVIGATION.md) for full details on game-to-game navigation.
+
 ## Best Practices
 
 * Inspect `RundotGameAPI.context.launchParams` on boot to determine how you want your game to load early on.
 * Inspect `RundotGameAPI.context.shareParams` on boot and branch gameplay early. Players expect to land in the invited context immediately.
 * Inspect `RundotGameAPI.context.notificationParams` to handle launches from push notifications — e.g. `roomId` to auto-join a room, or custom payload from a `send_notification` effect.
+* Check `RundotGameAPI.context.g2gLaunch` and `g2gReturn` to handle game-to-game navigation launches and returns.

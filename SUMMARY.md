@@ -25,6 +25,7 @@
   * [Lifecycles API](rundot-developer-platform/api/LIFECYCLES.md)
   * [Logging API](rundot-developer-platform/api/LOGGING.md)
   * [Multiplayer API (BETA)](rundot-developer-platform/api/MULTIPLAYER.md)
+  * [Navigation API (BETA)](rundot-developer-platform/api/NAVIGATION.md)
   * [Notifications API](rundot-developer-platform/api/NOTIFICATIONS.md)
   * [Preloader API](rundot-developer-platform/api/PRELOADER.md)
   * [Profiles API](rundot-developer-platform/api/PROFILE.md)

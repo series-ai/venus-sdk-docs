@@ -76,4 +76,4 @@ const result = a.times(b) // Handles numbers beyond JavaScript limits
 - Store values as strings (e.g., `BE:` prefix) when persisting to avoid JSON precision issues.
 - Normalize before performing comparisons so you're always working with Decimal instances.
 - Keep formatting on the client; send raw numbers to your backend for canonical calculations.
-- When storing big numbers, use `RundotGameAPI.storage` with string serialization.
+- When storing big numbers, use `RundotGameAPI.appStorage` with string serialization.

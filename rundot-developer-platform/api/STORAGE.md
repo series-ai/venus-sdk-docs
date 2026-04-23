@@ -43,6 +43,50 @@ await RundotGameAPI.appStorage.removeMultipleItems(['inventory', 'settings'])
 const allItems = await RundotGameAPI.appStorage.getAllItems()
 ```
 
+## Value Rules
+
+Storage values are **strings**. Serialize objects with `JSON.stringify` before writing and parse on read.
+
+Keys must be non-empty strings of at most 256 bytes (UTF-8), must not contain `.`, and must not start with `__` (reserved for internal metadata).
+
+Batch writes pass an array of `{ key: string, value: string }` items, as shown in [Batch Helpers](#batch-helpers) above.
+
+## Limits
+
+These limits apply to `appStorage` and to each `sharedStorage` source bucket. `sharedStorage` adds a namespace-level source-app cap described below.
+
+| Limit | Value |
+| --- | --- |
+| Items per bucket | 128 |
+| Value size (UTF-8 bytes) | 8 KiB |
+| Total bytes per bucket | 128 KiB |
+| Items per batch call | 128 |
+| Request body size | 64 KiB |
+| Key size (UTF-8 bytes) | 256 |
+
+`sharedStorage` also caps the number of source apps declared per namespace at **32**; `getAllForKey` fan-out inherits that ceiling.
+
+Exceeding a bucket-level limit (item count or total bytes) rejects with `QUOTA_EXCEEDED`. Exceeding a batch or key/value limit rejects with `INVALID_ARGUMENT`.
+
+## Error Codes
+
+All cloud-backed storage surfaces (`appStorage`, `sharedStorage`) reject with a structured error envelope on failure:
+
+```json
+{ "success": false, "error": { "code": "INVALID_ARGUMENT", "message": "…" } }
+```
+
+| Code | Raised when |
+| --- | --- |
+| `INVALID_ARGUMENT` | Key or value fails validation (empty, wrong type, oversized, forbidden character, reserved `__` prefix), `index` is not a non-negative integer, batch exceeds 128 items, or `gameId` is missing. |
+| `PROFILE_REQUIRED` | The caller is authenticated but has no player profile. |
+| `QUOTA_EXCEEDED` | The write would push the bucket past 128 items or 128 KiB of total data. |
+| `RATE_LIMITED` | Per-player request budget for this storage surface has been exhausted. **Note:** the 429 response currently uses a different shape — `{ error: "Too Many Requests", message, retryAfter }` — instead of the envelope above. Handle both when reading the HTTP 429 path. |
+| `NAMESPACE_NOT_FOUND` | `sharedStorage` only. Target app has no published build, no policy, or doesn't export the namespace. |
+| `ACCESS_DENIED` | `sharedStorage` only. Caller isn't in the namespace's grant list for the requested verb. |
+
+Handle each code by attaching a `.catch()` (or `try`/`catch` around `await`) — see [Error Handling](../error-handling.md).
+
 ## Shared Storage
 
 `sharedStorage` is per-player cross-app storage addressed by a target app ID plus a namespace the target declares. Source apps deposit data into their own bucket under the target's namespace; readers (the target, or source apps that the target granted `read_all`) fan out across source buckets for the current player.
@@ -89,20 +133,13 @@ const entries = await mailboxReader.getAllForKey('unread')
 
 Order is unspecified for `getAllForKey`. Source buckets that don't hold the key are omitted. `listSources` reflects sources that have actually written data for this player — not the declared source list.
 
-### Error Codes
+### Shared Storage Errors and Limits
 
-| Condition | Code |
-| --- | --- |
-| Target app has no published build, no policy, or the namespace isn't exported | `NAMESPACE_NOT_FOUND` |
-| Source app isn't in the namespace's grant list, or lacks the required verb | `ACCESS_DENIED` |
-
-### Mobile App Version Requirement
-
-`sharedStorage` requires the RUN.game app at the mobile platform level. Older clients without the bridge handler reject `sharedStorage` calls with an unknown-handler error. Games that use `sharedStorage` should document a minimum mobile app version in their release notes.
-
-### Limits
-
-Per-bucket limits match other storage surfaces: 128 items, 8 KiB values, 128 KiB total bytes. A namespace can declare up to 32 source apps; `getAllForKey` fan-out inherits that ceiling.
+- `NAMESPACE_NOT_FOUND` is raised when the target app has no published build, has no policy, or doesn't export the namespace.
+- `ACCESS_DENIED` is raised when the caller isn't in the namespace's grant list for the requested verb (`write_own` / `read_all`).
+- Cross-cutting error codes (`INVALID_ARGUMENT`, `PROFILE_REQUIRED`, `QUOTA_EXCEEDED`, `RATE_LIMITED`) apply here too — see [Error Codes](#error-codes).
+- Per-bucket limits match `appStorage` — see [Limits](#limits). A namespace can additionally declare up to 32 source apps; `getAllForKey` fan-out inherits that ceiling.
+- `sharedStorage` requires the current SDK build on the client and a RUN.game app build that ships the shared-storage handler on mobile. Older clients reject `sharedStorage` calls with an unknown-handler error, surfaced as a rejected promise.
 
 ## Best Practices
 

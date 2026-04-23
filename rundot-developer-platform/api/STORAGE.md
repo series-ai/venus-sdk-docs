@@ -1,6 +1,6 @@
 #  Storage APIs
 
-Persist player data at the right scope using the storage helpers. The SDK exposes multiple layers — device cache, per-game app storage, and cross-app shared storage.
+Persist player data at the right scope using the storage helpers. The SDK exposes multiple layers — device cache, per-game app storage, per-creator owner storage, and cross-app shared storage.
 
 {% hint style="warning" %}
 All SDK methods can reject — unhandled rejections crash the app. Always wrap SDK calls in `try/catch` or attach a `.catch()` handler. See [Error Handling](../error-handling.md) for details.
@@ -12,6 +12,7 @@ All SDK methods can reject — unhandled rejections crash the app. Always wrap S
 | ---------------------------- | -------------------------------------- | -------------------------------------------------- |
 | `RundotGameAPI.deviceCache`       | Shared across all apps on the device   | Anonymous hints, recently used app IDs             |
 | `RundotGameAPI.appStorage`        | Scoped to your title                   | Core save data, settings, progress                 |
+| `RundotGameAPI.ownerStorage`      | Shared across all titles by the same creator, per player | Creator-wide profile, cross-title progression   |
 | `RundotGameAPI.sharedStorage`     | Per-player, cross-app by target/namespace | Mailboxes, gifts, hand-offs between apps       |
 
 All single-bucket surfaces share the same API: `getItem`, `setItem`, `removeItem`, `clear`, `length`, and `key(index)`. `sharedStorage` is a factory — see [Shared Storage](#shared-storage) below.
@@ -53,7 +54,7 @@ Batch writes pass an array of `{ key: string, value: string }` items, as shown i
 
 ## Limits
 
-These limits apply to `appStorage` and to each `sharedStorage` source bucket. `sharedStorage` adds a namespace-level source-app cap described below.
+These limits apply to `appStorage`, `ownerStorage`, and to each `sharedStorage` source bucket. `sharedStorage` adds a namespace-level source-app cap described below.
 
 | Limit | Value |
 | --- | --- |
@@ -70,7 +71,7 @@ Exceeding a bucket-level limit (item count or total bytes) rejects with `QUOTA_E
 
 ## Error Codes
 
-All cloud-backed storage surfaces (`appStorage`, `sharedStorage`) reject with a structured error envelope on failure:
+All cloud-backed storage surfaces (`appStorage`, `ownerStorage`, `sharedStorage`) reject with a structured error envelope on failure:
 
 ```json
 { "success": false, "error": { "code": "INVALID_ARGUMENT", "message": "…" } }
@@ -82,10 +83,61 @@ All cloud-backed storage surfaces (`appStorage`, `sharedStorage`) reject with a 
 | `PROFILE_REQUIRED` | The caller is authenticated but has no player profile. |
 | `QUOTA_EXCEEDED` | The write would push the bucket past 128 items or 128 KiB of total data. |
 | `RATE_LIMITED` | Per-player request budget for this storage surface has been exhausted. **Note:** the 429 response currently uses a different shape — `{ error: "Too Many Requests", message, retryAfter }` — instead of the envelope above. Handle both when reading the HTTP 429 path. |
+| `OWNER_IDENTITY_UNAVAILABLE` | `ownerStorage` only. The game record is missing an owner identity, so the creator-scoped bucket cannot be resolved. Surfaces when a game has been published without the creator-identity backfill applied. |
 | `NAMESPACE_NOT_FOUND` | `sharedStorage` only. Target app has no published build, no policy, or doesn't export the namespace. |
 | `ACCESS_DENIED` | `sharedStorage` only. Caller isn't in the namespace's grant list for the requested verb. |
 
 Handle each code by attaching a `.catch()` (or `try`/`catch` around `await`) — see [Error Handling](../error-handling.md).
+
+## Owner Storage
+
+`ownerStorage` is per-player storage shared across every title owned by the same creator. The same player who saves data in Creator X's first game reads that data back when they launch Creator X's second game. Players of a different creator's games see an independent bucket.
+
+Use it for:
+
+- A unified creator profile (display name, avatar choice, opt-ins) across a creator's catalog.
+- Cross-title progression (shared currency, battle-pass state) where the creator's games are designed to hand off state.
+- Creator-wide settings a player sets once and expects to persist in every title from that creator.
+
+Use [`appStorage`](#quick-start) instead when state is specific to one title; use [`sharedStorage`](#shared-storage) when unrelated creators need to exchange data for the same player.
+
+### API
+
+`ownerStorage` exposes the same surface as `appStorage`:
+
+```typescript
+// Write / read
+await RundotGameAPI.ownerStorage.setItem('creatorProfile', JSON.stringify({ displayName: 'ArcticFox' }))
+const raw = await RundotGameAPI.ownerStorage.getItem('creatorProfile')
+
+// Enumerate
+const count = await RundotGameAPI.ownerStorage.length()
+const firstKey = await RundotGameAPI.ownerStorage.key(0)
+const keys = await RundotGameAPI.ownerStorage.getAllItems()
+const all = await RundotGameAPI.ownerStorage.getAllData()
+
+// Batch
+await RundotGameAPI.ownerStorage.setMultipleItems([
+  { key: 'creatorProfile', value: JSON.stringify({ displayName: 'ArcticFox' }) },
+  { key: 'creatorOptIns', value: JSON.stringify({ newsletter: true }) },
+])
+await RundotGameAPI.ownerStorage.removeMultipleItems(['creatorOptIns'])
+
+// Wipe
+await RundotGameAPI.ownerStorage.clear()
+```
+
+Method signatures are identical to `appStorage` — only the scoping differs. Value rules, batch shape, and [limits](#limits) also match `appStorage`.
+
+### Error Codes
+
+All codes in the top-level [Error Codes](#error-codes) table apply. One code is specific to `ownerStorage`:
+
+- `OWNER_IDENTITY_UNAVAILABLE` — the game record has no stored owner identity yet, so the creator-scoped bucket cannot be resolved. This is an operational issue rather than an input error; rebuilding or republishing the game after the creator-identity backfill has run clears it. Surface it in your error logs but don't treat it as user-facing.
+
+### Requirements
+
+`ownerStorage` requires the current SDK build on the client and a RUN.game app build that ships the owner-storage handler on mobile. Older RUN.game builds reject `ownerStorage` calls with an unknown-handler error, surfaced as a rejected promise. Games that depend on `ownerStorage` should feature-detect or document a minimum supported app version in their release notes.
 
 ## Shared Storage
 
@@ -144,7 +196,7 @@ Order is unspecified for `getAllForKey`. Source buckets that don't hold the key 
 ## Best Practices
 
 - Serialize complex objects explicitly (e.g., `JSON.stringify`) and version your schema for future migrations.
-- Use device cache for anonymous or non-critical data; rely on `appStorage` (and `sharedStorage` where appropriate) for authoritative state.
+- Use device cache for anonymous or non-critical data; rely on `appStorage`, `ownerStorage`, or `sharedStorage` (whichever matches the state's scope) for authoritative state.
 - Persist during lifecycle events (`onPause`, `onSleep`) so you don’t lose progress on forced quits.
 - Handle `null` responses gracefully—keys may be missing on first launch or after host-side cleanup.
 - When working with big numbers, store them as strings (e.g., using the Numbers API) to avoid precision loss.

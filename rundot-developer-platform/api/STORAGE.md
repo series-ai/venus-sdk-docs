@@ -178,6 +178,9 @@ const sources = await mailboxReader.listSources()
 // Read one source's bucket in full
 const alphaBucket = await mailboxReader.getAllFromSource('game_alpha')
 
+// Read a single key from a specific source's bucket (null if absent)
+const alphaUnread = await mailboxReader.get('game_alpha', 'unread')
+
 // Read one key across all source buckets
 const entries = await mailboxReader.getAllForKey('unread')
 // → [{ sourceAppId: 'game_alpha', value: '[{...}]', updatedAt: '2026-04-22T…' }, …]

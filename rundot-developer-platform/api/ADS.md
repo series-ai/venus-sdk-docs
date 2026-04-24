@@ -38,9 +38,12 @@ if (isReady) {
 Forced ads that interrupt gameplay at natural break points. These ads are automatically hidden for platform subscribers.
 
 ```typescript
-// Show interstitial at level transition
-await RundotGameAPI.ads.showInterstitialAd()
-// Gameplay resumes after ad completes or is skipped
+const isReady = await RundotGameAPI.ads.isInterstitialAdReadyAsync()
+if (isReady) {
+  // Show interstitial at level transition
+  await RundotGameAPI.ads.showInterstitialAd()
+  // Gameplay resumes after ad completes or is skipped
+}
 ```
 
 **Use cases:**
@@ -108,12 +111,13 @@ async function onLevelComplete(level: number) {
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `isRewardedAdReadyAsync()` | `Promise<boolean>` | Check if a rewarded ad is available |
+| `isInterstitialAdReadyAsync()` | `Promise<boolean>` | Check if an interstitial ad is available |
 | `showRewardedAdAsync(options?)` | `Promise<boolean>` | Show rewarded ad; returns `true` if watched |
 | `showInterstitialAd(options?)` | `Promise<boolean>` | Show interstitial ad |
 
 ## Best Practices
 
-- Always check `isRewardedAdReadyAsync()` before calling display methods—hosts may throttle requests during campaigns.
+- Preflight with `isRewardedAdReadyAsync()` / `isInterstitialAdReadyAsync()` before calling display methods—hosts may throttle requests during campaigns.
 - Disable reward buttons when `isRewardedAdReadyAsync()` returns `false` to avoid extra clicks.
 - Guard reward logic so you only grant the prize when the call resolves `true`.
 - Wrap ad calls in try/catch and fail silently; players might deny permissions or lose connectivity.

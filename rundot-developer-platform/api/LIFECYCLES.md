@@ -1,6 +1,6 @@
 #  Lifecycles API
 
-The host controls when your game is active, paused, or torn down. `RundotGameAPI.lifecycles` exposes five hooks so your app can react to those state changes:
+The host controls when your game is active, paused, or torn down. `RundotGameAPI.lifecycles` exposes six hooks so your app can react to those state changes:
 
 ```
 Import RundotGameAPI
@@ -12,10 +12,12 @@ Ready (implicit once module import resolves)
      │
      ├──▶ onSleep  ──▶ onAwake
      │
+     ├──▶ onBackButton  (Android only; handle or call requestPopOrQuit)
+     │
      └──▶ onQuit   (terminal)
 ```
 
-> Module import resolving is the “ready” moment—there is no separate `onReady` callback in the current SDK.
+> Module import resolving is the "ready" moment—there is no separate `onReady` callback in the current SDK.
 
 ## Quick Start
 
@@ -35,6 +37,7 @@ Ready (implicit once module import resolves)
 | `onSleep(callback)`    | Long suspend/background (system tab switch, network loss, etc.)    | Persist progress, stop network churn, close sockets  |
 | `onAwake(callback)`    | App returns from sleep and is about to resume interaction          | Refresh auth/session, refetch stale data             |
 | `onQuit(callback)`     | Host is shutting down the app instance                             | Flush telemetry, save state, return pending promises |
+| `onBackButton(callback)` | User pressed the device back button (Android only)               | Navigate back in menus, show exit dialog, save state |
 
 Each hook returns a `{ unsubscribe(): void }` handle. Call it if you need to detach listeners manually.
 
@@ -75,8 +78,54 @@ export function disposeLifecycleHandlers() {
 
 ## Best Practices
 
-- **Keep handlers fast**: dispatch longer tasks to your own queues so the host isn’t blocked.
+- **Keep handlers fast**: dispatch longer tasks to your own queues so the host isn't blocked.
 - **Guard async work**: wrap awaits in try/catch—transitions can happen at any time.
 - **Persist aggressively on `onSleep`**: do not rely on `onQuit` always firing.
-- **Avoid deprecated names**: older docs referenced `RundotGameAPI.lifecycle` (singular) and `onShow`/`onPlay`; those APIs aren’t available in current SDK builds.
+- **Avoid deprecated names**: older docs referenced `RundotGameAPI.lifecycle` (singular) and `onShow`/`onPlay`; those APIs aren't available in current SDK builds.
 
+## Back Button (Android)
+
+On Android devices, the hardware or gesture-based back button fires `onBackButton`. Use the callback to handle in-game back navigation (e.g. closing a settings screen, navigating up a menu hierarchy, or showing an exit confirmation).
+
+If you want the host to perform its default quit behavior from inside the callback, call `RundotGameAPI.navigation.requestPopOrQuit()`.
+
+If you don't register an `onBackButton` handler at all, the host performs its default quit behavior automatically — you only need this API if your game has its own back navigation.
+
+This event only fires on Android. On iOS and web, the event never fires — registering a handler is safe but acts as a no-op.
+
+### Example: In-Game Back Navigation
+
+```typescript
+import RundotGameAPI from '@series-inc/rundot-game-sdk/api'
+
+let currentScreen = 'gameplay'
+
+RundotGameAPI.lifecycles.onBackButton(() => {
+  if (currentScreen === 'settings') {
+    currentScreen = 'gameplay'
+    showGameplayScreen()
+    return // handled — navigated back within the game
+  }
+
+  if (currentScreen === 'gameplay') {
+    showExitConfirmDialog()
+    return // handled — showing dialog instead of quitting
+  }
+
+  // At root with nothing to do — tell the host to quit
+  RundotGameAPI.navigation.requestPopOrQuit()
+})
+```
+
+### Example: Simple Exit Confirmation
+
+```typescript
+RundotGameAPI.lifecycles.onBackButton(() => {
+  showMyCustomDialog('Are you sure you want to quit?', {
+    onConfirm: () => RundotGameAPI.navigation.requestPopOrQuit(),
+    onCancel: () => { /* stay in game */ },
+  })
+})
+```
+
+> **Note:** The callback cannot return a value to the host (the notification channel is fire-and-forget). To quit, call `requestPopOrQuit()` explicitly. Do not use `window.confirm()` — it blocks the WebView JS thread and the host cannot observe its result.

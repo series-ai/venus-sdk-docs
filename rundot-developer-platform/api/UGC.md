@@ -407,3 +407,64 @@ async function getCatalog() {
 - **Flexible Data**: Store any JSON structure (up to 100KB)
 - **Content Moderation**: Optional moderation for titles and data fields
 - **Author Attribution**: Automatic author info on all entries
+
+---
+
+## CLI Management (`rundot ugc`)
+
+The `rundot` CLI provides commands for managing UGC entries and handling moderation without requiring the game client.
+
+### Player Commands
+
+```bash
+# List public entries (auto-detects game from game.config.local.json)
+rundot ugc list
+
+# List only your entries
+rundot ugc list --mine
+
+# Get full details of an entry
+rundot ugc get <entry-id>
+
+# Delete an entry you own
+rundot ugc delete <entry-id>
+```
+
+### Admin Commands (Owner/Editor)
+
+These commands require owner or editor role on the game.
+
+```bash
+# Browse all entries, including private and removed
+rundot ugc admin browse
+rundot ugc admin browse --public false --content-type character
+
+# Soft-remove an entry
+rundot ugc admin remove <entry-id>
+
+# List user reports
+rundot ugc admin reports --status pending
+
+# Resolve a report
+rundot ugc admin resolve <report-id> --action reviewed
+rundot ugc admin resolve <report-id> --action dismissed
+```
+
+### Typical Moderation Workflow
+
+```bash
+# 1. Check for pending reports
+rundot ugc admin reports --status pending
+
+# 2. Review the flagged entry
+rundot ugc get <entry-id>
+
+# 3a. Remove if inappropriate, then mark report reviewed
+rundot ugc admin remove <entry-id>
+rundot ugc admin resolve <report-id> --action reviewed
+
+# 3b. Or dismiss the report if content is acceptable
+rundot ugc admin resolve <report-id> --action dismissed
+```
+
+All commands accept `--game-id <id>` to specify the game explicitly. If omitted, the CLI reads `game.config.local.json` from the current directory (set via `rundot init`).

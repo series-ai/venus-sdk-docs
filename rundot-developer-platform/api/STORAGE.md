@@ -152,9 +152,18 @@ Access is controlled by the **target** app's creator on the target's published (
 
 Grants are asymmetric by design. Sender-bucketing is an invariant: a caller can never write into another source's bucket.
 
+**Self-target is implicitly allowed.** When the caller's own app is the target (i.e. `appId` is omitted, or matches the caller's authenticated app ID), the host skips the namespace policy lookup and grants both `write_own` and `read_all` for that namespace. Self-target therefore needs no namespace declaration — useful for app-private cross-source data (e.g. progress shared between your own H5 and native builds).
+
 ### Writer Handle: `open`
 
 ```typescript
+// Self-target — the most common case. Omit appId; the host substitutes
+// the caller's own appId. No namespace policy declaration is required for
+// own-app self-target.
+const ownProgress = RundotGameAPI.sharedStorage.open({ namespace: 'progress' })
+await ownProgress.setItem('level', '5')
+
+// Cross-app target — pass an explicit appId.
 const mailbox = RundotGameAPI.sharedStorage.open({
   appId: 'target_fan_hub',
   namespace: 'mailbox',
@@ -167,10 +176,19 @@ await mailbox.clear()
 
 `open` returns a standard `StorageApi` bound to the caller's own source bucket under `(targetAppId, namespace)`. The handle is synchronous — the first method call performs the access-control check and returns a rejected promise if the caller lacks `write_own` for this namespace.
 
+Passing `appId: ''` (an empty string) throws synchronously. Use omission (or `undefined`) for self-target, or a non-empty string for a cross-app target.
+
 ### Reader Handle: `read`
 
 ```typescript
-const mailboxReader = RundotGameAPI.sharedStorage.read('target_fan_hub', 'mailbox')
+// Self-target reader — fan out across source buckets that have written
+// into your own app's namespace. Omit appId.
+const ownProgressReader = RundotGameAPI.sharedStorage.read({ namespace: 'progress' })
+
+const mailboxReader = RundotGameAPI.sharedStorage.read({
+  appId: 'target_fan_hub',
+  namespace: 'mailbox',
+})
 
 // Enumerate sources that have written for the current player
 const sources = await mailboxReader.listSources()
@@ -185,6 +203,8 @@ const alphaUnread = await mailboxReader.get('game_alpha', 'unread')
 const entries = await mailboxReader.getAllForKey('unread')
 // → [{ sourceAppId: 'game_alpha', value: '[{...}]', updatedAt: '2026-04-22T…' }, …]
 ```
+
+`read` accepts the same `{ appId?, namespace }` shape as `open`. Empty-string `appId` throws synchronously.
 
 Order is unspecified for `getAllForKey`. Source buckets that don't hold the key are omitted. `listSources` reflects sources that have actually written data for this player — not the declared source list.
 

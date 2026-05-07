@@ -40,6 +40,7 @@
   * [Simulation: Energy System (BETA)](rundot-developer-platform/api/ENERGY_SYSTEM.md)
   * [Simulation: Gacha System (BETA)](rundot-developer-platform/api/GACHA_SYSTEM.md)
   * [Storage API](rundot-developer-platform/api/STORAGE.md)
+  * [System API](rundot-developer-platform/api/SYSTEM.md)
   * [Time API](rundot-developer-platform/api/TIME.md)
   * [UGC API (BETA)](rundot-developer-platform/api/UGC.md)
   * [Video API (BETA)](rundot-developer-platform/api/VIDEO.md)

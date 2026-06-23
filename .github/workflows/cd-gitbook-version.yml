@@ -1,0 +1,41 @@
+name: "CD: GitBook Version"
+
+# Triggered when venus cd-sdk-docs.yml pushes a version branch (v*).
+# Creates a GitBook variant for the new SDK version and ensures the
+# Dev docs space exists.
+
+on:
+  create:
+
+permissions:
+  contents: write
+
+jobs:
+  version-docs:
+    if: github.ref_type == 'branch' && startsWith(github.ref_name, 'v') && !contains(github.ref_name, '-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Versioning docs for SDK v${VERSION}"
+
+      - name: Version docs
+        uses: ./.github/actions/version-docs
+        with:
+          version: ${{ steps.version.outputs.version }}
+          gitbook-api-token: ${{ secrets.GITBOOK_API_TOKEN }}
+          docs-deploy-token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
+
+      - name: Ensure Dev docs variant
+        uses: ./.github/actions/ensure-dev-docs
+        with:
+          gitbook-api-token: ${{ secrets.GITBOOK_API_TOKEN }}
+          docs-deploy-token: ${{ secrets.DOCS_DEPLOY_TOKEN }}

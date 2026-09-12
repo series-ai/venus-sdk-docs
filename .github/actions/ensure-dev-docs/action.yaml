@@ -1,0 +1,99 @@
+name: Ensure Dev Docs
+description: Idempotently ensure a "Dev" GitBook space exists with docs imported from main
+
+inputs:
+  gitbook-api-token:
+    description: 'GitBook API token'
+    required: true
+  docs-deploy-token:
+    description: 'GitHub token with push access to venus-sdk-docs'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure Dev docs variant
+      shell: bash
+      env:
+        GITBOOK_API_TOKEN: ${{ inputs.gitbook-api-token }}
+        DOCS_DEPLOY_TOKEN: ${{ inputs.docs-deploy-token }}
+      run: |
+        API="https://api.gitbook.com/v1"
+        AUTH="Authorization: Bearer ${GITBOOK_API_TOKEN}"
+
+        GITBOOK_ORG_ID=$(curl -s -H "${AUTH}" "${API}/orgs" | jq -r '.items[0].id')
+        if [[ -z "$GITBOOK_ORG_ID" || "$GITBOOK_ORG_ID" == "null" ]]; then
+          echo "::warning::Failed to fetch GitBook org ID"
+          exit 0
+        fi
+
+        GITBOOK_SITE_ID=$(curl -s -H "${AUTH}" "${API}/orgs/${GITBOOK_ORG_ID}/sites" | jq -r '.items[0].id')
+        if [[ -z "$GITBOOK_SITE_ID" || "$GITBOOK_SITE_ID" == "null" ]]; then
+          echo "::warning::Failed to fetch GitBook site ID"
+          exit 0
+        fi
+
+        GITBOOK_SECTION_ID=$(curl -s -H "${AUTH}" "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/sections" | jq -r '.items[0].id // empty')
+
+        SITE_SPACES=$(curl -s -H "${AUTH}" \
+          "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/site-spaces")
+
+        DEV_SPACE_ID=$(echo "$SITE_SPACES" | jq -r '[.items[] | select(.path == "dev")][0].space.id // empty')
+
+        if [[ -n "$DEV_SPACE_ID" ]]; then
+          echo "Dev docs variant already exists (space: ${DEV_SPACE_ID}), skipping"
+          exit 0
+        fi
+
+        DEV_RESP=$(curl -s -w "\n%{http_code}" -X POST "${API}/orgs/${GITBOOK_ORG_ID}/spaces" \
+          -H "${AUTH}" -H "Content-Type: application/json" \
+          -d '{"title":"Dev"}')
+        DEV_HTTP=$(echo "$DEV_RESP" | tail -1)
+        DEV_BODY=$(echo "$DEV_RESP" | sed '$d')
+
+        if [[ "$DEV_HTTP" != "201" ]]; then
+          echo "::warning::Failed to create Dev space (HTTP ${DEV_HTTP}): ${DEV_BODY}"
+          exit 0
+        fi
+
+        DEV_SPACE_ID=$(echo "$DEV_BODY" | jq -r '.id')
+        echo "Created Dev space: ${DEV_SPACE_ID}"
+
+        IMPORT_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+          -X POST "${API}/spaces/${DEV_SPACE_ID}/git/import" \
+          -H "${AUTH}" -H "Content-Type: application/json" \
+          -d "$(jq -n \
+            --arg url "https://x-access-token:${DOCS_DEPLOY_TOKEN}@github.com/series-ai/venus-sdk-docs.git" \
+            '{
+              "url": $url,
+              "ref": "refs/heads/main",
+              "gitInfo": { "provider": "github", "url": "https://github.com/series-ai/venus-sdk-docs" }
+            }')")
+        echo "Docs import returned HTTP ${IMPORT_CODE}"
+
+        if [[ "$IMPORT_CODE" != "204" && "$IMPORT_CODE" != "200" ]]; then
+          echo "::warning::Failed to import docs into Dev space (HTTP ${IMPORT_CODE}), aborting"
+          exit 0
+        fi
+
+        if [[ -n "$GITBOOK_SECTION_ID" ]]; then
+          PAYLOAD=$(jq -n --arg s "$DEV_SPACE_ID" --arg sec "$GITBOOK_SECTION_ID" '{"spaceId":$s,"sectionId":$sec}')
+        else
+          PAYLOAD=$(jq -n --arg s "$DEV_SPACE_ID" '{"spaceId":$s}')
+        fi
+
+        VAR_RESP=$(curl -s -w "\n%{http_code}" -X POST \
+          "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/site-spaces" \
+          -H "${AUTH}" -H "Content-Type: application/json" -d "$PAYLOAD")
+        VAR_HTTP=$(echo "$VAR_RESP" | tail -1)
+        VAR_BODY=$(echo "$VAR_RESP" | sed '$d')
+
+        if [[ "$VAR_HTTP" == "201" ]]; then
+          SITE_SPACE_ID=$(echo "$VAR_BODY" | jq -r '.id')
+          curl -s -o /dev/null -X PATCH \
+            "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/site-spaces/${SITE_SPACE_ID}" \
+            -H "${AUTH}" -H "Content-Type: application/json" -d '{"path":"dev"}'
+          echo "Added Dev variant at /dev"
+        else
+          echo "::warning::Failed to add Dev variant (HTTP ${VAR_HTTP}): ${VAR_BODY}"
+        fi

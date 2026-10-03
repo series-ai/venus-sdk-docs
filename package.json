@@ -1,0 +1,13 @@
+{
+  "name": "@series-inc/rundot-sdk-docs",
+  "private": true,
+  "version": "0.0.0",
+  "description": "SDK documentation tree mirrored to series-ai/venus-sdk-docs for GitBook.",
+  "scripts": {
+    "gen-agents-index": "tsx scripts/generate-agents-index.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

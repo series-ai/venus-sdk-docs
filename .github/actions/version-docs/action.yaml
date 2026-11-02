@@ -1,0 +1,200 @@
+name: Version Docs
+description: Create a versioned docs branch and GitBook variant for an SDK release
+
+inputs:
+  version:
+    description: 'SDK version without v prefix (e.g. 5.9.2)'
+    required: true
+  gitbook-api-token:
+    description: 'GitBook API token'
+    required: true
+  docs-deploy-token:
+    description: 'GitHub token with push access to venus-sdk-docs'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Version docs
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+        GITBOOK_API_TOKEN: ${{ inputs.gitbook-api-token }}
+        DOCS_DEPLOY_TOKEN: ${{ inputs.docs-deploy-token }}
+      run: |
+        DOCS_BRANCH="v${VERSION}"
+        API="https://api.gitbook.com/v1"
+        AUTH="Authorization: Bearer ${GITBOOK_API_TOKEN}"
+
+        LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -1 | sed 's/^v//')
+        SKIP_LATEST=false
+        if [[ -n "$LATEST_TAG" ]]; then
+          HIGHEST=$(printf '%s\n%s\n' "$VERSION" "$LATEST_TAG" | sort -V | tail -1)
+          if [[ "$HIGHEST" != "$VERSION" ]]; then
+            echo "Skipping latest update: v${VERSION} is older than v${LATEST_TAG}"
+            SKIP_LATEST=true
+          fi
+        fi
+
+        if [[ "$SKIP_LATEST" == "false" ]]; then
+          git push origin HEAD:latest --force
+        fi
+
+        GITBOOK_ORG_ID=$(curl -s -H "${AUTH}" "${API}/orgs" | jq -r '.items[0].id')
+        if [[ -z "$GITBOOK_ORG_ID" || "$GITBOOK_ORG_ID" == "null" ]]; then
+          echo "::warning::Failed to fetch GitBook org ID"
+          exit 0
+        fi
+        echo "GitBook org: ${GITBOOK_ORG_ID}"
+
+        GITBOOK_SITE_ID=$(curl -s -H "${AUTH}" "${API}/orgs/${GITBOOK_ORG_ID}/sites" | jq -r '.items[0].id')
+        if [[ -z "$GITBOOK_SITE_ID" || "$GITBOOK_SITE_ID" == "null" ]]; then
+          echo "::warning::Failed to fetch GitBook site ID"
+          exit 0
+        fi
+        echo "GitBook site: ${GITBOOK_SITE_ID}"
+
+        GITBOOK_SECTION_ID=$(curl -s -H "${AUTH}" "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/sections" | jq -r '.items[0].id // empty')
+        if [[ -n "$GITBOOK_SECTION_ID" ]]; then
+          echo "GitBook section: ${GITBOOK_SECTION_ID}"
+        else
+          echo "No sections found — will add variant directly to site"
+        fi
+
+        SITE_SPACES=$(curl -s -H "${AUTH}" \
+          "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/site-spaces")
+
+        EXISTING_VERSION_SPACE=$(echo "$SITE_SPACES" | jq -r \
+          --arg path "v${VERSION}" \
+          '[.items[] | select(.path == $path)][0].space.id // empty')
+
+        if [[ -n "$EXISTING_VERSION_SPACE" ]]; then
+          echo "GitBook variant /v${VERSION} already exists (space ${EXISTING_VERSION_SPACE}), skipping space creation"
+        else
+          SPACE_RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${API}/orgs/${GITBOOK_ORG_ID}/spaces" \
+            -H "${AUTH}" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg title "SDK v${VERSION}" '{ "title": $title }')")
+
+          HTTP_CODE=$(echo "$SPACE_RESPONSE" | tail -1)
+          SPACE_BODY=$(echo "$SPACE_RESPONSE" | sed '$d')
+
+          if [[ "$HTTP_CODE" != "201" ]]; then
+            echo "::warning::Failed to create GitBook space (HTTP ${HTTP_CODE}): ${SPACE_BODY}"
+            exit 0
+          fi
+
+          SPACE_ID=$(echo "$SPACE_BODY" | jq -r '.id')
+          echo "Created GitBook space: ${SPACE_ID}"
+
+          IMPORT_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "${API}/spaces/${SPACE_ID}/git/import" \
+            -H "${AUTH}" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg url "https://x-access-token:${DOCS_DEPLOY_TOKEN}@github.com/series-ai/venus-sdk-docs.git" \
+              --arg ref "refs/heads/${DOCS_BRANCH}" \
+              '{
+                "url": $url,
+                "ref": $ref,
+                "gitInfo": { "provider": "github", "url": "https://github.com/series-ai/venus-sdk-docs" }
+              }')")
+
+          if [[ "$IMPORT_CODE" != "204" && "$IMPORT_CODE" != "200" ]]; then
+            echo "::warning::Failed to import docs (HTTP ${IMPORT_CODE})"
+            exit 0
+          fi
+          echo "Imported docs from branch ${DOCS_BRANCH}"
+
+          if [[ -n "$GITBOOK_SECTION_ID" ]]; then
+            VARIANT_PAYLOAD=$(jq -n --arg spaceId "$SPACE_ID" --arg sectionId "$GITBOOK_SECTION_ID" '{
+              "spaceId": $spaceId,
+              "sectionId": $sectionId
+            }')
+          else
+            VARIANT_PAYLOAD=$(jq -n --arg spaceId "$SPACE_ID" '{
+              "spaceId": $spaceId
+            }')
+          fi
+
+          VARIANT_RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/site-spaces" \
+            -H "${AUTH}" \
+            -H "Content-Type: application/json" \
+            -d "$VARIANT_PAYLOAD")
+
+          VARIANT_HTTP=$(echo "$VARIANT_RESPONSE" | tail -1)
+          VARIANT_BODY=$(echo "$VARIANT_RESPONSE" | sed '$d')
+
+          if [[ "$VARIANT_HTTP" != "201" ]]; then
+            echo "::warning::Failed to add variant (HTTP ${VARIANT_HTTP}): ${VARIANT_BODY}"
+            exit 0
+          fi
+
+          SITE_SPACE_ID=$(echo "$VARIANT_BODY" | jq -r '.id')
+
+          curl -s -o /dev/null \
+            -X PATCH "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/site-spaces/${SITE_SPACE_ID}" \
+            -H "${AUTH}" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg path "v${VERSION}" '{ "path": $path }')"
+
+          echo "Published docs v${VERSION} as GitBook variant at /v${VERSION}"
+
+          SITE_SPACES=$(curl -s -H "${AUTH}" \
+            "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/site-spaces")
+        fi
+
+        if [[ "$SKIP_LATEST" == "true" ]]; then
+          echo "Skipping default variant update (not the latest version)"
+          exit 0
+        fi
+
+        DEFAULT_ENTRY=$(echo "$SITE_SPACES" | jq -c \
+          '[.items[] | select(.default == true)][0] // empty')
+
+        if [[ -z "$DEFAULT_ENTRY" ]]; then
+          echo "::warning::Could not find default site-space"
+          exit 0
+        fi
+
+        DEFAULT_SPACE_ID=$(echo "$DEFAULT_ENTRY" | jq -r '.space.id')
+        DEFAULT_SITE_SPACE_ID=$(echo "$DEFAULT_ENTRY" | jq -r '.id')
+
+        DEFAULT_IMPORT_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+          -X POST "${API}/spaces/${DEFAULT_SPACE_ID}/git/import" \
+          -H "${AUTH}" \
+          -H "Content-Type: application/json" \
+          -d "$(jq -n \
+            --arg url "https://x-access-token:${DOCS_DEPLOY_TOKEN}@github.com/series-ai/venus-sdk-docs.git" \
+            --arg ref "refs/heads/${DOCS_BRANCH}" \
+            '{
+              "url": $url,
+              "ref": $ref,
+              "gitInfo": { "provider": "github", "url": "https://github.com/series-ai/venus-sdk-docs" }
+            }')")
+
+        if [[ "$DEFAULT_IMPORT_CODE" != "204" && "$DEFAULT_IMPORT_CODE" != "200" ]]; then
+          echo "::warning::Failed to re-import default space (HTTP ${DEFAULT_IMPORT_CODE})"
+        else
+          echo "Re-imported default space ${DEFAULT_SPACE_ID} from ${DOCS_BRANCH}"
+        fi
+
+        curl -s -o /dev/null \
+          -X PATCH "${API}/spaces/${DEFAULT_SPACE_ID}" \
+          -H "${AUTH}" \
+          -H "Content-Type: application/json" \
+          -d "$(jq -n --arg title "SDK v${VERSION} (latest)" '{ "title": $title }')"
+
+        SS_HTTP=$(curl -s -o /dev/null -w "%{http_code}" \
+          -X PATCH "${API}/orgs/${GITBOOK_ORG_ID}/sites/${GITBOOK_SITE_ID}/site-spaces/${DEFAULT_SITE_SPACE_ID}/customization" \
+          -H "${AUTH}" \
+          -H "Content-Type: application/json" \
+          -d "$(jq -n --arg title "SDK v${VERSION} (latest)" '{ "title": $title }')")
+
+        if [[ "$SS_HTTP" != "200" ]]; then
+          echo "::warning::Failed to update site-space customization title (HTTP ${SS_HTTP})"
+        fi
+
+        echo "Renamed default variant to 'SDK v${VERSION} (latest)' (space + site-space customization)"
